@@ -1,0 +1,137 @@
+{
+  "browser": "156.0.8078.47",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "reactBuild": "production",
+  "sourceComponent": "src/renderer/src/pages/VmsPage.tsx",
+  "results": [
+    {
+      "mounted": {
+        "rows": 100,
+        "commitMs": 6.699999999254942,
+        "visibleRowsInDOM": 100,
+        "domNodes": 3352
+      },
+      "unrelatedUpdates": [
+        {
+          "rows": 100,
+          "kind": "tasks-only store update",
+          "commitMs": 0.19999999925494194
+        },
+        {
+          "rows": 100,
+          "kind": "tasks-only store update",
+          "commitMs": 0
+        },
+        {
+          "rows": 100,
+          "kind": "tasks-only store update",
+          "commitMs": 0.09999999776482582
+        }
+      ],
+      "selection": {
+        "rows": 100,
+        "kind": "select all",
+        "commitMs": 8.599999997764826,
+        "selectedCount": 100
+      }
+    },
+    {
+      "mounted": {
+        "rows": 500,
+        "commitMs": 7.099999997764826,
+        "visibleRowsInDOM": 100,
+        "domNodes": 3358
+      },
+      "unrelatedUpdates": [
+        {
+          "rows": 500,
+          "kind": "tasks-only store update",
+          "commitMs": 0.19999999925494194
+        },
+        {
+          "rows": 500,
+          "kind": "tasks-only store update",
+          "commitMs": 0.10000000149011612
+        },
+        {
+          "rows": 500,
+          "kind": "tasks-only store update",
+          "commitMs": 0.10000000149011612
+        }
+      ],
+      "selection": {
+        "rows": 500,
+        "kind": "select all",
+        "commitMs": 7.099999997764826,
+        "selectedCount": 500
+      }
+    },
+    {
+      "mounted": {
+        "rows": 1000,
+        "commitMs": 6.800000000745058,
+        "visibleRowsInDOM": 100,
+        "domNodes": 3358
+      },
+      "unrelatedUpdates": [
+        {
+          "rows": 1000,
+          "kind": "tasks-only store update",
+          "commitMs": 0.19999999925494194
+        },
+        {
+          "rows": 1000,
+          "kind": "tasks-only store update",
+          "commitMs": 0.19999999925494194
+        },
+        {
+          "rows": 1000,
+          "kind": "tasks-only store update",
+          "commitMs": 0.09999999776482582
+        }
+      ],
+      "selection": {
+        "rows": 1000,
+        "kind": "select all",
+        "commitMs": 9.5,
+        "selectedCount": 1000
+      }
+    },
+    {
+      "mounted": {
+        "rows": 2000,
+        "commitMs": 5.800000000745058,
+        "visibleRowsInDOM": 100,
+        "domNodes": 3358
+      },
+      "unrelatedUpdates": [
+        {
+          "rows": 2000,
+          "kind": "tasks-only store update",
+          "commitMs": 0.10000000149011612
+        },
+        {
+          "rows": 2000,
+          "kind": "tasks-only store update",
+          "commitMs": 0.10000000149011612
+        },
+        {
+          "rows": 2000,
+          "kind": "tasks-only store update",
+          "commitMs": 0
+        }
+      ],
+      "selection": {
+        "rows": 2000,
+        "kind": "select all",
+        "commitMs": 13.900000002235174,
+        "selectedCount": 2000
+      }
+    }
+  ],
+  "longTasks": [],
+  "errors": []
+}

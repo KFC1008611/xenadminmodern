@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-23",
+  "mode": "review only; no product source changes or real pool writes",
+  "toolchain": {
+    "node": "24.22.0",
+    "npm": "11.19.1"
+  },
+  "existingFocusedGate": {
+    "files": 6,
+    "passed": 61,
+    "failed": 0,
+    "skipped": 0,
+    "stderrLines": 0,
+    "warnings": 0,
+    "command": "npm test -- tests/unit/vm-creation-service.test.ts tests/unit/vm-wizard-model.test.ts tests/unit/ipc-vm-contract.test.ts tests/components/CreateVmWizard.test.tsx tests/components/CreateVmWizardSteps.test.tsx tests/components/CreateVmWizardWorkflow.test.tsx"
+  },
+  "diagnostic": {
+    "passed": 15,
+    "failed": 0,
+    "defectPaths": 12,
+    "policyRiskPaths": 1,
+    "normalControls": 2,
+    "realXapi": false,
+    "meaning": "Passing diagnostic assertions reproduce current behavior; they are not fixes."
+  },
+  "upstreamFixedCommitChecks": {
+    "passed": 9,
+    "failed": 0
+  },
+  "xcpNgByteComparison": {
+    "CreateVMAction.cs": true,
+    "xapi_templates.ml": true
+  }
+}

@@ -1,0 +1,82 @@
+import { describe, it, expect, vi } from 'vitest'
+import { writeFileSync } from 'node:fs'
+const fakes = vi.hoisted(() => ({
+  fetchVmRrd: vi.fn(),
+  getRunningVmUuids: vi.fn(),
+  getAllHostUuids: vi.fn(),
+  getVmMemoryDynamicMax: vi.fn(),
+  fetchHostRrd: vi.fn(),
+  fetchRrdUpdates: vi.fn(),
+}))
+vi.mock('/Volumes/zt/dev/xenadminmodern/src/main/xapi/connection-manager', () => ({
+  connectionManager: { getClient: () => ({}), getConnectionInfo: () => ({ poolUuid: 'pool' }) },
+}))
+vi.mock('/Volumes/zt/dev/xenadminmodern/src/main/xapi/services/rrd-client.service', () => ({
+  fetchVmRrd: fakes.fetchVmRrd,
+  fetchHostRrd: fakes.fetchHostRrd, fetchRrdUpdates: fakes.fetchRrdUpdates, RrdFetchError: class extends Error {},
+}))
+vi.mock('/Volumes/zt/dev/xenadminmodern/src/main/xapi/services/rrd-uuid-cache.service', () => ({
+  getAllHostUuids: fakes.getAllHostUuids, getRunningVmUuids: fakes.getRunningVmUuids,
+  getVmUuid: async () => 'vm', getVmMemoryDynamicMax: fakes.getVmMemoryDynamicMax,
+  invalidateConnection: vi.fn(),
+}))
+vi.mock('/Volumes/zt/dev/xenadminmodern/src/main/xapi/services/metrics-db.service', () => ({
+  persistMetricBatch: vi.fn(), persistVmMetricBatch: vi.fn(),
+  downsampleOldMetrics: vi.fn(), cleanupOldMetrics: vi.fn(), initDatabase: vi.fn(),
+  getMetricsRange: vi.fn(), getMetricStats: vi.fn(), getVmMetricsRange: vi.fn(),
+}))
+describe('performance review: real metrics scheduler, synthetic transport', () => {
+  it('reproduces overlapping VM sweeps and continued dispatch after stopping', async () => {
+    vi.useFakeTimers()
+    const service = await import('/Volumes/zt/dev/xenadminmodern/src/main/xapi/services/metrics.service')
+    let active = 0, peak = 0
+    fakes.getAllHostUuids.mockResolvedValue([])
+    fakes.getVmMemoryDynamicMax.mockResolvedValue(1024)
+    fakes.getRunningVmUuids.mockResolvedValue(Array.from({ length: 500 }, (_, i) => ({ vmRef: `vm-${i}`, vmUuid: `uuid-${i}`, vmName: `VM ${i}`, memoryDynamicMax: 1024 })))
+    fakes.fetchVmRrd.mockImplementation(() => {
+      active++; peak = Math.max(peak, active)
+      return new Promise((resolve) => setTimeout(() => {
+        active--
+        resolve('<rrd><ds><name>cpu_avg</name><database><row><t>1792700000</t><v>0.25</v></row></database></ds></rrd>')
+      }, 1000))
+    })
+    try {
+      await service.startMetricsCollection('performance-review')
+      await vi.advanceTimersByTimeAsync(90_000)
+      const beforeStop = { sweeps: fakes.getRunningVmUuids.mock.calls.length, requests: fakes.fetchVmRrd.mock.calls.length, active, peak }
+      expect(beforeStop.sweeps).toBe(1)
+      expect(beforeStop.peak).toBe(5)
+      service.stopAllCollections()
+      const stopCount = fakes.fetchVmRrd.mock.calls.length
+      await vi.advanceTimersByTimeAsync(5000)
+      const afterStop = { newRequests: fakes.fetchVmRrd.mock.calls.length - stopCount, active }
+      expect(afterStop.newRequests).toBe(0)
+      writeFileSync('/private/tmp/xenadmin-performance-20261023.JlaZxp/metrics-overlap-after.json', JSON.stringify({ vmCount: 500, syntheticRequestLatencyMs: 1000, simulatedMs: 90_000, beforeStop, afterStop }, null, 2))
+    } finally { service.stopAllCollections(); vi.clearAllTimers(); vi.useRealTimers() }
+  })
+  it('reproduces one serialized memory-record lookup per VM in the incremental path', async () => {
+    vi.useFakeTimers()
+    vi.clearAllMocks()
+    const service = await import('/Volumes/zt/dev/xenadminmodern/src/main/xapi/services/metrics.service')
+    const now = Math.floor(Date.now() / 1000)
+    let active = 0, peak = 0, completed = 0
+    fakes.getAllHostUuids.mockResolvedValue([{ hostRef: 'host', hostUuid: 'host-uuid', hostName: 'Host' }])
+    fakes.getRunningVmUuids.mockResolvedValueOnce([]).mockResolvedValue(Array.from({ length: 200 }, (_, i) => ({ vmRef: `vm-${i}`, vmUuid: `uuid-${i}`, vmName: `VM ${i}`, memoryDynamicMax: 1024 })))
+    fakes.fetchHostRrd.mockResolvedValue(`<rrd><ds><name>cpu_avg</name><database><row><t>${now}</t><v>0.25</v></row></database></ds></rrd>`)
+    fakes.fetchRrdUpdates.mockResolvedValue(`<xport><meta><legend>${Array.from({length: 200}, (_, i) => `<entry>AVERAGE:vm:uuid-${i}:cpu_avg</entry>`).join('')}</legend></meta><data><row><t>${now + 10}</t>${'<v>0.25</v>'.repeat(200)}</row></data></xport>`)
+    fakes.getVmMemoryDynamicMax.mockImplementation(() => {
+      active++; peak = Math.max(peak, active)
+      return new Promise<number>((resolve) => setTimeout(() => { active--; completed++; resolve(1024) }, 100))
+    })
+    try {
+      await service.startMetricsCollection('performance-review', { interval: 60_000 })
+      await vi.advanceTimersByTimeAsync(29_999)
+      expect(completed).toBe(0)
+      expect(fakes.fetchRrdUpdates).toHaveBeenCalledTimes(2)
+      await vi.advanceTimersByTimeAsync(1)
+      expect(completed).toBe(0)
+      expect(peak).toBe(0)
+      writeFileSync('/private/tmp/xenadmin-performance-20261023.JlaZxp/incremental-n-plus-one-after.json', JSON.stringify({ vmCount: 200, syntheticMemoryLookupLatencyMs: 100, configuredIncrementalIntervalMs: 10_000, totalMemoryLookupRequests: fakes.getVmMemoryDynamicMax.mock.calls.length, peakMemoryLookupConcurrency: peak, firstIncrementalCompletedAfterMs: 0, incrementalHttpRequestsAt30s: fakes.fetchRrdUpdates.mock.calls.length }, null, 2))
+    } finally { service.stopAllCollections(); vi.clearAllTimers(); vi.useRealTimers() }
+  })
+})

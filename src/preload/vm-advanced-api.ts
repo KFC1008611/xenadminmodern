@@ -1,0 +1,51 @@
+import {
+  vmAdvancedAddAntiAffinityContract,
+  vmAdvancedAddTagContract,
+  vmAdvancedDisableProtectionContract,
+  vmAdvancedEnableProtectionContract,
+  vmAdvancedGetAffinityContract,
+  vmAdvancedGetAllConfigsContract,
+  vmAdvancedGetConfigContract,
+  vmAdvancedRemoveAntiAffinityContract,
+  vmAdvancedRemoveTagContract,
+  vmAdvancedSetAffinityContract,
+  vmAdvancedSetAntiAffinityContract,
+  vmAdvancedSetBootOrderContract,
+  vmAdvancedSetHvmBootParamsContract,
+  vmAdvancedSetOtherConfigContract,
+  vmAdvancedSetPlatformParamContract,
+  vmAdvancedSetStartDelayContract,
+  vmAdvancedSetStartOrderContract,
+  vmAdvancedSetVcpuHotplugContract,
+  vmAdvancedSetVcpusNumberContract,
+  vmAdvancedSetViridianContract,
+} from '../shared/ipc-contracts/vm-advanced'
+import {
+  createIpcContractInvoker,
+  type IpcInvokeTransport,
+} from './ipc-contract-client'
+
+export function createVmAdvancedApi(transport: IpcInvokeTransport) {
+  return {
+    getConfig: createIpcContractInvoker(vmAdvancedGetConfigContract, transport),
+    getAllConfigs: createIpcContractInvoker(vmAdvancedGetAllConfigsContract, transport),
+    setAffinity: createIpcContractInvoker(vmAdvancedSetAffinityContract, transport),
+    getAffinity: createIpcContractInvoker(vmAdvancedGetAffinityContract, transport),
+    setAntiAffinity: createIpcContractInvoker(vmAdvancedSetAntiAffinityContract, transport),
+    addAntiAffinity: createIpcContractInvoker(vmAdvancedAddAntiAffinityContract, transport),
+    removeAntiAffinity: createIpcContractInvoker(vmAdvancedRemoveAntiAffinityContract, transport),
+    enableProtection: createIpcContractInvoker(vmAdvancedEnableProtectionContract, transport),
+    disableProtection: createIpcContractInvoker(vmAdvancedDisableProtectionContract, transport),
+    setVcpuHotplug: createIpcContractInvoker(vmAdvancedSetVcpuHotplugContract, transport),
+    setVcpusNumber: createIpcContractInvoker(vmAdvancedSetVcpusNumberContract, transport),
+    setStartDelay: createIpcContractInvoker(vmAdvancedSetStartDelayContract, transport),
+    setBootOrder: createIpcContractInvoker(vmAdvancedSetBootOrderContract, transport),
+    setHvmBootParams: createIpcContractInvoker(vmAdvancedSetHvmBootParamsContract, transport),
+    setPlatformParam: createIpcContractInvoker(vmAdvancedSetPlatformParamContract, transport),
+    setViridian: createIpcContractInvoker(vmAdvancedSetViridianContract, transport),
+    setOtherConfig: createIpcContractInvoker(vmAdvancedSetOtherConfigContract, transport),
+    addTag: createIpcContractInvoker(vmAdvancedAddTagContract, transport),
+    removeTag: createIpcContractInvoker(vmAdvancedRemoveTagContract, transport),
+    setStartOrder: createIpcContractInvoker(vmAdvancedSetStartOrderContract, transport),
+  }
+}

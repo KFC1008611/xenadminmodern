@@ -1,0 +1,101 @@
+{
+  "date": "2026-10-23",
+  "scope": "当前工作区源码；未安装或发布",
+  "toolchain": {
+    "nodeVersion": "24.22.0",
+    "npmVersion": "11.19.1",
+    "lockfileVersion": 3
+  },
+  "fullTests": {
+    "schemaVersion": 1,
+    "kind": "xenadmin-test-gate",
+    "ok": true,
+    "toolchain": {
+      "nodeVersion": "24.22.0",
+      "npmVersion": "11.19.1",
+      "lockfileVersion": 3
+    },
+    "collection": {
+      "mode": "full",
+      "manifestChecked": true,
+      "fileCount": 193,
+      "testCount": 1943,
+      "expectedFileCount": 193,
+      "expectedTestCount": 1943,
+      "drift": {
+        "missing": [],
+        "unexpected": [],
+        "countMismatches": []
+      }
+    },
+    "tests": {
+      "passed": 1943,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "onlyDetected": false
+    },
+    "diagnostics": {
+      "warningCount": 0,
+      "stderr": {
+        "bytes": 0,
+        "lineCount": 0
+      }
+    },
+    "errors": []
+  },
+  "checks": {
+    "typecheck:web": {
+      "passed": true,
+      "command": "npm run typecheck:web"
+    },
+    "typecheck:node": {
+      "passed": true,
+      "command": "npm run typecheck:node"
+    },
+    "lint": {
+      "passed": true,
+      "command": "npm run lint"
+    },
+    "build": {
+      "passed": true,
+      "command": "npm run build"
+    }
+  },
+  "diffWhitespaceCheck": true,
+  "browser": {
+    "layoutChecks": 96,
+    "routes": 12,
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "viewports": [
+      [
+        1024,
+        768
+      ],
+      [
+        1280,
+        800
+      ],
+      [
+        1440,
+        900
+      ],
+      [
+        1920,
+        1080
+      ]
+    ],
+    "consoleWarningsAndErrors": [],
+    "record": "browser-validation.json"
+  },
+  "textContrast": {
+    "pairs": 70,
+    "minimumRatio": 4.579,
+    "record": "contrast-validation.json"
+  },
+  "installedAppUpdated": false,
+  "liveXcpNgValidated": false
+}

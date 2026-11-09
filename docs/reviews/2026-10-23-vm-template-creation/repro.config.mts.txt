@@ -1,0 +1,13 @@
+export default {
+  resolve: { alias: {
+    react: '/Volumes/zt/dev/xenadminmodern/node_modules/react',
+    vitest: '/Volumes/zt/dev/xenadminmodern/node_modules/vitest',
+    '@testing-library/react': '/Volumes/zt/dev/xenadminmodern/node_modules/@testing-library/react',
+  } },
+  esbuild: { jsx: 'automatic' },
+  test: {
+    globals: true, environment: 'jsdom', fileParallelism: false,
+    include: ['/private/tmp/xenadmin-template-audit-20261023/repro.test.tsx'],
+    setupFiles: ['/Volumes/zt/dev/xenadminmodern/tests/components/setup.ts'],
+  },
+}

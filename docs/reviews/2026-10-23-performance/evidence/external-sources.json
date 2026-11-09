@@ -1,0 +1,42 @@
+[
+  {
+    "name": "electron-performance",
+    "url": "https://www.electronjs.org/docs/latest/tutorial/performance",
+    "resolvedUrl": "https://www.electronjs.org/docs/latest/tutorial/performance",
+    "status": 200,
+    "bytes": 70769
+  },
+  {
+    "name": "xapi-event",
+    "url": "https://xapi-project.github.io/xen-api/classes/event.html",
+    "resolvedUrl": "https://xapi-project.github.io/xen-api/classes/event.html",
+    "status": 200,
+    "bytes": 32143
+  },
+  {
+    "name": "xapi-metrics",
+    "url": "https://xapi-project.github.io/xen-api/metrics.html",
+    "resolvedUrl": "https://xapi-project.github.io/xen-api/metrics.html",
+    "status": 200,
+    "bytes": 296115
+  },
+  {
+    "name": "xo-metrics",
+    "url": "https://docs.xen-orchestra.com/manage-your-infrastructure/metrics",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "name": "xo-infrastructure",
+    "url": "https://docs.xen-orchestra.com/manage-your-infrastructure/manage_infrastructure",
+    "resolvedUrl": "https://docs.xen-orchestra.com/manage-your-infrastructure/manage_infrastructure",
+    "status": 200,
+    "bytes": 182443
+  },
+  {
+    "name": "xencenter-performance",
+    "url": "https://docs.xenserver.com/en-us/xencenter/current-release/vms-performance.html",
+    "resolvedUrl": "https://docs.xenserver.com/us/en/home.html",
+    "status": 200,
+    "bytes": 49343
+  }
+]

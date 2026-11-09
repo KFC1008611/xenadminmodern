@@ -1,0 +1,197 @@
+{
+  "date": "2026-10-23",
+  "scope": "Template wizard repairs and XenAdmin-compatible Quick Create combined in current worktree",
+  "focusedTestGate": {
+    "schemaVersion": 1,
+    "kind": "xenadmin-test-gate",
+    "ok": true,
+    "toolchain": {
+      "nodeVersion": "24.22.0",
+      "npmVersion": "11.19.1",
+      "lockfileVersion": 3
+    },
+    "collection": {
+      "mode": "focused",
+      "manifestChecked": false,
+      "fileCount": 14,
+      "testCount": 278,
+      "expectedFileCount": null,
+      "expectedTestCount": null,
+      "drift": {
+        "missing": [],
+        "unexpected": [],
+        "countMismatches": []
+      }
+    },
+    "tests": {
+      "passed": 278,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "onlyDetected": false
+    },
+    "diagnostics": {
+      "warningCount": 0,
+      "stderr": {
+        "bytes": 0,
+        "lineCount": 0
+      }
+    },
+    "errors": []
+  },
+  "typecheckNode": {
+    "exitCode": 0
+  },
+  "typecheckWeb": {
+    "exitCode": 0
+  },
+  "lint": {
+    "exitCode": 0,
+    "maxWarnings": 0
+  },
+  "build": {
+    "exitCode": 0,
+    "output": "out/",
+    "installedApplicationUpdated": false
+  },
+  "fullSuiteAttempt": {
+    "gate": {
+      "schemaVersion": 1,
+      "kind": "xenadmin-test-gate",
+      "ok": false,
+      "toolchain": {
+        "nodeVersion": "24.22.0",
+        "npmVersion": "11.19.1",
+        "lockfileVersion": 3
+      },
+      "collection": {
+        "mode": "full",
+        "manifestChecked": true,
+        "fileCount": 195,
+        "testCount": 2025,
+        "expectedFileCount": 195,
+        "expectedTestCount": 2025,
+        "drift": {
+          "missing": [],
+          "unexpected": [],
+          "countMismatches": []
+        }
+      },
+      "tests": {
+        "passed": 1961,
+        "failed": 56,
+        "skipped": 8,
+        "todo": 0,
+        "onlyDetected": false
+      },
+      "diagnostics": {
+        "warningCount": 0,
+        "stderr": {
+          "bytes": 35071,
+          "lineCount": 991
+        }
+      },
+      "errors": [
+        "Vitest exited with status 1",
+        "8 skipped tests is not permitted",
+        "Vitest wrote 991 stderr lines"
+      ]
+    },
+    "limitations": [
+      "Loopback HTTP/TLS servers cannot listen under workspace sandbox (EPERM on 127.0.0.1 and ::1)",
+      "Two metrics-service assertions and one multiData-vm-events assertion failed in the concurrently modified workspace; these modules were not changed for this task",
+      "The manifest sorting assertion from that run was fixed and subsequently passed in the 278-test focused gate"
+    ]
+  },
+  "browserLayout": {
+    "executed": false,
+    "preparedScript": "/private/tmp/xenadmin-template-visual.cjs",
+    "plannedViewports": [
+      [
+        1024,
+        768
+      ],
+      [
+        1280,
+        800
+      ],
+      [
+        1440,
+        900
+      ],
+      [
+        1920,
+        1080
+      ]
+    ],
+    "plannedThemes": [
+      "light",
+      "dark"
+    ],
+    "blockers": [
+      "Automatic approval service returned 403 Forbidden / insufficient balance before launching headless Chrome",
+      "An alternative in-app browser request was explicitly rejected as bypassing the unresolved approval failure; no further browser action attempted"
+    ],
+    "needsUserApproval": true
+  },
+  "realPoolMutations": false,
+  "realXcpNgAcceptance": false,
+  "sourceSha256": {
+    "src/main/xapi/services/vm-creation.service.ts": "73de491131279ed2eccac23f45b7e25dd37460fc86e47e30d5ad8927fce54c87",
+    "src/main/xapi/services/vm-quick-create.service.ts": "ea09602f2aa12b765c0edb3f9bb2aadfb087a2cba7809c1c0e60ea4db25400e6",
+    "src/main/xapi/services/template-metadata.service.ts": "3cf430da357caf5ddd555a1cfc1668556073189d1baf1f7d39e926c0ceb2aa60",
+    "src/shared/template-quick-create.ts": "12cedf0ae8a453fbe1f7c6b6990825382a1cce3c8a80eead33921daa306f207a",
+    "src/shared/vm-creation.ts": "a51adfebfcf0e3b180980ac47a0c81d0fa12745e55d762868b19fcfd9b8770af",
+    "src/shared/types/xapi.ts": "3d7b5e39be2d2886bb85e64a6e1708387be364ebe94bb60ad950f1df949a9066",
+    "src/shared/ipc-contracts/vm.ts": "dbe00e51cc2c744becb74088821c310472315898882348041fe632db10cd0324",
+    "src/renderer/src/pages/VmsPage.tsx": "7649dc6cb39200d05ae3628c252c9232934d7d882f52e87f2a7327f9df9f0058",
+    "src/renderer/src/components/wizard/CreateVmWizard.tsx": "83693f19477362d5f359230e542fdbc5fd5b3bf191139be8dfe0467bd208dd06",
+    "src/renderer/src/components/wizard/vmWizardModel.ts": "330fa357f525490b4109cce189ca2257dba5ac19e02c1ae32e606ac4aa5e0b9d",
+    "src/renderer/src/components/wizard/steps/Step1Template.tsx": "7e365dbfb03d727801eeb4c71ee6a747f030e2365bce44d6f1065949aff31bcc",
+    "src/renderer/src/components/wizard/steps/Step2Name.tsx": "9e98b70647f65260b778d09f39fb79ff395f2134205d448aad9f5bc81c3ef7e3",
+    "src/renderer/src/components/wizard/steps/Step3Cpu.tsx": "f6bcaeec5cc6315fc828fc4e3c8d5112abef9f0c29cb0f6aad4dfa389c501139",
+    "src/renderer/src/components/wizard/steps/Step4Disk.tsx": "b49640de94d3f56e8f11411744f45df034406cb7ece3736f95fdfd3741fbb41c",
+    "src/renderer/src/components/wizard/steps/Step5Network.tsx": "f93840908031227515ff82b548d4ac4a29d7c90630636fd24fc6a2cfdba9391b",
+    "src/renderer/src/components/wizard/steps/Step6Review.tsx": "f04a4af832b7453e20c6acac7de9ecdd29970872ada1179cb3c5e2bb7883b719",
+    "src/renderer/src/components/wizard/steps/StepInstallMedia.tsx": "3bd56b936e309b8d5a90d308cf86b3bb7a04efc58b645043ba51707599578d6c",
+    "src/renderer/src/components/wizard/steps/StepPlacement.tsx": "32f79047382adf511bcbe71ffb847503f81bcd9aff928ee961e402a865fc6ed1"
+  },
+  "claimsTestGate": {
+    "schemaVersion": 1,
+    "kind": "xenadmin-test-gate",
+    "ok": true,
+    "toolchain": {
+      "nodeVersion": "24.22.0",
+      "npmVersion": "11.19.1",
+      "lockfileVersion": 3
+    },
+    "collection": {
+      "mode": "focused",
+      "manifestChecked": false,
+      "fileCount": 2,
+      "testCount": 8,
+      "expectedFileCount": null,
+      "expectedTestCount": null,
+      "drift": {
+        "missing": [],
+        "unexpected": [],
+        "countMismatches": []
+      }
+    },
+    "tests": {
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "onlyDetected": false
+    },
+    "diagnostics": {
+      "warningCount": 0,
+      "stderr": {
+        "bytes": 0,
+        "lineCount": 0
+      }
+    },
+    "errors": []
+  }
+}

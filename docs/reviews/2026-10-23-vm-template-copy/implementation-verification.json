@@ -1,0 +1,164 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-23T14:49:06.131438+08:00",
+  "workspaceHead": "7c3e7e67bb3fea8e59b2c4bc53d720392d1c982d",
+  "workspaceDirty": true,
+  "scope": "Current source and local controlled verification; no installed-app update or real pool mutation",
+  "checks": {
+    "typecheck:node": {
+      "exitCode": 0,
+      "log": "implementation-evidence/typecheck-node.log"
+    },
+    "typecheck:web": {
+      "exitCode": 0,
+      "log": "implementation-evidence/typecheck-web.log"
+    },
+    "lint": {
+      "exitCode": 0,
+      "log": "implementation-evidence/lint.log"
+    },
+    "build": {
+      "exitCode": 0,
+      "log": "implementation-evidence/build.log"
+    },
+    "diffWhitespace": {
+      "exitCode": 0
+    }
+  },
+  "fullTestGate": {
+    "schemaVersion": 1,
+    "kind": "xenadmin-test-gate",
+    "ok": true,
+    "toolchain": {
+      "nodeVersion": "24.22.0",
+      "npmVersion": "11.19.1",
+      "lockfileVersion": 3
+    },
+    "collection": {
+      "mode": "full",
+      "manifestChecked": true,
+      "fileCount": 191,
+      "testCount": 1886,
+      "expectedFileCount": 191,
+      "expectedTestCount": 1886,
+      "drift": {
+        "missing": [],
+        "unexpected": [],
+        "countMismatches": []
+      }
+    },
+    "tests": {
+      "passed": 1886,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "onlyDetected": false
+    },
+    "diagnostics": {
+      "warningCount": 0,
+      "stderr": {
+        "bytes": 0,
+        "lineCount": 0
+      }
+    },
+    "errors": []
+  },
+  "copyTestGate": {
+    "schemaVersion": 1,
+    "kind": "xenadmin-test-gate",
+    "ok": true,
+    "toolchain": {
+      "nodeVersion": "24.22.0",
+      "npmVersion": "11.19.1",
+      "lockfileVersion": 3
+    },
+    "collection": {
+      "mode": "focused",
+      "manifestChecked": false,
+      "fileCount": 4,
+      "testCount": 41,
+      "expectedFileCount": null,
+      "expectedTestCount": null,
+      "drift": {
+        "missing": [],
+        "unexpected": [],
+        "countMismatches": []
+      }
+    },
+    "tests": {
+      "passed": 41,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "onlyDetected": false
+    },
+    "diagnostics": {
+      "warningCount": 0,
+      "stderr": {
+        "bytes": 0,
+        "lineCount": 0
+      }
+    },
+    "errors": []
+  },
+  "browser": {
+    "runtime": "headless Google Chrome with actual React components and controlled IPC",
+    "scenarios": 9,
+    "viewports": [
+      "1024x720",
+      "1280x800",
+      "1440x900"
+    ],
+    "horizontalOverflow": false,
+    "enterSubmissions": 1,
+    "cancelStatus": "cancelling",
+    "pageErrors": [],
+    "evidence": "implementation-evidence/visual-results.json"
+  },
+  "sourceSha256": {
+    "src/main/xapi/services/vm-copy-resources.ts": "d082c9c3b8fd988bad55729a67926b11cbe94fbfaf03af1d176d63a6fcbe4542",
+    "src/main/xapi/services/vm-copy.service.ts": "c3fc2764c52a935b8b0e65ca8a7aa3d7a9a3a572eca11d508911ef378094a647",
+    "src/main/xapi/services/vm.service.ts": "3793a6ac398cca55a8bb3231299832cdf96579a0518607d4c0c7aa57d6f1b814",
+    "src/main/xapi/services/vm-relocation.service.ts": "af50606457a8b99e7df4fceaa0e8a77340abf98b5fb26b594aa54adc901531b1",
+    "src/main/xapi/services/storage.service.ts": "d7a4f0b65f578dc22b35b82af5ff201416342948f227faceeebf035bdee9926f",
+    "src/main/ipc/handlers/vm.ts": "c632a2036d767421219ab543d18d1cd85e5bf544639b0d62771cd452ebcc2f2d",
+    "src/shared/types/xapi.ts": "08d3477d86263f01f15c28827cc82dcada92000bcd8c4877132c414b3df03d85",
+    "src/shared/ipc-contracts/vm-copy.ts": "3a1f1c08e1b615efe421142de1d95c65a43ecd62300fe4b86e983105d52f218c",
+    "src/shared/ipc-contracts/vm.ts": "ca75c9663d1c72eef1a61b22b73527ee5c73232761a33478540ce17bb5ccb843",
+    "src/shared/channels.ts": "204a98ffb0be1fc144f91498184788ae061ecb55b084195c02b4c0ba07191f77",
+    "src/shared/evidence-manifest.ts": "23ae15fbd16875a26e9bbbd790b132635fcea6bbb87d74a29fcda465e9d4c4e4",
+    "src/shared/audited-features.ts": "6fd341a1085ca4eed1d55615532baffbefdcffba34784f8b0cbec18d8f4a9310",
+    "src/preload/index.ts": "111535726bca2e16b261a6feeb90e09a1e5b898bdecea74666c344e9b78c71f5",
+    "src/preload/ipc-bridge.ts": "b27b4f37fb04d34c912b34013250ee45938e23e8b21923d7951c5c71bf2dddae",
+    "src/shared/ipc-bridge.ts": "a50585afb5ea38cb2ffb00ca7787dfa8341166b1539a454debc3d44dd0924ae0",
+    "src/renderer/src/components/vm/CopyVmDialog.tsx": "bafb35316e52ff60a6fe78654676d01ec8d555db8f1a741af9a88bf3baacc222",
+    "src/renderer/src/components/vm/CopyTaskPanel.tsx": "5fe0b8e34749c7057536f6209cdba832500ee5e1ce8b933da15283c92ca33993",
+    "src/renderer/src/components/template/CloneTemplateDialog.tsx": "87e415d545ff8cfbd6ccb62024996c8ab3a4b181ea0423497473c5b42d5305e2",
+    "src/renderer/src/components/vm/VmRelocateDialog.tsx": "f0435a29adaf7934999c6abbbe164536a7556dd7ce30eea2aa8ddb6d0499556e",
+    "src/renderer/src/store/copy.store.ts": "b9acb30aa0b5276107d603262c591fa2538a2de7293e8cd595e25c879e894d34",
+    "src/renderer/src/types/xapi.ts": "369164a6b74f797e58622dca5b9eb8684b08c7b687565b6519e6727b8dc437ac",
+    "src/renderer/src/pages/VmsPage.tsx": "1bb5582da149f610eb201efe73af4ef4794e903723699920d9a89d105def8911",
+    "src/renderer/src/App.tsx": "c3c20113a2a0d6418dc5e2d9cc271435c8313d5030dcd6dafc64354d47e3e462",
+    "package.json": "8029b52ba2aef8d5563117035e3adf5ca9c254bc5d0e9cf660f53867fa3283ac",
+    "package-lock.json": "fc1a26f15358c44514e912a0e35161414a235ac010f9415c1771d1279d75080b",
+    "tests/test-collection.json": "12d2b350beb200c8076cd80920210c635f4856058734af1ececb9d8a0f2c7013",
+    "tests/unit/vm-copy-workflow.test.ts": "e057e39159f330932665d888f8b1028de6050e697542c9050ce3112429f3cadb",
+    "tests/unit/vm-copy-contract.test.ts": "8260babd316e839def4ba99c63ca209822c66347ae92e25a019aea6c10205dfd",
+    "tests/components/CopyTaskPanel.test.tsx": "496ee048867883618ab5413e0d16087f936eac038fa1f63711afe18bb1539335",
+    "tests/components/CopyVmSafetyGate.test.tsx": "fe84aa457f5e1169ec13b1426ca4fe6f634ff15e63d313326b7c0217b0dc7a14",
+    "tests/helpers/vm-copy-fixtures.ts": "9c413f91c58e072989b7f0bddb9f313ebe2bfdea38d57a92c3b51bfc23199eaf"
+  },
+  "unverified": [
+    "real XCP-ng/XenServer versions, storage backends and RBAC",
+    "real cancellation, partial results and cross-restart recovery",
+    "installed Electron application and distribution package",
+    "actual copy throughput and long-running behavior"
+  ],
+  "unimplemented": [
+    "online snapshot preparation",
+    "batch copy and naming rules",
+    "vGPU mappings",
+    "compression",
+    "cross-pool disk format conversion"
+  ]
+}

@@ -1,0 +1,167 @@
+{
+  "ok": true,
+  "cases": [
+    {
+      "width": 1024,
+      "height": 768,
+      "theme": "light",
+      "panels": {
+        "count": 2,
+        "overflow": false,
+        "cancelButtons": 0,
+        "panelsInViewport": true,
+        "progressBarsOnMissingImports": 0,
+        "theme": "light"
+      },
+      "draft": {
+        "clean": true,
+        "historyCount": 2,
+        "withinViewport": true,
+        "overflow": false
+      },
+      "localRemovalWithoutServerWrite": true
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "theme": "dark",
+      "panels": {
+        "count": 2,
+        "overflow": false,
+        "cancelButtons": 0,
+        "panelsInViewport": true,
+        "progressBarsOnMissingImports": 0,
+        "theme": "dark"
+      },
+      "draft": {
+        "clean": true,
+        "historyCount": 2,
+        "withinViewport": true,
+        "overflow": false
+      },
+      "localRemovalWithoutServerWrite": true
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "theme": "light",
+      "panels": {
+        "count": 2,
+        "overflow": false,
+        "cancelButtons": 0,
+        "panelsInViewport": true,
+        "progressBarsOnMissingImports": 0,
+        "theme": "light"
+      },
+      "draft": {
+        "clean": true,
+        "historyCount": 2,
+        "withinViewport": true,
+        "overflow": false
+      },
+      "localRemovalWithoutServerWrite": true
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "theme": "dark",
+      "panels": {
+        "count": 2,
+        "overflow": false,
+        "cancelButtons": 0,
+        "panelsInViewport": true,
+        "progressBarsOnMissingImports": 0,
+        "theme": "dark"
+      },
+      "draft": {
+        "clean": true,
+        "historyCount": 2,
+        "withinViewport": true,
+        "overflow": false
+      },
+      "localRemovalWithoutServerWrite": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "panels": {
+        "count": 2,
+        "overflow": false,
+        "cancelButtons": 0,
+        "panelsInViewport": true,
+        "progressBarsOnMissingImports": 0,
+        "theme": "light"
+      },
+      "draft": {
+        "clean": true,
+        "historyCount": 2,
+        "withinViewport": true,
+        "overflow": false
+      },
+      "localRemovalWithoutServerWrite": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "panels": {
+        "count": 2,
+        "overflow": false,
+        "cancelButtons": 0,
+        "panelsInViewport": true,
+        "progressBarsOnMissingImports": 0,
+        "theme": "dark"
+      },
+      "draft": {
+        "clean": true,
+        "historyCount": 2,
+        "withinViewport": true,
+        "overflow": false
+      },
+      "localRemovalWithoutServerWrite": true
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "panels": {
+        "count": 2,
+        "overflow": false,
+        "cancelButtons": 0,
+        "panelsInViewport": true,
+        "progressBarsOnMissingImports": 0,
+        "theme": "light"
+      },
+      "draft": {
+        "clean": true,
+        "historyCount": 2,
+        "withinViewport": true,
+        "overflow": false
+      },
+      "localRemovalWithoutServerWrite": true
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "panels": {
+        "count": 2,
+        "overflow": false,
+        "cancelButtons": 0,
+        "panelsInViewport": true,
+        "progressBarsOnMissingImports": 0,
+        "theme": "dark"
+      },
+      "draft": {
+        "clean": true,
+        "historyCount": 2,
+        "withinViewport": true,
+        "overflow": false
+      },
+      "localRemovalWithoutServerWrite": true
+    }
+  ],
+  "rendererExceptions": [],
+  "realPoolAccess": false
+}

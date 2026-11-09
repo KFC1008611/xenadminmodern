@@ -1,0 +1,125 @@
+import React from 'react'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { CloneTemplateDialog } from '/Volumes/zt/dev/xenadminmodern/src/renderer/src/components/template/CloneTemplateDialog'
+import { VmRelocateDialog } from '/Volumes/zt/dev/xenadminmodern/src/renderer/src/components/vm/VmRelocateDialog'
+import { useConnectionManagerStore } from '/Volumes/zt/dev/xenadminmodern/src/renderer/src/store/connectionManager.store'
+const mocks=vi.hoisted(()=>({source:vi.fn(),target:vi.fn(),toast:{success:vi.fn(),error:vi.fn(),info:vi.fn()}}))
+vi.mock('/Volumes/zt/dev/xenadminmodern/src/renderer/src/components/toast/useToast',()=>({useToast:()=>mocks.toast}))
+vi.mock('/Volumes/zt/dev/xenadminmodern/src/main/xapi/connection-manager',()=>({connectionManager:{getClient:(id:string)=>({callWithSession:id==='target'?mocks.target:mocks.source}),getConnectionInfo:()=>({poolName:'same pool',poolUuid:'same-pool-uuid'})}}))
+const defer=()=>{let resolve:any;const promise=new Promise<any>(r=>resolve=r);return {resolve,promise}}
+const templateA={ref:'OpaqueRef:tplA',name_label:'Template A',connectionId:'source'}
+const templateB={ref:'OpaqueRef:tplB',name_label:'Template B',connectionId:'target'}
+const sr=(ref:string,name=ref)=>({ref,name_label:name,physical_size:100,physical_utilisation:0,type:'nfs',PBDs:['OpaqueRef:pbd']})
+const templateProps={open:true,onClose:vi.fn(),onSuccess:vi.fn(),template:templateA}
+let api:any
+beforeEach(()=>{
+ vi.clearAllMocks()
+ api={storage:{listSrs:vi.fn().mockResolvedValue([])},template:{clone:vi.fn().mockResolvedValue('OpaqueRef:created')},vm:{getRelocationPlan:vi.fn()}}
+ ;(window as any).xapi=api
+ mocks.source.mockReset();mocks.target.mockReset()
+})
+afterEach(()=>{cleanup();vi.restoreAllMocks()})
+describe('Intentional defect reproductions; passing means current behavior reproduced',()=>{
+ it('R01 permits a second copy after the server creates a template but its reply is lost',async()=>{
+  let created=0
+  api.template.clone.mockImplementation(async()=>{created++;if(created===1)throw new Error('ECONNRESET after commit');return 'OpaqueRef:created2'})
+  render(<CloneTemplateDialog {...templateProps}/>);
+  await waitFor(()=>expect(screen.getByRole('button',{name:'复制模板'})).toBeEnabled())
+  fireEvent.click(screen.getByRole('button',{name:'复制模板'}))
+  await screen.findByText('ECONNRESET after commit')
+  expect(screen.getByRole('button',{name:'复制模板'})).toBeEnabled()
+  fireEvent.click(screen.getByRole('button',{name:'复制模板'}))
+  await waitFor(()=>expect(created).toBe(2))
+ })
+ it('R02 submits a full copy to a disconnected, full SR offered without screening',async()=>{
+  api.storage.listSrs.mockResolvedValue([{...sr('OpaqueRef:full','Full disconnected SR'),PBDs:[],physical_utilisation:100}])
+  render(<CloneTemplateDialog {...templateProps}/>);
+  await screen.findByRole('option',{name:/Full disconnected SR/})
+  fireEvent.change(screen.getByRole('combobox'),{target:{value:'OpaqueRef:full'}})
+  fireEvent.click(screen.getByRole('button',{name:'复制模板'}))
+  await waitFor(()=>expect(api.template.clone).toHaveBeenCalledWith('source',expect.objectContaining({targetSrRef:'OpaqueRef:full'})))
+ })
+ it('R03 an old pool SR response replaces the current template pool choices',async()=>{
+  const a=defer(),b=defer();api.storage.listSrs.mockReturnValueOnce(a.promise).mockReturnValueOnce(b.promise)
+  const v=render(<CloneTemplateDialog {...templateProps}/>);
+  v.rerender(<CloneTemplateDialog {...templateProps} template={templateB}/>);
+  await act(async()=>b.resolve([sr('OpaqueRef:srB','Pool B storage')]))
+  expect(screen.getByRole('option',{name:/Pool B storage/})).toBeInTheDocument()
+  await act(async()=>a.resolve([sr('OpaqueRef:srA','Pool A storage')]))
+  expect(screen.queryByRole('option',{name:/Pool B storage/})).toBeNull()
+  expect(screen.getByRole('option',{name:/Pool A storage/})).toBeInTheDocument()
+  expect(screen.getByRole('textbox')).toHaveValue('Copy of Template B')
+ })
+ it('R04 a new pool fetch failure leaves old pool storage selectable and submittable',async()=>{
+  vi.spyOn(console,'error').mockImplementation(()=>{})
+  api.storage.listSrs.mockResolvedValueOnce([sr('OpaqueRef:srA','Pool A storage')]).mockRejectedValueOnce(new Error('Pool B fetch failed'))
+  const v=render(<CloneTemplateDialog {...templateProps}/>);
+  await screen.findByRole('option',{name:/Pool A storage/})
+  v.rerender(<CloneTemplateDialog {...templateProps} template={templateB}/>);
+  await waitFor(()=>expect(mocks.toast.error).toHaveBeenCalledWith(expect.stringContaining('Pool B fetch failed')))
+  expect(screen.getByRole('combobox')).toBeEnabled()
+  fireEvent.change(screen.getByRole('combobox'),{target:{value:'OpaqueRef:srA'}})
+  fireEvent.click(screen.getByRole('button',{name:'复制模板'}))
+  await waitFor(()=>expect(api.template.clone).toHaveBeenCalledWith('target',expect.objectContaining({targetSrRef:'OpaqueRef:srA'})))
+ })
+ it('R05 a long copy locks cancellation and closing and exposes no background action',async()=>{
+  api.template.clone.mockReturnValue(new Promise(()=>{}))
+  render(<CloneTemplateDialog {...templateProps}/>);
+  await waitFor(()=>expect(screen.getByRole('button',{name:'复制模板'})).toBeEnabled())
+  fireEvent.click(screen.getByRole('button',{name:'复制模板'}))
+  expect(await screen.findByRole('button',{name:'复制中...'})).toBeDisabled()
+  expect(screen.getByRole('button',{name:'取消'})).toBeDisabled()
+  expect(screen.queryByRole('button',{name:/后台/})).toBeNull()
+  expect(screen.getAllByRole('button').every(b=>b.hasAttribute('disabled'))).toBe(true)
+ })
+ const vm={name_label:'vm',power_state:'Running',allowed_operations:['migrate_send'],VBDs:[],VIFs:[],current_operations:{}}
+ const setupSource=(record:any=vm)=>mocks.source.mockImplementation(async(method:string)=>{
+  if(method==='VM.get_record') return record
+  if(method==='host.get_all_records'||method==='SR.get_all_records'||method==='network.get_all_records') return {}
+  throw Error('Unexpected '+method)
+ })
+ it('R06 cross-pool preflight advertises copy for a running VM',async()=>{
+  setupSource();mocks.target.mockImplementation(async()=>({}))
+  const {getVmRelocationPlan}=await import('/Volumes/zt/dev/xenadminmodern/src/main/xapi/services/vm-relocation.service')
+  const plan=await getVmRelocationPlan('source','OpaqueRef:vm','target')
+  expect(plan.allowedModes).toContain('cross-pool-copy')
+  expect(plan.blockers).toEqual([])
+ })
+ it('R07 a user template cannot enter cross-pool copy at all',async()=>{
+  setupSource({...vm,is_a_template:true,power_state:'Halted'});mocks.target.mockImplementation(async()=>({}))
+  const {getVmRelocationPlan}=await import('/Volumes/zt/dev/xenadminmodern/src/main/xapi/services/vm-relocation.service')
+  const plan=await getVmRelocationPlan('source','OpaqueRef:tpl','target')
+  expect(plan.allowedModes).toEqual([])
+  expect(plan.blockers[0].code).toBe('VM_IS_TEMPLATE')
+ })
+ it('R08 same pool UUID through different connection IDs is classified as cross-pool',async()=>{
+  setupSource({...vm,power_state:'Halted'});mocks.target.mockImplementation(async()=>({}))
+  const {getVmRelocationPlan}=await import('/Volumes/zt/dev/xenadminmodern/src/main/xapi/services/vm-relocation.service')
+  const plan=await getVmRelocationPlan('source','OpaqueRef:vm','target')
+  expect(plan.allowedModes).toEqual(['cross-pool-migrate','cross-pool-copy'])
+ })
+ it('R09 same-pool preflight downloads each full inventory twice',async()=>{
+  setupSource()
+  const {getVmRelocationPlan}=await import('/Volumes/zt/dev/xenadminmodern/src/main/xapi/services/vm-relocation.service')
+  await getVmRelocationPlan('source','OpaqueRef:vm')
+  for(const method of ['host.get_all_records','SR.get_all_records','network.get_all_records'])
+   expect(mocks.source.mock.calls.filter(c=>c[0]===method)).toHaveLength(2)
+ })
+ it('R10 late relocation plan restores pool A resources while target selector stays on pool B',async()=>{
+  useConnectionManagerStore.setState({connections:[{id:'source',poolName:'Source',state:'connected'},{id:'A',poolName:'A',state:'connected'},{id:'B',poolName:'B',state:'connected'}] as any})
+  const p=(target:string)=>({sourceConnectionId:'source',targetConnectionId:target,vmRef:'OpaqueRef:vm',vmName:'VM',powerState:'Halted',allowedModes:target==='source'?['pool-migrate']:['cross-pool-migrate','cross-pool-copy'],blockers:[],warnings:[],disks:[],vifs:[],sourceHosts:[],targetHosts:[{ref:'host-'+target,name_label:'Host '+target,enabled:true}],sourceSrs:[],targetSrs:[],sourceNetworks:[],targetNetworks:[]})
+  const a=defer(),b=defer()
+  api.vm.getRelocationPlan.mockImplementation((_s:any,_v:any,t:string)=>t==='A'?a.promise:t==='B'?b.promise:Promise.resolve(p('source')))
+  const sourceVm={ref:'OpaqueRef:vm',name_label:'VM',connectionId:'source'}
+  render(<VmRelocateDialog open onClose={vi.fn()} onSuccess={vi.fn()} vm={sourceVm}/>);
+  await screen.findByRole('option',{name:'Host source'})
+  fireEvent.change(screen.getAllByRole('combobox')[0],{target:{value:'A'}})
+  fireEvent.change(screen.getAllByRole('combobox')[0],{target:{value:'B'}})
+  await act(async()=>b.resolve(p('B')))
+  expect(screen.getByRole('option',{name:'Host B'})).toBeInTheDocument()
+  await act(async()=>a.resolve(p('A')))
+  expect(screen.getAllByRole('combobox')[0]).toHaveValue('B')
+  expect(screen.getByRole('option',{name:'Host A'})).toBeInTheDocument()
+ })
+})

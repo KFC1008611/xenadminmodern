@@ -1,0 +1,101 @@
+[
+  {
+    "file": "xenadmin-create.cs",
+    "repository": "xenserver/xenadmin",
+    "commit": "b210cd2c2d8547f5bb48b49d71f17429c7d65e44",
+    "path": "XenModel/Actions/VM/CreateVMAction.cs",
+    "url": "https://github.com/xenserver/xenadmin/blob/b210cd2c2d8547f5bb48b49d71f17429c7d65e44/XenModel/Actions/VM/CreateVMAction.cs",
+    "sha256": "187337095ccc6745b69d5864e0e032360e1dc67b4b04cb7f0398ec8899d2394e",
+    "gitBlob": "754cd1aad2a0e615564be22095dc6569e57c68d7",
+    "expectedGitBlob": "754cd1aad2a0e615564be22095dc6569e57c68d7",
+    "matchesFixedCommit": true
+  },
+  {
+    "file": "xenadmin-fast.cs",
+    "repository": "xenserver/xenadmin",
+    "commit": "b210cd2c2d8547f5bb48b49d71f17429c7d65e44",
+    "path": "XenModel/Actions/VM/CreateVMFastAction.cs",
+    "url": "https://github.com/xenserver/xenadmin/blob/b210cd2c2d8547f5bb48b49d71f17429c7d65e44/XenModel/Actions/VM/CreateVMFastAction.cs",
+    "sha256": "0440e70d304c3ad850e158862c34c134634f8081e99c8447ed88a69ae12fc1e7",
+    "gitBlob": "74a4426ebaf9bd63e9a54316b8edf02772f3ef53",
+    "expectedGitBlob": "74a4426ebaf9bd63e9a54316b8edf02772f3ef53",
+    "matchesFixedCommit": true
+  },
+  {
+    "file": "xenadmin-storage.cs",
+    "repository": "xenserver/xenadmin",
+    "commit": "b210cd2c2d8547f5bb48b49d71f17429c7d65e44",
+    "path": "XenAdmin/Wizards/NewVMWizard/Page_Storage.cs",
+    "url": "https://github.com/xenserver/xenadmin/blob/b210cd2c2d8547f5bb48b49d71f17429c7d65e44/XenAdmin/Wizards/NewVMWizard/Page_Storage.cs",
+    "sha256": "7904a9095781d3690192aa2a5d2100a88db181d20bf4cd9c331accb1308a23e2",
+    "gitBlob": "3fa8ee27b23cb9629cce4dbd2eb9f84ee87146d4",
+    "expectedGitBlob": "3fa8ee27b23cb9629cce4dbd2eb9f84ee87146d4",
+    "matchesFixedCommit": true
+  },
+  {
+    "file": "xenadmin-install.cs",
+    "repository": "xenserver/xenadmin",
+    "commit": "b210cd2c2d8547f5bb48b49d71f17429c7d65e44",
+    "path": "XenAdmin/Wizards/NewVMWizard/Page_InstallationMedia.cs",
+    "url": "https://github.com/xenserver/xenadmin/blob/b210cd2c2d8547f5bb48b49d71f17429c7d65e44/XenAdmin/Wizards/NewVMWizard/Page_InstallationMedia.cs",
+    "sha256": "ae4f13e54158d4a36e215774feb8b60b856723b641cbbfc5b92a5faaa590576c",
+    "gitBlob": "9bfd54acb20dbe1ccdf8900cd8ac5bedf79ba4bb",
+    "expectedGitBlob": "9bfd54acb20dbe1ccdf8900cd8ac5bedf79ba4bb",
+    "matchesFixedCommit": true
+  },
+  {
+    "file": "xo-vm.mjs",
+    "repository": "vatesfr/xen-orchestra",
+    "commit": "a508ca7897cc869026c54f2b693d67abefb71a21",
+    "path": "packages/xo-server/src/xapi/mixins/vm.mjs",
+    "url": "https://github.com/vatesfr/xen-orchestra/blob/a508ca7897cc869026c54f2b693d67abefb71a21/packages/xo-server/src/xapi/mixins/vm.mjs",
+    "sha256": "ae2fd8ad292c17bb41fcdd0ee53275bf6999f0e9aa9c8ebef63e0271b577fd08",
+    "gitBlob": "b2208bae467f25b553ad4886ede45397bd688140",
+    "expectedGitBlob": "b2208bae467f25b553ad4886ede45397bd688140",
+    "matchesFixedCommit": true
+  },
+  {
+    "file": "xo-new-vm.js",
+    "repository": "vatesfr/xen-orchestra",
+    "commit": "a508ca7897cc869026c54f2b693d67abefb71a21",
+    "path": "packages/xo-web/src/xo-app/new-vm/index.js",
+    "url": "https://github.com/vatesfr/xen-orchestra/blob/a508ca7897cc869026c54f2b693d67abefb71a21/packages/xo-web/src/xo-app/new-vm/index.js",
+    "sha256": "838eeb5234cf49504d256c0ce92b56f7760d28e8304513c548ffda9a0be6fe69",
+    "gitBlob": "5f64717fca7c2ea97e75c373e22b938a1134acbe",
+    "expectedGitBlob": "5f64717fca7c2ea97e75c373e22b938a1134acbe",
+    "matchesFixedCommit": true
+  },
+  {
+    "file": "xapi-vm.ml",
+    "repository": "xapi-project/xen-api",
+    "commit": "e2d37d9c0949ebdab915c0f4061ac3b0e90341c9",
+    "path": "ocaml/xapi/xapi_vm.ml",
+    "url": "https://github.com/xapi-project/xen-api/blob/e2d37d9c0949ebdab915c0f4061ac3b0e90341c9/ocaml/xapi/xapi_vm.ml",
+    "sha256": "8af5a8449f1ec19bc8143d04b0e3411c08d882cf276031d20eef1e947dcd32d3",
+    "gitBlob": "f474ca306cb6f10c4888d87bb1164ba6395ec086",
+    "expectedGitBlob": "f474ca306cb6f10c4888d87bb1164ba6395ec086",
+    "matchesFixedCommit": true
+  },
+  {
+    "file": "xapi-templates.ml",
+    "repository": "xapi-project/xen-api",
+    "commit": "e2d37d9c0949ebdab915c0f4061ac3b0e90341c9",
+    "path": "ocaml/xapi/xapi_templates.ml",
+    "url": "https://github.com/xapi-project/xen-api/blob/e2d37d9c0949ebdab915c0f4061ac3b0e90341c9/ocaml/xapi/xapi_templates.ml",
+    "sha256": "964ca5e8e6bbdbe1aeac6c8f31d310a706a87fc9e336d4afc93593d9c3eada87",
+    "gitBlob": "15c2c33b9765eacc3c585a00afe9383074404a57",
+    "expectedGitBlob": "15c2c33b9765eacc3c585a00afe9383074404a57",
+    "matchesFixedCommit": true
+  },
+  {
+    "file": "xapi-clone.ml",
+    "repository": "xapi-project/xen-api",
+    "commit": "e2d37d9c0949ebdab915c0f4061ac3b0e90341c9",
+    "path": "ocaml/xapi/xapi_vm_clone.ml",
+    "url": "https://github.com/xapi-project/xen-api/blob/e2d37d9c0949ebdab915c0f4061ac3b0e90341c9/ocaml/xapi/xapi_vm_clone.ml",
+    "sha256": "459e714734ff3ccd7c7530768e0752aafb342aab0074dd04096593fbb1e3e984",
+    "gitBlob": "25a30eac2785d5d58ce6baa48cab1ed60981ce0d",
+    "expectedGitBlob": "25a30eac2785d5d58ce6baa48cab1ed60981ce0d",
+    "matchesFixedCommit": true
+  }
+]

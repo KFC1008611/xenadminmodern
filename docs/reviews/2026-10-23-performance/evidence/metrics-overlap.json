@@ -1,0 +1,15 @@
+{
+  "vmCount": 500,
+  "syntheticRequestLatencyMs": 1000,
+  "simulatedMs": 90000,
+  "beforeStop": {
+    "sweeps": 4,
+    "requests": 920,
+    "active": 20,
+    "peak": 20
+  },
+  "afterStop": {
+    "newRequests": 100,
+    "active": 20
+  }
+}

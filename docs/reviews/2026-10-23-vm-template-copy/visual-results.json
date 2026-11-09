@@ -1,0 +1,318 @@
+[
+  {
+    "viewport": {
+      "width": 1024,
+      "height": 720
+    },
+    "mode": "template",
+    "x": 288,
+    "y": 167,
+    "width": 448,
+    "height": 386,
+    "clientWidth": 446,
+    "scrollWidth": 446,
+    "clientHeight": 384,
+    "scrollHeight": 384,
+    "buttons": [
+      {
+        "text": "",
+        "disabled": false
+      },
+      {
+        "text": "取消",
+        "disabled": false
+      },
+      {
+        "text": "复制模板",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "viewport": {
+      "width": 1024,
+      "height": 720
+    },
+    "mode": "copy",
+    "x": 288,
+    "y": 115,
+    "width": 448,
+    "height": 490,
+    "clientWidth": 446,
+    "scrollWidth": 446,
+    "clientHeight": 488,
+    "scrollHeight": 488,
+    "buttons": [
+      {
+        "text": "",
+        "disabled": false
+      },
+      {
+        "text": "快速克隆",
+        "disabled": false
+      },
+      {
+        "text": "完整复制",
+        "disabled": false
+      },
+      {
+        "text": "取消",
+        "disabled": false
+      },
+      {
+        "text": "复制",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "viewport": {
+      "width": 1024,
+      "height": 720
+    },
+    "mode": "relocate",
+    "x": 128,
+    "y": 91.5,
+    "width": 768,
+    "height": 537,
+    "clientWidth": 766,
+    "scrollWidth": 766,
+    "clientHeight": 535,
+    "scrollHeight": 535,
+    "buttons": [
+      {
+        "text": "",
+        "disabled": false
+      },
+      {
+        "text": "同池主机迁移",
+        "disabled": false
+      },
+      {
+        "text": "停机存储移动",
+        "disabled": true
+      },
+      {
+        "text": "取消",
+        "disabled": false
+      },
+      {
+        "text": "提交",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "mode": "template",
+    "x": 416,
+    "y": 207,
+    "width": 448,
+    "height": 386,
+    "clientWidth": 446,
+    "scrollWidth": 446,
+    "clientHeight": 384,
+    "scrollHeight": 384,
+    "buttons": [
+      {
+        "text": "",
+        "disabled": false
+      },
+      {
+        "text": "取消",
+        "disabled": false
+      },
+      {
+        "text": "复制模板",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "mode": "copy",
+    "x": 416,
+    "y": 155,
+    "width": 448,
+    "height": 490,
+    "clientWidth": 446,
+    "scrollWidth": 446,
+    "clientHeight": 488,
+    "scrollHeight": 488,
+    "buttons": [
+      {
+        "text": "",
+        "disabled": false
+      },
+      {
+        "text": "快速克隆",
+        "disabled": false
+      },
+      {
+        "text": "完整复制",
+        "disabled": false
+      },
+      {
+        "text": "取消",
+        "disabled": false
+      },
+      {
+        "text": "复制",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "mode": "relocate",
+    "x": 256,
+    "y": 131.5,
+    "width": 768,
+    "height": 537,
+    "clientWidth": 766,
+    "scrollWidth": 766,
+    "clientHeight": 535,
+    "scrollHeight": 535,
+    "buttons": [
+      {
+        "text": "",
+        "disabled": false
+      },
+      {
+        "text": "同池主机迁移",
+        "disabled": false
+      },
+      {
+        "text": "停机存储移动",
+        "disabled": true
+      },
+      {
+        "text": "取消",
+        "disabled": false
+      },
+      {
+        "text": "提交",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "mode": "template",
+    "x": 496,
+    "y": 257,
+    "width": 448,
+    "height": 386,
+    "clientWidth": 446,
+    "scrollWidth": 446,
+    "clientHeight": 384,
+    "scrollHeight": 384,
+    "buttons": [
+      {
+        "text": "",
+        "disabled": false
+      },
+      {
+        "text": "取消",
+        "disabled": false
+      },
+      {
+        "text": "复制模板",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "mode": "copy",
+    "x": 496,
+    "y": 205,
+    "width": 448,
+    "height": 490,
+    "clientWidth": 446,
+    "scrollWidth": 446,
+    "clientHeight": 488,
+    "scrollHeight": 488,
+    "buttons": [
+      {
+        "text": "",
+        "disabled": false
+      },
+      {
+        "text": "快速克隆",
+        "disabled": false
+      },
+      {
+        "text": "完整复制",
+        "disabled": false
+      },
+      {
+        "text": "取消",
+        "disabled": false
+      },
+      {
+        "text": "复制",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "mode": "relocate",
+    "x": 336,
+    "y": 181.5,
+    "width": 768,
+    "height": 537,
+    "clientWidth": 766,
+    "scrollWidth": 766,
+    "clientHeight": 535,
+    "scrollHeight": 535,
+    "buttons": [
+      {
+        "text": "",
+        "disabled": false
+      },
+      {
+        "text": "同池主机迁移",
+        "disabled": false
+      },
+      {
+        "text": "停机存储移动",
+        "disabled": true
+      },
+      {
+        "text": "取消",
+        "disabled": false
+      },
+      {
+        "text": "提交",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "mode": "template-long-name",
+    "clientWidth": 446,
+    "scrollWidth": 446,
+    "closeButtonRight": 711,
+    "dialogRight": 736
+  }
+]

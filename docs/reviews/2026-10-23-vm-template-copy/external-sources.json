@@ -1,0 +1,74 @@
+[
+  {
+    "repo": "vatesfr/xen-orchestra",
+    "commit": "3923756ff5d56871c963616d67fe71b737e498b7",
+    "commitDate": "2026-10-22T10:16:03Z",
+    "path": "packages/xo-server/src/xapi/index.mjs",
+    "url": "https://raw.githubusercontent.com/vatesfr/xen-orchestra/3923756ff5d56871c963616d67fe71b737e498b7/packages/xo-server/src/xapi/index.mjs",
+    "sha256": "25c43ed618a0b37b3a956829362f48ceba84dbf4e980020a130aaff0811479ad",
+    "sameAsInitialDownload": true
+  },
+  {
+    "repo": "vatesfr/xen-orchestra",
+    "commit": "3923756ff5d56871c963616d67fe71b737e498b7",
+    "commitDate": "2026-10-22T10:16:03Z",
+    "path": "packages/xo-server/src/api/vm.mjs",
+    "url": "https://raw.githubusercontent.com/vatesfr/xen-orchestra/3923756ff5d56871c963616d67fe71b737e498b7/packages/xo-server/src/api/vm.mjs",
+    "sha256": "9e4e276671eef7e4ce8b371265ee0c1b3978327c51b30a1bbb1ca8a93bb947fd",
+    "sameAsInitialDownload": true
+  },
+  {
+    "repo": "vatesfr/xen-orchestra",
+    "commit": "3923756ff5d56871c963616d67fe71b737e498b7",
+    "commitDate": "2026-10-22T10:16:03Z",
+    "path": "packages/xo-web/src/common/xo/copy-vms-modal/index.js",
+    "url": "https://raw.githubusercontent.com/vatesfr/xen-orchestra/3923756ff5d56871c963616d67fe71b737e498b7/packages/xo-web/src/common/xo/copy-vms-modal/index.js",
+    "sha256": "3c2b9c002eeea1a0559dd62fdf4ad540ea237b8a4759baf0f7d9afb1831e2547",
+    "sameAsInitialDownload": true
+  },
+  {
+    "repo": "xenserver/xenadmin",
+    "commit": "b210cd2c2d8547f5bb48b49d71f17429c7d65e44",
+    "commitDate": "2023-12-13T15:07:53Z",
+    "path": "XenModel/Actions/VM/VMCopyAction.cs",
+    "url": "https://raw.githubusercontent.com/xenserver/xenadmin/b210cd2c2d8547f5bb48b49d71f17429c7d65e44/XenModel/Actions/VM/VMCopyAction.cs",
+    "sha256": "bab62338a48be2ac50b146c850ddb59c8ec497b518dbdf2aa60ff61827b6c0d5",
+    "sameAsInitialDownload": true
+  },
+  {
+    "repo": "xenserver/xenadmin",
+    "commit": "b210cd2c2d8547f5bb48b49d71f17429c7d65e44",
+    "commitDate": "2023-12-13T15:07:53Z",
+    "path": "XenModel/Actions/VM/VMCloneAction.cs",
+    "url": "https://raw.githubusercontent.com/xenserver/xenadmin/b210cd2c2d8547f5bb48b49d71f17429c7d65e44/XenModel/Actions/VM/VMCloneAction.cs",
+    "sha256": "be46dd1902597ee38f568a3070d542097a695d1fe0357479df0b9d636a84285a",
+    "sameAsInitialDownload": true
+  },
+  {
+    "repo": "xapi-project/xen-api",
+    "commit": "e2d37d9c0949ebdab915c0f4061ac3b0e90341c9",
+    "commitDate": "2026-10-23T01:24:19Z",
+    "path": "ocaml/xapi/xapi_vm_migrate.ml",
+    "url": "https://raw.githubusercontent.com/xapi-project/xen-api/e2d37d9c0949ebdab915c0f4061ac3b0e90341c9/ocaml/xapi/xapi_vm_migrate.ml",
+    "sha256": "77f41a8a75828ff726bdd4ce492a07f126d71d9a65d1c820f3ac9ac1b156d5a9",
+    "sameAsInitialDownload": true
+  },
+  {
+    "repo": "xapi-project/xen-api",
+    "commit": "e2d37d9c0949ebdab915c0f4061ac3b0e90341c9",
+    "commitDate": "2026-10-23T01:24:19Z",
+    "path": "ocaml/xapi/xapi_vm_lifecycle.ml",
+    "url": "https://raw.githubusercontent.com/xapi-project/xen-api/e2d37d9c0949ebdab915c0f4061ac3b0e90341c9/ocaml/xapi/xapi_vm_lifecycle.ml",
+    "sha256": "f782cf990baed79617ae530014e32a37ba54cdd7ee79acb35cf1ea0f3528969b",
+    "sameAsInitialDownload": true
+  },
+  {
+    "repo": "xapi-project/xen-api",
+    "commit": "e2d37d9c0949ebdab915c0f4061ac3b0e90341c9",
+    "commitDate": "2026-10-23T01:24:19Z",
+    "path": "ocaml/xapi/xapi_vm_clone.ml",
+    "url": "https://raw.githubusercontent.com/xapi-project/xen-api/e2d37d9c0949ebdab915c0f4061ac3b0e90341c9/ocaml/xapi/xapi_vm_clone.ml",
+    "sha256": "459e714734ff3ccd7c7530768e0752aafb342aab0074dd04096593fbb1e3e984",
+    "sameAsInitialDownload": true
+  }
+]

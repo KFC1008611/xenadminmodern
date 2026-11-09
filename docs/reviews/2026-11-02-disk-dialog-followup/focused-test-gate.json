@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "kind": "xenadmin-test-gate",
+  "ok": true,
+  "toolchain": {
+    "nodeVersion": "24.22.0",
+    "npmVersion": "11.19.1",
+    "lockfileVersion": 3
+  },
+  "collection": {
+    "mode": "focused",
+    "manifestChecked": false,
+    "fileCount": 6,
+    "testCount": 97,
+    "expectedFileCount": null,
+    "expectedTestCount": null,
+    "drift": {
+      "missing": [],
+      "unexpected": [],
+      "countMismatches": []
+    }
+  },
+  "tests": {
+    "passed": 97,
+    "failed": 0,
+    "skipped": 0,
+    "todo": 0,
+    "onlyDetected": false
+  },
+  "diagnostics": {
+    "warningCount": 0,
+    "stderr": {
+      "bytes": 0,
+      "lineCount": 0
+    }
+  },
+  "errors": []
+}

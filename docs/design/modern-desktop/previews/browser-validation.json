@@ -1,0 +1,370 @@
+{
+  "date": "2026-10-23",
+  "layouts": [
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "基础设施总览",
+      "sidebarFits": true,
+      "size": [
+        1024,
+        768
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "虚拟机",
+      "sidebarFits": true,
+      "size": [
+        1024,
+        768
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "主机",
+      "sidebarFits": true,
+      "size": [
+        1024,
+        768
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "存储",
+      "sidebarFits": true,
+      "size": [
+        1024,
+        768
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "网络",
+      "sidebarFits": true,
+      "size": [
+        1024,
+        768
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "设置",
+      "sidebarFits": true,
+      "size": [
+        1024,
+        768
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "基础设施总览",
+      "sidebarFits": true,
+      "size": [
+        1280,
+        800
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "虚拟机",
+      "sidebarFits": true,
+      "size": [
+        1280,
+        800
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "主机",
+      "sidebarFits": true,
+      "size": [
+        1280,
+        800
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "存储",
+      "sidebarFits": true,
+      "size": [
+        1280,
+        800
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "网络",
+      "sidebarFits": true,
+      "size": [
+        1280,
+        800
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "设置",
+      "sidebarFits": true,
+      "size": [
+        1280,
+        800
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "基础设施总览",
+      "sidebarFits": true,
+      "size": [
+        1440,
+        900
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "资源池",
+      "sidebarFits": true,
+      "size": [
+        1440,
+        900
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "主机",
+      "sidebarFits": true,
+      "size": [
+        1440,
+        900
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "虚拟机",
+      "sidebarFits": true,
+      "size": [
+        1440,
+        900
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "存储",
+      "sidebarFits": true,
+      "size": [
+        1440,
+        900
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "网络",
+      "sidebarFits": true,
+      "size": [
+        1440,
+        900
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "任务中心",
+      "sidebarFits": true,
+      "size": [
+        1440,
+        900
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "告警消息",
+      "sidebarFits": true,
+      "size": [
+        1440,
+        900
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "用户与权限",
+      "sidebarFits": true,
+      "size": [
+        1440,
+        900
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "设置",
+      "sidebarFits": true,
+      "size": [
+        1440,
+        900
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "基础设施总览",
+      "sidebarFits": true,
+      "size": [
+        1920,
+        1080
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "资源池",
+      "sidebarFits": true,
+      "size": [
+        1920,
+        1080
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "主机",
+      "sidebarFits": true,
+      "size": [
+        1920,
+        1080
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "虚拟机",
+      "sidebarFits": true,
+      "size": [
+        1920,
+        1080
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "存储",
+      "sidebarFits": true,
+      "size": [
+        1920,
+        1080
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "网络",
+      "sidebarFits": true,
+      "size": [
+        1920,
+        1080
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "任务中心",
+      "sidebarFits": true,
+      "size": [
+        1920,
+        1080
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "告警消息",
+      "sidebarFits": true,
+      "size": [
+        1920,
+        1080
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "用户与权限",
+      "sidebarFits": true,
+      "size": [
+        1920,
+        1080
+      ],
+      "themeVisible": true
+    },
+    {
+      "contentFits": true,
+      "documentFits": true,
+      "page": "设置",
+      "sidebarFits": true,
+      "size": [
+        1920,
+        1080
+      ],
+      "themeVisible": true
+    }
+  ],
+  "consoleErrors": [],
+  "interactions": [
+    "three-step VM creation in lab pool",
+    "template selection",
+    "dialog focus after replacing steps",
+    "Escape and focus return",
+    "keyboard resource search",
+    "task drawer"
+  ],
+  "screenshots": [
+    "virtual-machines-light.jpg",
+    "virtual-machines-dark.jpg"
+  ]
+}

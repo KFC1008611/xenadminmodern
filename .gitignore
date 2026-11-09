@@ -1,0 +1,35 @@
+# 依赖与构建产物
+/node_modules/
+/dist/
+/out/
+/coverage/
+*.tsbuildinfo
+
+# 本地环境与日志
+.env
+.env.*
+!.env.example
+*.log
+/.scratch/
+
+# 系统与编辑器文件
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.code-workspace
+
+# 本地参考源码
+/refs/
+
+# 本地工具配置及旧插件自动产物
+/.claude/
+/.qoder/
+/.specify/
+/.superpowers/
+/.workbuddy/
+/.playwright-mcp/
+CLAUDE.md

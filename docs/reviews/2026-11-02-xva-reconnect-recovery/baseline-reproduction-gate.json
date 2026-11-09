@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "kind": "xenadmin-test-gate",
+  "ok": false,
+  "toolchain": {
+    "nodeVersion": "24.22.0",
+    "npmVersion": "11.19.1",
+    "lockfileVersion": 3
+  },
+  "collection": {
+    "mode": "focused",
+    "manifestChecked": false,
+    "fileCount": 1,
+    "testCount": 3,
+    "expectedFileCount": null,
+    "expectedTestCount": null,
+    "drift": {
+      "missing": [],
+      "unexpected": [],
+      "countMismatches": []
+    }
+  },
+  "tests": {
+    "passed": 1,
+    "failed": 2,
+    "skipped": 0,
+    "todo": 0,
+    "onlyDetected": false
+  },
+  "diagnostics": {
+    "warningCount": 0,
+    "stderr": {
+      "bytes": 2121,
+      "lineCount": 51
+    }
+  },
+  "errors": [
+    "Vitest exited with status 1",
+    "Vitest wrote 51 stderr lines"
+  ]
+}

@@ -1,0 +1,6 @@
+import { defineConfig } from 'vitest/config'
+import react from '@vitejs/plugin-react'
+export default defineConfig({
+ plugins:[react()],
+ test:{globals:true,environment:'jsdom',fileParallelism:false,include:['/private/tmp/xen-copy-review-20261023/repro.test.tsx'],setupFiles:['/Volumes/zt/dev/xenadminmodern/tests/components/setup.ts']},
+})

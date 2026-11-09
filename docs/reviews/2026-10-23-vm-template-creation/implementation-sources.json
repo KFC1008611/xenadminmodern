@@ -1,0 +1,38 @@
+{
+  "basis": "current dirty worktree",
+  "head": "7c3e7e67bb3fea8e59b2c4bc53d720392d1c982d",
+  "files": [
+    {
+      "path": "src/main/xapi/services/vm-creation.service.ts",
+      "sha256": "df0f859132d351beb9d5ef5b8fa1511238f1a91fe852bde73fc0b0529ef3dd61"
+    },
+    {
+      "path": "src/renderer/src/components/wizard/CreateVmWizard.tsx",
+      "sha256": "0460f7cb3da639c6d4df79128ea7ee4df44862042be8563647581bfcacdc645e"
+    },
+    {
+      "path": "src/renderer/src/components/wizard/vmWizardModel.ts",
+      "sha256": "d0f48f31641f55c471ba6ecdb3de3351d4b00127a05f25fe438df01c58638544"
+    },
+    {
+      "path": "src/renderer/src/components/wizard/steps/Step4Disk.tsx",
+      "sha256": "e9a39c3056a55fa92475ecc8835e4cc9316144ba942d56a4d56912c456442476"
+    },
+    {
+      "path": "src/shared/ipc-contracts/vm.ts",
+      "sha256": "ca75c9663d1c72eef1a61b22b73527ee5c73232761a33478540ce17bb5ccb843"
+    },
+    {
+      "path": "src/shared/types/xapi.ts",
+      "sha256": "08d3477d86263f01f15c28827cc82dcada92000bcd8c4877132c414b3df03d85"
+    },
+    {
+      "path": "tests/unit/vm-creation-service.test.ts",
+      "sha256": "8d00b6694d00f2017056910821918b26a6756a59b017587a4551eebd9d1471f4"
+    },
+    {
+      "path": "tests/components/CreateVmWizardWorkflow.test.tsx",
+      "sha256": "b4f33411d518381339bc37fc932884ac66476a265336111794d3017e9ff87fa9"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "events": 600,
+  "durationMs": 60000,
+  "fullVmInventoryReads": 0,
+  "globalThirtySecondPollingRunning": false,
+  "listPageFiveSecondPollingRunning": false
+}

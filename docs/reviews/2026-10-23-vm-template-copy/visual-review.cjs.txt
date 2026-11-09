@@ -1,0 +1,29 @@
+const {chromium}=require('/Users/whs/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright')
+const fs=require('node:fs')
+;(async()=>{
+ const browser=await chromium.launch({headless:true,executablePath:"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"})
+ const page=await browser.newPage()
+ const results=[]
+ for(const [width,height] of [[1024,720],[1280,800],[1440,900]]){
+  await page.setViewportSize({width,height})
+  for(const mode of ['template','copy','relocate']){
+   await page.goto('file:///private/tmp/xen-copy-review-20261023/index.html?mode='+mode)
+   await page.getByRole('dialog').waitFor()
+   if(mode==='relocate') await page.getByRole('option',{name:'目标主机',exact:true}).waitFor({state:'attached'})
+   if(mode==='template') await page.getByRole('option',{name:/目标存储/}).waitFor({state:'attached'})
+   const measure=await page.getByRole('dialog').evaluate(el=>{
+    const r=el.getBoundingClientRect()
+    return {x:r.x,y:r.y,width:r.width,height:r.height,clientWidth:el.clientWidth,scrollWidth:el.scrollWidth,clientHeight:el.clientHeight,scrollHeight:el.scrollHeight,buttons:[...el.querySelectorAll('button')].map(b=>({text:b.textContent,disabled:b.disabled}))}
+   })
+   results.push({viewport:{width,height},mode,...measure})
+   await page.screenshot({path:`/private/tmp/xen-copy-review-20261023/${mode}-${width}.png`})
+  }
+ }
+ await page.setViewportSize({width:1024,height:720})
+ await page.goto('file:///private/tmp/xen-copy-review-20261023/index.html?mode=template&long=1')
+ await page.getByRole('option',{name:/目标存储/}).waitFor({state:'attached'})
+ results.push({mode:'template-long-name',...await page.getByRole('dialog').evaluate(el=>({clientWidth:el.clientWidth,scrollWidth:el.scrollWidth,closeButtonRight:el.querySelector('button').getBoundingClientRect().right,dialogRight:el.getBoundingClientRect().right}))})
+ await page.screenshot({path:'/private/tmp/xen-copy-review-20261023/template-long-name-1024.png'})
+ fs.writeFileSync('/private/tmp/xen-copy-review-20261023/visual-results.json',JSON.stringify(results,null,2))
+ await browser.close()
+})().catch(e=>{console.error(e);process.exit(1)})

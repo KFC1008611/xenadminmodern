@@ -1,0 +1,265 @@
+{
+  "checks": [
+    {
+      "viewportWidth": 1024,
+      "viewportHeight": 720,
+      "mode": "copy",
+      "x": 128,
+      "y": 48.5,
+      "width": 768,
+      "height": 623,
+      "clientWidth": 766,
+      "scrollWidth": 766,
+      "bodyOverflow": false,
+      "footerButtons": [
+        {
+          "text": "取消",
+          "width": 60,
+          "textLines": 1,
+          "bottom": 654.5
+        },
+        {
+          "text": "开始复制",
+          "width": 88,
+          "textLines": 1,
+          "bottom": 654.5
+        }
+      ]
+    },
+    {
+      "viewportWidth": 1024,
+      "viewportHeight": 720,
+      "mode": "template",
+      "x": 128,
+      "y": 48.5,
+      "width": 768,
+      "height": 623,
+      "clientWidth": 766,
+      "scrollWidth": 766,
+      "bodyOverflow": false,
+      "footerButtons": [
+        {
+          "text": "取消",
+          "width": 60,
+          "textLines": 1,
+          "bottom": 654.5
+        },
+        {
+          "text": "开始复制",
+          "width": 88,
+          "textLines": 1,
+          "bottom": 654.5
+        }
+      ]
+    },
+    {
+      "viewportWidth": 1024,
+      "viewportHeight": 720,
+      "mode": "cross",
+      "x": 128,
+      "y": 24,
+      "width": 768,
+      "height": 672,
+      "clientWidth": 766,
+      "scrollWidth": 766,
+      "bodyOverflow": false,
+      "footerButtons": [
+        {
+          "text": "取消",
+          "width": 60,
+          "textLines": 1,
+          "bottom": 679
+        },
+        {
+          "text": "开始复制",
+          "width": 88,
+          "textLines": 1,
+          "bottom": 679
+        }
+      ]
+    },
+    {
+      "viewportWidth": 1280,
+      "viewportHeight": 800,
+      "mode": "copy",
+      "x": 256,
+      "y": 88.5,
+      "width": 768,
+      "height": 623,
+      "clientWidth": 766,
+      "scrollWidth": 766,
+      "bodyOverflow": false,
+      "footerButtons": [
+        {
+          "text": "取消",
+          "width": 60,
+          "textLines": 1,
+          "bottom": 694.5
+        },
+        {
+          "text": "开始复制",
+          "width": 88,
+          "textLines": 1,
+          "bottom": 694.5
+        }
+      ]
+    },
+    {
+      "viewportWidth": 1280,
+      "viewportHeight": 800,
+      "mode": "template",
+      "x": 256,
+      "y": 88.5,
+      "width": 768,
+      "height": 623,
+      "clientWidth": 766,
+      "scrollWidth": 766,
+      "bodyOverflow": false,
+      "footerButtons": [
+        {
+          "text": "取消",
+          "width": 60,
+          "textLines": 1,
+          "bottom": 694.5
+        },
+        {
+          "text": "开始复制",
+          "width": 88,
+          "textLines": 1,
+          "bottom": 694.5
+        }
+      ]
+    },
+    {
+      "viewportWidth": 1280,
+      "viewportHeight": 800,
+      "mode": "cross",
+      "x": 256,
+      "y": 24,
+      "width": 768,
+      "height": 752,
+      "clientWidth": 766,
+      "scrollWidth": 766,
+      "bodyOverflow": false,
+      "footerButtons": [
+        {
+          "text": "取消",
+          "width": 60,
+          "textLines": 1,
+          "bottom": 759
+        },
+        {
+          "text": "开始复制",
+          "width": 88,
+          "textLines": 1,
+          "bottom": 759
+        }
+      ]
+    },
+    {
+      "viewportWidth": 1440,
+      "viewportHeight": 900,
+      "mode": "copy",
+      "x": 336,
+      "y": 138.5,
+      "width": 768,
+      "height": 623,
+      "clientWidth": 766,
+      "scrollWidth": 766,
+      "bodyOverflow": false,
+      "footerButtons": [
+        {
+          "text": "取消",
+          "width": 60,
+          "textLines": 1,
+          "bottom": 744.5
+        },
+        {
+          "text": "开始复制",
+          "width": 88,
+          "textLines": 1,
+          "bottom": 744.5
+        }
+      ]
+    },
+    {
+      "viewportWidth": 1440,
+      "viewportHeight": 900,
+      "mode": "template",
+      "x": 336,
+      "y": 138.5,
+      "width": 768,
+      "height": 623,
+      "clientWidth": 766,
+      "scrollWidth": 766,
+      "bodyOverflow": false,
+      "footerButtons": [
+        {
+          "text": "取消",
+          "width": 60,
+          "textLines": 1,
+          "bottom": 744.5
+        },
+        {
+          "text": "开始复制",
+          "width": 88,
+          "textLines": 1,
+          "bottom": 744.5
+        }
+      ]
+    },
+    {
+      "viewportWidth": 1440,
+      "viewportHeight": 900,
+      "mode": "cross",
+      "x": 336,
+      "y": 24,
+      "width": 768,
+      "height": 852,
+      "clientWidth": 766,
+      "scrollWidth": 766,
+      "bodyOverflow": false,
+      "footerButtons": [
+        {
+          "text": "取消",
+          "width": 60,
+          "textLines": 1,
+          "bottom": 859
+        },
+        {
+          "text": "开始复制",
+          "width": 88,
+          "textLines": 1,
+          "bottom": 859
+        }
+      ]
+    }
+  ],
+  "workflow": {
+    "operations": [
+      {
+        "id": "copy-1",
+        "sourceConnectionId": "source",
+        "targetConnectionId": "source",
+        "sourcePoolUuid": "pool-a",
+        "targetPoolUuid": "pool-a",
+        "sourcePoolName": "生产资源池 A",
+        "targetPoolName": "生产资源池 A",
+        "sourceVmRef": "OpaqueRef:source",
+        "name": "桌面复制验证",
+        "isTemplate": false,
+        "mode": "copy",
+        "status": "cancelling",
+        "progress": 42,
+        "message": "已请求取消，等待服务器确认终态",
+        "warnings": [],
+        "cancellable": false,
+        "createdAt": 1792737936362,
+        "taskRef": "OpaqueRef:copy-task"
+      }
+    ],
+    "starts": 1,
+    "refreshes": []
+  },
+  "errors": []
+}

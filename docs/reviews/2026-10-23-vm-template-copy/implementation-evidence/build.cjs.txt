@@ -1,0 +1,7 @@
+const fs=require('fs')
+const esbuild=require('/Volumes/zt/dev/xenadminmodern/node_modules/vite/node_modules/esbuild')
+const base='/private/tmp/xen-copy-implementation-20261023/'
+esbuild.buildSync({entryPoints:[base+'harness.tsx'],bundle:true,outfile:base+'harness.js',platform:'browser',jsx:'automatic',nodePaths:['/Volumes/zt/dev/xenadminmodern/node_modules'],define:{'process.env.NODE_ENV':'"development"'}})
+const css=fs.readdirSync('/Volumes/zt/dev/xenadminmodern/out/renderer/assets').find(p=>p.endsWith('.css'))
+fs.copyFileSync('/Volumes/zt/dev/xenadminmodern/out/renderer/assets/'+css,base+'harness.css')
+fs.writeFileSync(base+'index.html','<!doctype html><html lang="zh-CN"><meta charset="utf-8"><link rel="stylesheet" href="harness.css"><div id="root"></div><script src="harness.js"></script></html>')

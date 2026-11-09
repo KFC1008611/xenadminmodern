@@ -1,0 +1,46 @@
+import { performance } from 'node:perf_hooks'
+import { mkdtempSync, statSync, writeFileSync } from 'node:fs'
+import { configureJsonStoreDirectory } from '/Volumes/zt/dev/xenadminmodern/src/main/persistence/json-store'
+import * as db from '/Volumes/zt/dev/xenadminmodern/src/main/xapi/services/metrics-db.service'
+const output = '/private/tmp/xenadmin-perf-followup-20261023.Qxb81z'
+const results: any = { node: process.versions.node, cappedIngestion: [] }
+const now = Date.now()
+function point(i: number) {
+ return { timestamp: now - 1_000_000 + (i % 200) * 5000, cpuPercent: 25.5, memoryPercent: 40.5,
+ networkRxBytes: 1234567, networkTxBytes: 2345678, diskReadBytes: 3456789, diskWriteBytes: 4567890,
+ availableMetrics: ['cpuPercent','memoryPercent','networkRxBytes','networkTxBytes','diskReadBytes','diskWriteBytes'],
+ connectionId: 'perf-review', poolUuid: '00000000-0000-4000-8000-000000000000', vmRef: `OpaqueRef:vm-${Math.floor(i / 200)}` }
+}
+for (const prefill of [50_000, 100_000]) {
+ for (let trial = 0; trial < 3; trial++) {
+ configureJsonStoreDirectory(null)
+ db.initDatabase()
+ db.persistVmMetricBatch(Array.from({length: prefill}, (_, i) => point(i)))
+ const started = performance.now()
+ const heartbeat = new Promise<number>(resolve => setTimeout(() => resolve(performance.now() - started), 0))
+ for (let vm = 0; vm < 500; vm++) {
+   db.persistVmMetricBatch([0,1].map(offset => ({...point(vm * 200), timestamp: now + offset * 5000})))
+ }
+ const elapsed = performance.now() - started
+ results.cappedIngestion.push({ prefill, vmBatches: 500, samplesPerBatch: 2, trial, synchronousMs: elapsed, timerDelayMs: await heartbeat })
+ await db.closeDatabase()
+ }
+}
+const directory = mkdtempSync(output + '/state-')
+configureJsonStoreDirectory(directory)
+db.initDatabase()
+const points = Array.from({length:100_000}, (_,i) => point(i))
+db.persistVmMetricBatch(points)
+db.persistMetricBatch(points.map(({vmRef, ...sample},i) => ({...sample, hostRef:`OpaqueRef:host-${Math.floor(i/200)}`})))
+await db.flushMetricStore()
+results.startup = { snapshotBytes: statSync(directory + '/metric-samples.json').size, trials: [] }
+for(let trial=0;trial<3;trial++) {
+ await db.closeDatabase()
+ const started=performance.now()
+ const heartbeat=new Promise<number>(resolve=>setTimeout(()=>resolve(performance.now()-started),0))
+ db.initDatabase()
+ results.startup.trials.push({ trial, synchronousMs: performance.now()-started, timerDelayMs: await heartbeat })
+}
+await db.closeDatabase()
+writeFileSync(output + '/db-results.json',JSON.stringify(results,null,2))
+console.log(JSON.stringify(results,null,2))

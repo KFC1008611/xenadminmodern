@@ -1,0 +1,1797 @@
+{
+  "scenarios": 48,
+  "results": [
+    {
+      "scenario": "create-refresh",
+      "expectedTheme": "light",
+      "alerts": [
+        "磁盘已创建，但列表刷新失败：磁盘列表读取超时。请重新读取磁盘列表。"
+      ],
+      "buttons": [
+        {
+          "bottom": 226.5,
+          "disabled": false,
+          "text": "",
+          "top": 190.5
+        },
+        {
+          "bottom": 577.5,
+          "disabled": false,
+          "text": "关闭",
+          "top": 541.5
+        }
+      ],
+      "dialog": {
+        "bottom": 594.5,
+        "left": 256,
+        "right": 768,
+        "top": 173.5
+      },
+      "height": 768,
+      "scrollWidth": 1024,
+      "theme": "light",
+      "width": 1024,
+      "screenshot": "create-refresh-light-1024x768.png",
+      "ok": true
+    },
+    {
+      "scenario": "partial",
+      "expectedTheme": "light",
+      "alerts": [
+        "磁盘已创建，连接失败。已保留 VDI OpaqueRef:created。"
+      ],
+      "buttons": [
+        {
+          "bottom": 244.5,
+          "disabled": false,
+          "text": "",
+          "top": 208.5
+        },
+        {
+          "bottom": 559.5,
+          "disabled": false,
+          "text": "关闭",
+          "top": 523.5
+        }
+      ],
+      "dialog": {
+        "bottom": 576.5,
+        "left": 256,
+        "right": 768,
+        "top": 191.5
+      },
+      "height": 768,
+      "scrollWidth": 1024,
+      "theme": "light",
+      "width": 1024,
+      "screenshot": "partial-light-1024x768.png",
+      "ok": true
+    },
+    {
+      "scenario": "move-read",
+      "expectedTheme": "light",
+      "alerts": [],
+      "buttons": [
+        {
+          "bottom": 314.25,
+          "disabled": false,
+          "text": "",
+          "top": 278.25
+        },
+        {
+          "bottom": 496.75,
+          "disabled": false,
+          "text": "取消",
+          "top": 460.75
+        },
+        {
+          "bottom": 496.75,
+          "disabled": false,
+          "text": "移动",
+          "top": 460.75
+        }
+      ],
+      "dialog": {
+        "bottom": 513.75,
+        "left": 288,
+        "right": 736,
+        "top": 254.25
+      },
+      "height": 768,
+      "scrollWidth": 1024,
+      "theme": "light",
+      "width": 1024,
+      "screenshot": "move-read-light-1024x768.png",
+      "ok": true
+    },
+    {
+      "scenario": "create-refresh",
+      "expectedTheme": "light",
+      "alerts": [
+        "磁盘已创建，但列表刷新失败：磁盘列表读取超时。请重新读取磁盘列表。"
+      ],
+      "buttons": [
+        {
+          "bottom": 242.5,
+          "disabled": false,
+          "text": "",
+          "top": 206.5
+        },
+        {
+          "bottom": 593.5,
+          "disabled": false,
+          "text": "关闭",
+          "top": 557.5
+        }
+      ],
+      "dialog": {
+        "bottom": 610.5,
+        "left": 384,
+        "right": 896,
+        "top": 189.5
+      },
+      "height": 800,
+      "scrollWidth": 1280,
+      "theme": "light",
+      "width": 1280,
+      "screenshot": "create-refresh-light-1280x800.png",
+      "ok": true
+    },
+    {
+      "scenario": "partial",
+      "expectedTheme": "light",
+      "alerts": [
+        "磁盘已创建，连接失败。已保留 VDI OpaqueRef:created。"
+      ],
+      "buttons": [
+        {
+          "bottom": 260.5,
+          "disabled": false,
+          "text": "",
+          "top": 224.5
+        },
+        {
+          "bottom": 575.5,
+          "disabled": false,
+          "text": "关闭",
+          "top": 539.5
+        }
+      ],
+      "dialog": {
+        "bottom": 592.5,
+        "left": 384,
+        "right": 896,
+        "top": 207.5
+      },
+      "height": 800,
+      "scrollWidth": 1280,
+      "theme": "light",
+      "width": 1280,
+      "screenshot": "partial-light-1280x800.png",
+      "ok": true
+    },
+    {
+      "scenario": "move-read",
+      "expectedTheme": "light",
+      "alerts": [],
+      "buttons": [
+        {
+          "bottom": 330.25,
+          "disabled": false,
+          "text": "",
+          "top": 294.25
+        },
+        {
+          "bottom": 512.75,
+          "disabled": false,
+          "text": "取消",
+          "top": 476.75
+        },
+        {
+          "bottom": 512.75,
+          "disabled": false,
+          "text": "移动",
+          "top": 476.75
+        }
+      ],
+      "dialog": {
+        "bottom": 529.75,
+        "left": 416,
+        "right": 864,
+        "top": 270.25
+      },
+      "height": 800,
+      "scrollWidth": 1280,
+      "theme": "light",
+      "width": 1280,
+      "screenshot": "move-read-light-1280x800.png",
+      "ok": true
+    },
+    {
+      "scenario": "create-refresh",
+      "expectedTheme": "light",
+      "alerts": [
+        "磁盘已创建，但列表刷新失败：磁盘列表读取超时。请重新读取磁盘列表。"
+      ],
+      "buttons": [
+        {
+          "bottom": 292.5,
+          "disabled": false,
+          "text": "",
+          "top": 256.5
+        },
+        {
+          "bottom": 643.5,
+          "disabled": false,
+          "text": "关闭",
+          "top": 607.5
+        }
+      ],
+      "dialog": {
+        "bottom": 660.5,
+        "left": 464,
+        "right": 976,
+        "top": 239.5
+      },
+      "height": 900,
+      "scrollWidth": 1440,
+      "theme": "light",
+      "width": 1440,
+      "screenshot": "create-refresh-light-1440x900.png",
+      "ok": true
+    },
+    {
+      "scenario": "partial",
+      "expectedTheme": "light",
+      "alerts": [
+        "磁盘已创建，连接失败。已保留 VDI OpaqueRef:created。"
+      ],
+      "buttons": [
+        {
+          "bottom": 310.5,
+          "disabled": false,
+          "text": "",
+          "top": 274.5
+        },
+        {
+          "bottom": 625.5,
+          "disabled": false,
+          "text": "关闭",
+          "top": 589.5
+        }
+      ],
+      "dialog": {
+        "bottom": 642.5,
+        "left": 464,
+        "right": 976,
+        "top": 257.5
+      },
+      "height": 900,
+      "scrollWidth": 1440,
+      "theme": "light",
+      "width": 1440,
+      "screenshot": "partial-light-1440x900.png",
+      "ok": true
+    },
+    {
+      "scenario": "move-read",
+      "expectedTheme": "light",
+      "alerts": [],
+      "buttons": [
+        {
+          "bottom": 380.25,
+          "disabled": false,
+          "text": "",
+          "top": 344.25
+        },
+        {
+          "bottom": 562.75,
+          "disabled": false,
+          "text": "取消",
+          "top": 526.75
+        },
+        {
+          "bottom": 562.75,
+          "disabled": false,
+          "text": "移动",
+          "top": 526.75
+        }
+      ],
+      "dialog": {
+        "bottom": 579.75,
+        "left": 496,
+        "right": 944,
+        "top": 320.25
+      },
+      "height": 900,
+      "scrollWidth": 1440,
+      "theme": "light",
+      "width": 1440,
+      "screenshot": "move-read-light-1440x900.png",
+      "ok": true
+    },
+    {
+      "scenario": "create-refresh",
+      "expectedTheme": "light",
+      "alerts": [
+        "磁盘已创建，但列表刷新失败：磁盘列表读取超时。请重新读取磁盘列表。"
+      ],
+      "buttons": [
+        {
+          "bottom": 382.5,
+          "disabled": false,
+          "text": "",
+          "top": 346.5
+        },
+        {
+          "bottom": 733.5,
+          "disabled": false,
+          "text": "关闭",
+          "top": 697.5
+        }
+      ],
+      "dialog": {
+        "bottom": 750.5,
+        "left": 704,
+        "right": 1216,
+        "top": 329.5
+      },
+      "height": 1080,
+      "scrollWidth": 1920,
+      "theme": "light",
+      "width": 1920,
+      "screenshot": "create-refresh-light-1920x1080.png",
+      "ok": true
+    },
+    {
+      "scenario": "partial",
+      "expectedTheme": "light",
+      "alerts": [
+        "磁盘已创建，连接失败。已保留 VDI OpaqueRef:created。"
+      ],
+      "buttons": [
+        {
+          "bottom": 400.5,
+          "disabled": false,
+          "text": "",
+          "top": 364.5
+        },
+        {
+          "bottom": 715.5,
+          "disabled": false,
+          "text": "关闭",
+          "top": 679.5
+        }
+      ],
+      "dialog": {
+        "bottom": 732.5,
+        "left": 704,
+        "right": 1216,
+        "top": 347.5
+      },
+      "height": 1080,
+      "scrollWidth": 1920,
+      "theme": "light",
+      "width": 1920,
+      "screenshot": "partial-light-1920x1080.png",
+      "ok": true
+    },
+    {
+      "scenario": "move-read",
+      "expectedTheme": "light",
+      "alerts": [],
+      "buttons": [
+        {
+          "bottom": 470.25,
+          "disabled": false,
+          "text": "",
+          "top": 434.25
+        },
+        {
+          "bottom": 652.75,
+          "disabled": false,
+          "text": "取消",
+          "top": 616.75
+        },
+        {
+          "bottom": 652.75,
+          "disabled": false,
+          "text": "移动",
+          "top": 616.75
+        }
+      ],
+      "dialog": {
+        "bottom": 669.75,
+        "left": 736,
+        "right": 1184,
+        "top": 410.25
+      },
+      "height": 1080,
+      "scrollWidth": 1920,
+      "theme": "light",
+      "width": 1920,
+      "screenshot": "move-read-light-1920x1080.png",
+      "ok": true
+    },
+    {
+      "scenario": "create-refresh",
+      "expectedTheme": "dark",
+      "alerts": [
+        "磁盘已创建，但列表刷新失败：磁盘列表读取超时。请重新读取磁盘列表。"
+      ],
+      "buttons": [
+        {
+          "bottom": 226.5,
+          "disabled": false,
+          "text": "",
+          "top": 190.5
+        },
+        {
+          "bottom": 577.5,
+          "disabled": false,
+          "text": "关闭",
+          "top": 541.5
+        }
+      ],
+      "dialog": {
+        "bottom": 594.5,
+        "left": 256,
+        "right": 768,
+        "top": 173.5
+      },
+      "height": 768,
+      "scrollWidth": 1024,
+      "theme": "dark",
+      "width": 1024,
+      "screenshot": "create-refresh-dark-1024x768.png",
+      "ok": true
+    },
+    {
+      "scenario": "partial",
+      "expectedTheme": "dark",
+      "alerts": [
+        "磁盘已创建，连接失败。已保留 VDI OpaqueRef:created。"
+      ],
+      "buttons": [
+        {
+          "bottom": 244.5,
+          "disabled": false,
+          "text": "",
+          "top": 208.5
+        },
+        {
+          "bottom": 559.5,
+          "disabled": false,
+          "text": "关闭",
+          "top": 523.5
+        }
+      ],
+      "dialog": {
+        "bottom": 576.5,
+        "left": 256,
+        "right": 768,
+        "top": 191.5
+      },
+      "height": 768,
+      "scrollWidth": 1024,
+      "theme": "dark",
+      "width": 1024,
+      "screenshot": "partial-dark-1024x768.png",
+      "ok": true
+    },
+    {
+      "scenario": "move-read",
+      "expectedTheme": "dark",
+      "alerts": [],
+      "buttons": [
+        {
+          "bottom": 314.25,
+          "disabled": false,
+          "text": "",
+          "top": 278.25
+        },
+        {
+          "bottom": 496.75,
+          "disabled": false,
+          "text": "取消",
+          "top": 460.75
+        },
+        {
+          "bottom": 496.75,
+          "disabled": false,
+          "text": "移动",
+          "top": 460.75
+        }
+      ],
+      "dialog": {
+        "bottom": 513.75,
+        "left": 288,
+        "right": 736,
+        "top": 254.25
+      },
+      "height": 768,
+      "scrollWidth": 1024,
+      "theme": "dark",
+      "width": 1024,
+      "screenshot": "move-read-dark-1024x768.png",
+      "ok": true
+    },
+    {
+      "scenario": "create-refresh",
+      "expectedTheme": "dark",
+      "alerts": [
+        "磁盘已创建，但列表刷新失败：磁盘列表读取超时。请重新读取磁盘列表。"
+      ],
+      "buttons": [
+        {
+          "bottom": 242.5,
+          "disabled": false,
+          "text": "",
+          "top": 206.5
+        },
+        {
+          "bottom": 593.5,
+          "disabled": false,
+          "text": "关闭",
+          "top": 557.5
+        }
+      ],
+      "dialog": {
+        "bottom": 610.5,
+        "left": 384,
+        "right": 896,
+        "top": 189.5
+      },
+      "height": 800,
+      "scrollWidth": 1280,
+      "theme": "dark",
+      "width": 1280,
+      "screenshot": "create-refresh-dark-1280x800.png",
+      "ok": true
+    },
+    {
+      "scenario": "partial",
+      "expectedTheme": "dark",
+      "alerts": [
+        "磁盘已创建，连接失败。已保留 VDI OpaqueRef:created。"
+      ],
+      "buttons": [
+        {
+          "bottom": 260.5,
+          "disabled": false,
+          "text": "",
+          "top": 224.5
+        },
+        {
+          "bottom": 575.5,
+          "disabled": false,
+          "text": "关闭",
+          "top": 539.5
+        }
+      ],
+      "dialog": {
+        "bottom": 592.5,
+        "left": 384,
+        "right": 896,
+        "top": 207.5
+      },
+      "height": 800,
+      "scrollWidth": 1280,
+      "theme": "dark",
+      "width": 1280,
+      "screenshot": "partial-dark-1280x800.png",
+      "ok": true
+    },
+    {
+      "scenario": "move-read",
+      "expectedTheme": "dark",
+      "alerts": [],
+      "buttons": [
+        {
+          "bottom": 330.25,
+          "disabled": false,
+          "text": "",
+          "top": 294.25
+        },
+        {
+          "bottom": 512.75,
+          "disabled": false,
+          "text": "取消",
+          "top": 476.75
+        },
+        {
+          "bottom": 512.75,
+          "disabled": false,
+          "text": "移动",
+          "top": 476.75
+        }
+      ],
+      "dialog": {
+        "bottom": 529.75,
+        "left": 416,
+        "right": 864,
+        "top": 270.25
+      },
+      "height": 800,
+      "scrollWidth": 1280,
+      "theme": "dark",
+      "width": 1280,
+      "screenshot": "move-read-dark-1280x800.png",
+      "ok": true
+    },
+    {
+      "scenario": "create-refresh",
+      "expectedTheme": "dark",
+      "alerts": [
+        "磁盘已创建，但列表刷新失败：磁盘列表读取超时。请重新读取磁盘列表。"
+      ],
+      "buttons": [
+        {
+          "bottom": 292.5,
+          "disabled": false,
+          "text": "",
+          "top": 256.5
+        },
+        {
+          "bottom": 643.5,
+          "disabled": false,
+          "text": "关闭",
+          "top": 607.5
+        }
+      ],
+      "dialog": {
+        "bottom": 660.5,
+        "left": 464,
+        "right": 976,
+        "top": 239.5
+      },
+      "height": 900,
+      "scrollWidth": 1440,
+      "theme": "dark",
+      "width": 1440,
+      "screenshot": "create-refresh-dark-1440x900.png",
+      "ok": true
+    },
+    {
+      "scenario": "partial",
+      "expectedTheme": "dark",
+      "alerts": [
+        "磁盘已创建，连接失败。已保留 VDI OpaqueRef:created。"
+      ],
+      "buttons": [
+        {
+          "bottom": 310.5,
+          "disabled": false,
+          "text": "",
+          "top": 274.5
+        },
+        {
+          "bottom": 625.5,
+          "disabled": false,
+          "text": "关闭",
+          "top": 589.5
+        }
+      ],
+      "dialog": {
+        "bottom": 642.5,
+        "left": 464,
+        "right": 976,
+        "top": 257.5
+      },
+      "height": 900,
+      "scrollWidth": 1440,
+      "theme": "dark",
+      "width": 1440,
+      "screenshot": "partial-dark-1440x900.png",
+      "ok": true
+    },
+    {
+      "scenario": "move-read",
+      "expectedTheme": "dark",
+      "alerts": [],
+      "buttons": [
+        {
+          "bottom": 380.25,
+          "disabled": false,
+          "text": "",
+          "top": 344.25
+        },
+        {
+          "bottom": 562.75,
+          "disabled": false,
+          "text": "取消",
+          "top": 526.75
+        },
+        {
+          "bottom": 562.75,
+          "disabled": false,
+          "text": "移动",
+          "top": 526.75
+        }
+      ],
+      "dialog": {
+        "bottom": 579.75,
+        "left": 496,
+        "right": 944,
+        "top": 320.25
+      },
+      "height": 900,
+      "scrollWidth": 1440,
+      "theme": "dark",
+      "width": 1440,
+      "screenshot": "move-read-dark-1440x900.png",
+      "ok": true
+    },
+    {
+      "scenario": "create-refresh",
+      "expectedTheme": "dark",
+      "alerts": [
+        "磁盘已创建，但列表刷新失败：磁盘列表读取超时。请重新读取磁盘列表。"
+      ],
+      "buttons": [
+        {
+          "bottom": 382.5,
+          "disabled": false,
+          "text": "",
+          "top": 346.5
+        },
+        {
+          "bottom": 733.5,
+          "disabled": false,
+          "text": "关闭",
+          "top": 697.5
+        }
+      ],
+      "dialog": {
+        "bottom": 750.5,
+        "left": 704,
+        "right": 1216,
+        "top": 329.5
+      },
+      "height": 1080,
+      "scrollWidth": 1920,
+      "theme": "dark",
+      "width": 1920,
+      "screenshot": "create-refresh-dark-1920x1080.png",
+      "ok": true
+    },
+    {
+      "scenario": "partial",
+      "expectedTheme": "dark",
+      "alerts": [
+        "磁盘已创建，连接失败。已保留 VDI OpaqueRef:created。"
+      ],
+      "buttons": [
+        {
+          "bottom": 400.5,
+          "disabled": false,
+          "text": "",
+          "top": 364.5
+        },
+        {
+          "bottom": 715.5,
+          "disabled": false,
+          "text": "关闭",
+          "top": 679.5
+        }
+      ],
+      "dialog": {
+        "bottom": 732.5,
+        "left": 704,
+        "right": 1216,
+        "top": 347.5
+      },
+      "height": 1080,
+      "scrollWidth": 1920,
+      "theme": "dark",
+      "width": 1920,
+      "screenshot": "partial-dark-1920x1080.png",
+      "ok": true
+    },
+    {
+      "scenario": "move-read",
+      "expectedTheme": "dark",
+      "alerts": [],
+      "buttons": [
+        {
+          "bottom": 470.25,
+          "disabled": false,
+          "text": "",
+          "top": 434.25
+        },
+        {
+          "bottom": 652.75,
+          "disabled": false,
+          "text": "取消",
+          "top": 616.75
+        },
+        {
+          "bottom": 652.75,
+          "disabled": false,
+          "text": "移动",
+          "top": 616.75
+        }
+      ],
+      "dialog": {
+        "bottom": 669.75,
+        "left": 736,
+        "right": 1184,
+        "top": 410.25
+      },
+      "height": 1080,
+      "scrollWidth": 1920,
+      "theme": "dark",
+      "width": 1920,
+      "screenshot": "move-read-dark-1920x1080.png",
+      "ok": true
+    },
+    {
+      "scenario": "create",
+      "expectedTheme": "light",
+      "alerts": [],
+      "buttons": [
+        {
+          "bottom": 111.75,
+          "disabled": false,
+          "text": "",
+          "top": 75.75
+        },
+        {
+          "bottom": 374.75,
+          "disabled": false,
+          "text": "GB",
+          "top": 338.75
+        },
+        {
+          "bottom": 374.75,
+          "disabled": false,
+          "text": "MB",
+          "top": 338.75
+        },
+        {
+          "bottom": 692.25,
+          "disabled": false,
+          "text": "取消",
+          "top": 656.25
+        },
+        {
+          "bottom": 692.25,
+          "disabled": true,
+          "text": "创建",
+          "top": 656.25
+        }
+      ],
+      "dialog": {
+        "bottom": 709.25,
+        "left": 256,
+        "right": 768,
+        "top": 58.75
+      },
+      "height": 768,
+      "scrollWidth": 1024,
+      "theme": "light",
+      "width": 1024,
+      "screenshot": "create-light-1024x768.png",
+      "ok": true
+    },
+    {
+      "scenario": "create-reconnect",
+      "expectedTheme": "light",
+      "alerts": [
+        "管理连接已变化，无法读取原创建请求的结果。请关闭窗口，重新读取原虚拟机磁盘和存储清单后核对。"
+      ],
+      "buttons": [
+        {
+          "bottom": 234.5,
+          "disabled": false,
+          "text": "",
+          "top": 198.5
+        },
+        {
+          "bottom": 569.5,
+          "disabled": false,
+          "text": "关闭",
+          "top": 533.5
+        }
+      ],
+      "dialog": {
+        "bottom": 586.5,
+        "left": 256,
+        "right": 768,
+        "top": 181.5
+      },
+      "height": 768,
+      "scrollWidth": 1024,
+      "theme": "light",
+      "width": 1024,
+      "screenshot": "create-reconnect-light-1024x768.png",
+      "ok": true
+    },
+    {
+      "scenario": "move-error",
+      "expectedTheme": "light",
+      "alerts": [
+        "服务器任务读取超时：OpaqueRef:move-task请关闭窗口，重新读取原虚拟机磁盘和存储清单后再操作。"
+      ],
+      "buttons": [
+        {
+          "bottom": 273.25,
+          "disabled": false,
+          "text": "",
+          "top": 237.25
+        },
+        {
+          "bottom": 537.75,
+          "disabled": false,
+          "text": "取消",
+          "top": 501.75
+        },
+        {
+          "bottom": 537.75,
+          "disabled": true,
+          "text": "移动",
+          "top": 501.75
+        }
+      ],
+      "dialog": {
+        "bottom": 554.75,
+        "left": 288,
+        "right": 736,
+        "top": 213.25
+      },
+      "height": 768,
+      "scrollWidth": 1024,
+      "theme": "light",
+      "width": 1024,
+      "screenshot": "move-error-light-1024x768.png",
+      "ok": true
+    },
+    {
+      "scenario": "create",
+      "expectedTheme": "light",
+      "alerts": [],
+      "buttons": [
+        {
+          "bottom": 127.75,
+          "disabled": false,
+          "text": "",
+          "top": 91.75
+        },
+        {
+          "bottom": 390.75,
+          "disabled": false,
+          "text": "GB",
+          "top": 354.75
+        },
+        {
+          "bottom": 390.75,
+          "disabled": false,
+          "text": "MB",
+          "top": 354.75
+        },
+        {
+          "bottom": 708.25,
+          "disabled": false,
+          "text": "取消",
+          "top": 672.25
+        },
+        {
+          "bottom": 708.25,
+          "disabled": true,
+          "text": "创建",
+          "top": 672.25
+        }
+      ],
+      "dialog": {
+        "bottom": 725.25,
+        "left": 384,
+        "right": 896,
+        "top": 74.75
+      },
+      "height": 800,
+      "scrollWidth": 1280,
+      "theme": "light",
+      "width": 1280,
+      "screenshot": "create-light-1280x800.png",
+      "ok": true
+    },
+    {
+      "scenario": "create-reconnect",
+      "expectedTheme": "light",
+      "alerts": [
+        "管理连接已变化，无法读取原创建请求的结果。请关闭窗口，重新读取原虚拟机磁盘和存储清单后核对。"
+      ],
+      "buttons": [
+        {
+          "bottom": 250.5,
+          "disabled": false,
+          "text": "",
+          "top": 214.5
+        },
+        {
+          "bottom": 585.5,
+          "disabled": false,
+          "text": "关闭",
+          "top": 549.5
+        }
+      ],
+      "dialog": {
+        "bottom": 602.5,
+        "left": 384,
+        "right": 896,
+        "top": 197.5
+      },
+      "height": 800,
+      "scrollWidth": 1280,
+      "theme": "light",
+      "width": 1280,
+      "screenshot": "create-reconnect-light-1280x800.png",
+      "ok": true
+    },
+    {
+      "scenario": "move-error",
+      "expectedTheme": "light",
+      "alerts": [
+        "服务器任务读取超时：OpaqueRef:move-task请关闭窗口，重新读取原虚拟机磁盘和存储清单后再操作。"
+      ],
+      "buttons": [
+        {
+          "bottom": 289.25,
+          "disabled": false,
+          "text": "",
+          "top": 253.25
+        },
+        {
+          "bottom": 553.75,
+          "disabled": false,
+          "text": "取消",
+          "top": 517.75
+        },
+        {
+          "bottom": 553.75,
+          "disabled": true,
+          "text": "移动",
+          "top": 517.75
+        }
+      ],
+      "dialog": {
+        "bottom": 570.75,
+        "left": 416,
+        "right": 864,
+        "top": 229.25
+      },
+      "height": 800,
+      "scrollWidth": 1280,
+      "theme": "light",
+      "width": 1280,
+      "screenshot": "move-error-light-1280x800.png",
+      "ok": true
+    },
+    {
+      "scenario": "create",
+      "expectedTheme": "light",
+      "alerts": [],
+      "buttons": [
+        {
+          "bottom": 177.75,
+          "disabled": false,
+          "text": "",
+          "top": 141.75
+        },
+        {
+          "bottom": 440.75,
+          "disabled": false,
+          "text": "GB",
+          "top": 404.75
+        },
+        {
+          "bottom": 440.75,
+          "disabled": false,
+          "text": "MB",
+          "top": 404.75
+        },
+        {
+          "bottom": 758.25,
+          "disabled": false,
+          "text": "取消",
+          "top": 722.25
+        },
+        {
+          "bottom": 758.25,
+          "disabled": true,
+          "text": "创建",
+          "top": 722.25
+        }
+      ],
+      "dialog": {
+        "bottom": 775.25,
+        "left": 464,
+        "right": 976,
+        "top": 124.75
+      },
+      "height": 900,
+      "scrollWidth": 1440,
+      "theme": "light",
+      "width": 1440,
+      "screenshot": "create-light-1440x900.png",
+      "ok": true
+    },
+    {
+      "scenario": "create-reconnect",
+      "expectedTheme": "light",
+      "alerts": [
+        "管理连接已变化，无法读取原创建请求的结果。请关闭窗口，重新读取原虚拟机磁盘和存储清单后核对。"
+      ],
+      "buttons": [
+        {
+          "bottom": 300.5,
+          "disabled": false,
+          "text": "",
+          "top": 264.5
+        },
+        {
+          "bottom": 635.5,
+          "disabled": false,
+          "text": "关闭",
+          "top": 599.5
+        }
+      ],
+      "dialog": {
+        "bottom": 652.5,
+        "left": 464,
+        "right": 976,
+        "top": 247.5
+      },
+      "height": 900,
+      "scrollWidth": 1440,
+      "theme": "light",
+      "width": 1440,
+      "screenshot": "create-reconnect-light-1440x900.png",
+      "ok": true
+    },
+    {
+      "scenario": "move-error",
+      "expectedTheme": "light",
+      "alerts": [
+        "服务器任务读取超时：OpaqueRef:move-task请关闭窗口，重新读取原虚拟机磁盘和存储清单后再操作。"
+      ],
+      "buttons": [
+        {
+          "bottom": 339.25,
+          "disabled": false,
+          "text": "",
+          "top": 303.25
+        },
+        {
+          "bottom": 603.75,
+          "disabled": false,
+          "text": "取消",
+          "top": 567.75
+        },
+        {
+          "bottom": 603.75,
+          "disabled": true,
+          "text": "移动",
+          "top": 567.75
+        }
+      ],
+      "dialog": {
+        "bottom": 620.75,
+        "left": 496,
+        "right": 944,
+        "top": 279.25
+      },
+      "height": 900,
+      "scrollWidth": 1440,
+      "theme": "light",
+      "width": 1440,
+      "screenshot": "move-error-light-1440x900.png",
+      "ok": true
+    },
+    {
+      "scenario": "create",
+      "expectedTheme": "light",
+      "alerts": [],
+      "buttons": [
+        {
+          "bottom": 267.75,
+          "disabled": false,
+          "text": "",
+          "top": 231.75
+        },
+        {
+          "bottom": 530.75,
+          "disabled": false,
+          "text": "GB",
+          "top": 494.75
+        },
+        {
+          "bottom": 530.75,
+          "disabled": false,
+          "text": "MB",
+          "top": 494.75
+        },
+        {
+          "bottom": 848.25,
+          "disabled": false,
+          "text": "取消",
+          "top": 812.25
+        },
+        {
+          "bottom": 848.25,
+          "disabled": true,
+          "text": "创建",
+          "top": 812.25
+        }
+      ],
+      "dialog": {
+        "bottom": 865.25,
+        "left": 704,
+        "right": 1216,
+        "top": 214.75
+      },
+      "height": 1080,
+      "scrollWidth": 1920,
+      "theme": "light",
+      "width": 1920,
+      "screenshot": "create-light-1920x1080.png",
+      "ok": true
+    },
+    {
+      "scenario": "create-reconnect",
+      "expectedTheme": "light",
+      "alerts": [
+        "管理连接已变化，无法读取原创建请求的结果。请关闭窗口，重新读取原虚拟机磁盘和存储清单后核对。"
+      ],
+      "buttons": [
+        {
+          "bottom": 390.5,
+          "disabled": false,
+          "text": "",
+          "top": 354.5
+        },
+        {
+          "bottom": 725.5,
+          "disabled": false,
+          "text": "关闭",
+          "top": 689.5
+        }
+      ],
+      "dialog": {
+        "bottom": 742.5,
+        "left": 704,
+        "right": 1216,
+        "top": 337.5
+      },
+      "height": 1080,
+      "scrollWidth": 1920,
+      "theme": "light",
+      "width": 1920,
+      "screenshot": "create-reconnect-light-1920x1080.png",
+      "ok": true
+    },
+    {
+      "scenario": "move-error",
+      "expectedTheme": "light",
+      "alerts": [
+        "服务器任务读取超时：OpaqueRef:move-task请关闭窗口，重新读取原虚拟机磁盘和存储清单后再操作。"
+      ],
+      "buttons": [
+        {
+          "bottom": 429.25,
+          "disabled": false,
+          "text": "",
+          "top": 393.25
+        },
+        {
+          "bottom": 693.75,
+          "disabled": false,
+          "text": "取消",
+          "top": 657.75
+        },
+        {
+          "bottom": 693.75,
+          "disabled": true,
+          "text": "移动",
+          "top": 657.75
+        }
+      ],
+      "dialog": {
+        "bottom": 710.75,
+        "left": 736,
+        "right": 1184,
+        "top": 369.25
+      },
+      "height": 1080,
+      "scrollWidth": 1920,
+      "theme": "light",
+      "width": 1920,
+      "screenshot": "move-error-light-1920x1080.png",
+      "ok": true
+    },
+    {
+      "scenario": "create",
+      "expectedTheme": "dark",
+      "alerts": [],
+      "buttons": [
+        {
+          "bottom": 111.75,
+          "disabled": false,
+          "text": "",
+          "top": 75.75
+        },
+        {
+          "bottom": 374.75,
+          "disabled": false,
+          "text": "GB",
+          "top": 338.75
+        },
+        {
+          "bottom": 374.75,
+          "disabled": false,
+          "text": "MB",
+          "top": 338.75
+        },
+        {
+          "bottom": 692.25,
+          "disabled": false,
+          "text": "取消",
+          "top": 656.25
+        },
+        {
+          "bottom": 692.25,
+          "disabled": true,
+          "text": "创建",
+          "top": 656.25
+        }
+      ],
+      "dialog": {
+        "bottom": 709.25,
+        "left": 256,
+        "right": 768,
+        "top": 58.75
+      },
+      "height": 768,
+      "scrollWidth": 1024,
+      "theme": "dark",
+      "width": 1024,
+      "screenshot": "create-dark-1024x768.png",
+      "ok": true
+    },
+    {
+      "scenario": "create-reconnect",
+      "expectedTheme": "dark",
+      "alerts": [
+        "管理连接已变化，无法读取原创建请求的结果。请关闭窗口，重新读取原虚拟机磁盘和存储清单后核对。"
+      ],
+      "buttons": [
+        {
+          "bottom": 234.5,
+          "disabled": false,
+          "text": "",
+          "top": 198.5
+        },
+        {
+          "bottom": 569.5,
+          "disabled": false,
+          "text": "关闭",
+          "top": 533.5
+        }
+      ],
+      "dialog": {
+        "bottom": 586.5,
+        "left": 256,
+        "right": 768,
+        "top": 181.5
+      },
+      "height": 768,
+      "scrollWidth": 1024,
+      "theme": "dark",
+      "width": 1024,
+      "screenshot": "create-reconnect-dark-1024x768.png",
+      "ok": true
+    },
+    {
+      "scenario": "move-error",
+      "expectedTheme": "dark",
+      "alerts": [
+        "服务器任务读取超时：OpaqueRef:move-task请关闭窗口，重新读取原虚拟机磁盘和存储清单后再操作。"
+      ],
+      "buttons": [
+        {
+          "bottom": 273.25,
+          "disabled": false,
+          "text": "",
+          "top": 237.25
+        },
+        {
+          "bottom": 537.75,
+          "disabled": false,
+          "text": "取消",
+          "top": 501.75
+        },
+        {
+          "bottom": 537.75,
+          "disabled": true,
+          "text": "移动",
+          "top": 501.75
+        }
+      ],
+      "dialog": {
+        "bottom": 554.75,
+        "left": 288,
+        "right": 736,
+        "top": 213.25
+      },
+      "height": 768,
+      "scrollWidth": 1024,
+      "theme": "dark",
+      "width": 1024,
+      "screenshot": "move-error-dark-1024x768.png",
+      "ok": true
+    },
+    {
+      "scenario": "create",
+      "expectedTheme": "dark",
+      "alerts": [],
+      "buttons": [
+        {
+          "bottom": 127.75,
+          "disabled": false,
+          "text": "",
+          "top": 91.75
+        },
+        {
+          "bottom": 390.75,
+          "disabled": false,
+          "text": "GB",
+          "top": 354.75
+        },
+        {
+          "bottom": 390.75,
+          "disabled": false,
+          "text": "MB",
+          "top": 354.75
+        },
+        {
+          "bottom": 708.25,
+          "disabled": false,
+          "text": "取消",
+          "top": 672.25
+        },
+        {
+          "bottom": 708.25,
+          "disabled": true,
+          "text": "创建",
+          "top": 672.25
+        }
+      ],
+      "dialog": {
+        "bottom": 725.25,
+        "left": 384,
+        "right": 896,
+        "top": 74.75
+      },
+      "height": 800,
+      "scrollWidth": 1280,
+      "theme": "dark",
+      "width": 1280,
+      "screenshot": "create-dark-1280x800.png",
+      "ok": true
+    },
+    {
+      "scenario": "create-reconnect",
+      "expectedTheme": "dark",
+      "alerts": [
+        "管理连接已变化，无法读取原创建请求的结果。请关闭窗口，重新读取原虚拟机磁盘和存储清单后核对。"
+      ],
+      "buttons": [
+        {
+          "bottom": 250.5,
+          "disabled": false,
+          "text": "",
+          "top": 214.5
+        },
+        {
+          "bottom": 585.5,
+          "disabled": false,
+          "text": "关闭",
+          "top": 549.5
+        }
+      ],
+      "dialog": {
+        "bottom": 602.5,
+        "left": 384,
+        "right": 896,
+        "top": 197.5
+      },
+      "height": 800,
+      "scrollWidth": 1280,
+      "theme": "dark",
+      "width": 1280,
+      "screenshot": "create-reconnect-dark-1280x800.png",
+      "ok": true
+    },
+    {
+      "scenario": "move-error",
+      "expectedTheme": "dark",
+      "alerts": [
+        "服务器任务读取超时：OpaqueRef:move-task请关闭窗口，重新读取原虚拟机磁盘和存储清单后再操作。"
+      ],
+      "buttons": [
+        {
+          "bottom": 289.25,
+          "disabled": false,
+          "text": "",
+          "top": 253.25
+        },
+        {
+          "bottom": 553.75,
+          "disabled": false,
+          "text": "取消",
+          "top": 517.75
+        },
+        {
+          "bottom": 553.75,
+          "disabled": true,
+          "text": "移动",
+          "top": 517.75
+        }
+      ],
+      "dialog": {
+        "bottom": 570.75,
+        "left": 416,
+        "right": 864,
+        "top": 229.25
+      },
+      "height": 800,
+      "scrollWidth": 1280,
+      "theme": "dark",
+      "width": 1280,
+      "screenshot": "move-error-dark-1280x800.png",
+      "ok": true
+    },
+    {
+      "scenario": "create",
+      "expectedTheme": "dark",
+      "alerts": [],
+      "buttons": [
+        {
+          "bottom": 177.75,
+          "disabled": false,
+          "text": "",
+          "top": 141.75
+        },
+        {
+          "bottom": 440.75,
+          "disabled": false,
+          "text": "GB",
+          "top": 404.75
+        },
+        {
+          "bottom": 440.75,
+          "disabled": false,
+          "text": "MB",
+          "top": 404.75
+        },
+        {
+          "bottom": 758.25,
+          "disabled": false,
+          "text": "取消",
+          "top": 722.25
+        },
+        {
+          "bottom": 758.25,
+          "disabled": true,
+          "text": "创建",
+          "top": 722.25
+        }
+      ],
+      "dialog": {
+        "bottom": 775.25,
+        "left": 464,
+        "right": 976,
+        "top": 124.75
+      },
+      "height": 900,
+      "scrollWidth": 1440,
+      "theme": "dark",
+      "width": 1440,
+      "screenshot": "create-dark-1440x900.png",
+      "ok": true
+    },
+    {
+      "scenario": "create-reconnect",
+      "expectedTheme": "dark",
+      "alerts": [
+        "管理连接已变化，无法读取原创建请求的结果。请关闭窗口，重新读取原虚拟机磁盘和存储清单后核对。"
+      ],
+      "buttons": [
+        {
+          "bottom": 300.5,
+          "disabled": false,
+          "text": "",
+          "top": 264.5
+        },
+        {
+          "bottom": 635.5,
+          "disabled": false,
+          "text": "关闭",
+          "top": 599.5
+        }
+      ],
+      "dialog": {
+        "bottom": 652.5,
+        "left": 464,
+        "right": 976,
+        "top": 247.5
+      },
+      "height": 900,
+      "scrollWidth": 1440,
+      "theme": "dark",
+      "width": 1440,
+      "screenshot": "create-reconnect-dark-1440x900.png",
+      "ok": true
+    },
+    {
+      "scenario": "move-error",
+      "expectedTheme": "dark",
+      "alerts": [
+        "服务器任务读取超时：OpaqueRef:move-task请关闭窗口，重新读取原虚拟机磁盘和存储清单后再操作。"
+      ],
+      "buttons": [
+        {
+          "bottom": 339.25,
+          "disabled": false,
+          "text": "",
+          "top": 303.25
+        },
+        {
+          "bottom": 603.75,
+          "disabled": false,
+          "text": "取消",
+          "top": 567.75
+        },
+        {
+          "bottom": 603.75,
+          "disabled": true,
+          "text": "移动",
+          "top": 567.75
+        }
+      ],
+      "dialog": {
+        "bottom": 620.75,
+        "left": 496,
+        "right": 944,
+        "top": 279.25
+      },
+      "height": 900,
+      "scrollWidth": 1440,
+      "theme": "dark",
+      "width": 1440,
+      "screenshot": "move-error-dark-1440x900.png",
+      "ok": true
+    },
+    {
+      "scenario": "create",
+      "expectedTheme": "dark",
+      "alerts": [],
+      "buttons": [
+        {
+          "bottom": 267.75,
+          "disabled": false,
+          "text": "",
+          "top": 231.75
+        },
+        {
+          "bottom": 530.75,
+          "disabled": false,
+          "text": "GB",
+          "top": 494.75
+        },
+        {
+          "bottom": 530.75,
+          "disabled": false,
+          "text": "MB",
+          "top": 494.75
+        },
+        {
+          "bottom": 848.25,
+          "disabled": false,
+          "text": "取消",
+          "top": 812.25
+        },
+        {
+          "bottom": 848.25,
+          "disabled": true,
+          "text": "创建",
+          "top": 812.25
+        }
+      ],
+      "dialog": {
+        "bottom": 865.25,
+        "left": 704,
+        "right": 1216,
+        "top": 214.75
+      },
+      "height": 1080,
+      "scrollWidth": 1920,
+      "theme": "dark",
+      "width": 1920,
+      "screenshot": "create-dark-1920x1080.png",
+      "ok": true
+    },
+    {
+      "scenario": "create-reconnect",
+      "expectedTheme": "dark",
+      "alerts": [
+        "管理连接已变化，无法读取原创建请求的结果。请关闭窗口，重新读取原虚拟机磁盘和存储清单后核对。"
+      ],
+      "buttons": [
+        {
+          "bottom": 390.5,
+          "disabled": false,
+          "text": "",
+          "top": 354.5
+        },
+        {
+          "bottom": 725.5,
+          "disabled": false,
+          "text": "关闭",
+          "top": 689.5
+        }
+      ],
+      "dialog": {
+        "bottom": 742.5,
+        "left": 704,
+        "right": 1216,
+        "top": 337.5
+      },
+      "height": 1080,
+      "scrollWidth": 1920,
+      "theme": "dark",
+      "width": 1920,
+      "screenshot": "create-reconnect-dark-1920x1080.png",
+      "ok": true
+    },
+    {
+      "scenario": "move-error",
+      "expectedTheme": "dark",
+      "alerts": [
+        "服务器任务读取超时：OpaqueRef:move-task请关闭窗口，重新读取原虚拟机磁盘和存储清单后再操作。"
+      ],
+      "buttons": [
+        {
+          "bottom": 429.25,
+          "disabled": false,
+          "text": "",
+          "top": 393.25
+        },
+        {
+          "bottom": 693.75,
+          "disabled": false,
+          "text": "取消",
+          "top": 657.75
+        },
+        {
+          "bottom": 693.75,
+          "disabled": true,
+          "text": "移动",
+          "top": 657.75
+        }
+      ],
+      "dialog": {
+        "bottom": 710.75,
+        "left": 736,
+        "right": 1184,
+        "top": 369.25
+      },
+      "height": 1080,
+      "scrollWidth": 1920,
+      "theme": "dark",
+      "width": 1920,
+      "screenshot": "move-error-dark-1920x1080.png",
+      "ok": true
+    }
+  ]
+}

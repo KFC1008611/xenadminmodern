@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-23",
+  "scope": "source changes and local synthetic verification; no installation or real XCP-ng access",
+  "toolchain": {
+    "nodeVersion": "24.22.0",
+    "npmVersion": "11.19.1",
+    "lockfileVersion": 3
+  },
+  "fullTestGate": {
+    "schemaVersion": 1,
+    "kind": "xenadmin-test-gate",
+    "ok": true,
+    "toolchain": {
+      "nodeVersion": "24.22.0",
+      "npmVersion": "11.19.1",
+      "lockfileVersion": 3
+    },
+    "collection": {
+      "mode": "full",
+      "manifestChecked": true,
+      "fileCount": 197,
+      "testCount": 2069,
+      "expectedFileCount": 197,
+      "expectedTestCount": 2069,
+      "drift": {
+        "missing": [],
+        "unexpected": [],
+        "countMismatches": []
+      }
+    },
+    "tests": {
+      "passed": 2069,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "onlyDetected": false
+    },
+    "diagnostics": {
+      "warningCount": 0,
+      "stderr": {
+        "bytes": 0,
+        "lineCount": 0
+      }
+    },
+    "errors": []
+  },
+  "checks": {
+    "nodeTypecheck": "passed",
+    "webTypecheck": "passed",
+    "lint": "passed",
+    "productionBuild": "passed",
+    "gitDiffCheck": "passed"
+  },
+  "performanceEvidence": [
+    "evidence/db-results.json",
+    "evidence/db-results-after.json",
+    "evidence/on-demand-results.json",
+    "evidence/on-demand-results-after.json",
+    "evidence/monitor-overlap-results.json",
+    "evidence/monitor-overlap-results-after.json"
+  ],
+  "sourceSha256": {
+    "src/main/index.ts": "8d5cecb4d77fe68ec24da9321a1926f1dac883c24588102484042dc1f7ad2448",
+    "src/main/ipc/handlers/infrastructure.ts": "b863b63af23f496810b2f82ddefbf1c63ca385c7669cf26838813a397b09f598",
+    "src/main/persistence/json-store.ts": "9039d9b9262547781d25b10eb96e85ed64de78e8552d55b7f8001036319d3343",
+    "src/main/xapi/services/alert-engine.service.ts": "dbefa60cfeb39b27cc2fffbae57ac85d769c6741637166abf1b059232db2d8bf",
+    "src/main/xapi/services/bounded-samples.ts": "6461c2b4df40c40ed3cf40fae5b6281fe59030503480aaac88a5e24ecac7eb92",
+    "src/main/xapi/services/metrics-db.service.ts": "182c2983e97c57f8d126d72bf828bdeb4909e8c40cc955ff5408bad236be29bb",
+    "src/main/xapi/services/metrics.service.ts": "dfd4b9b3dae4bd7234a3021a5086294c2ce4d9111e674021539817e30c0f1e25",
+    "src/renderer/src/components/vm/VmMonitorTab.tsx": "19f102072c1a32be9c33c8c5bcbed8f0acc9451c1138136571b68009f3d22d24",
+    "tests/unit/metrics-db-service.test.ts": "11ba5264dc615164ee6060275193c73da9b18def748b55e924291ffdcb75042a",
+    "tests/unit/metrics-service.test.ts": "6c0ba225302d858ffbb115dcbeb29b382a12576d569eadf2766298ccd380c882",
+    "tests/unit/metric-snapshot-writer.test.ts": "bc6363b049ed26ab449dad156053c97cc6538e1da804a40b30baf7975708b1fb",
+    "tests/unit/observability-persistence.test.ts": "a23bafcdb9de34e184093996d0dd8ee1b30273a30d1e23439db9a202b4b32d10",
+    "tests/components/VmMonitorTab.test.tsx": "bcaebdc992b6a7f0b01cfe97e983ca6b9d44cd4f6bcfb31379f1200b20dbdeb0",
+    "tests/test-collection.json": "0818356fbc6fd2ade8ebd7dd564198dde163bfcac2fb94b8c42f45c3b7fde4d4"
+  }
+}

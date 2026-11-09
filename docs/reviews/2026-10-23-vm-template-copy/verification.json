@@ -1,0 +1,645 @@
+{
+  "date": "2026-10-23",
+  "scope": "current dirty worktree source; not installed application or real pool mutation",
+  "head": "7c3e7e67bb3fea8e59b2c4bc53d720392d1c982d",
+  "nodeExistingAndReproTests": "24.22.1 (bundled runtime)",
+  "projectPinnedNode": "24.22.0",
+  "strictProjectGateRun": false,
+  "toolchainNote": "Direct Vitest runs for review; do not represent these as the pinned npm test gate, full suite, lint, typecheck, production build or real hypervisor acceptance.",
+  "reports": {
+    "existing-tests": {
+      "success": true,
+      "total": 127,
+      "passed": 127,
+      "failed": 0,
+      "pending": 0,
+      "files": [
+        {
+          "name": "tests/unit/ipc-vm-contract.test.ts",
+          "status": "passed",
+          "assertions": [
+            {
+              "name": " VM list IPC contract declares a strict read boundary and preserves compatible XAPI result extensions",
+              "status": "passed"
+            },
+            {
+              "name": " VM list IPC contract declares a strict VM change push envelope while preserving live snapshot extensions",
+              "status": "passed"
+            },
+            {
+              "name": " VM list IPC contract declares the literal base VM read inventory and validates normalized DTO results",
+              "status": "passed"
+            },
+            {
+              "name": " VM list IPC contract declares strict lifecycle, compute, and VM-device mutation tuples",
+              "status": "passed"
+            },
+            {
+              "name": " VM list IPC contract declares strict relocation, copy, and creation discriminators",
+              "status": "passed"
+            },
+            {
+              "name": " VM list IPC contract declares strict snapshot and template payload contracts",
+              "status": "passed"
+            },
+            {
+              "name": " VM list IPC contract declares strict XVA transfer and progress contracts without treating paths as secrets",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "name": "tests/unit/ipc-vm-tracer.test.ts",
+          "status": "passed",
+          "assertions": [
+            {
+              "name": " VM IPC contract tracer registers read and basic mutation contracts and enforces owner before the audit gate",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "name": "tests/unit/template-service.test.ts",
+          "status": "passed",
+          "assertions": [
+            {
+              "name": " template-service cloneTemplate same-pool clone: uses VM.clone and preserves template metadata from XAPI",
+              "status": "passed"
+            },
+            {
+              "name": " template-service cloneTemplate cross-SR copy: uses VM.copy without adding an instant marker",
+              "status": "passed"
+            },
+            {
+              "name": " template-service cloneTemplate returns the new template ref",
+              "status": "passed"
+            },
+            {
+              "name": " template-service cloneTemplate propagates errors from XAPI",
+              "status": "passed"
+            },
+            {
+              "name": " template-service deleteTemplate throws error for system template (is_default_template=true)",
+              "status": "passed"
+            },
+            {
+              "name": " template-service deleteTemplate throws error for system template (other_config default_template=true)",
+              "status": "passed"
+            },
+            {
+              "name": " template-service deleteTemplate deletes template and associated VDIs when deleteDisks=true",
+              "status": "passed"
+            },
+            {
+              "name": " template-service deleteTemplate only destroys template when deleteDisks=false",
+              "status": "passed"
+            },
+            {
+              "name": " template-service deleteTemplate skips VDI.destroy for NULL VDI references",
+              "status": "passed"
+            },
+            {
+              "name": " template-service updateTemplateSettings updates name label when nameLabel is provided",
+              "status": "passed"
+            },
+            {
+              "name": " template-service updateTemplateSettings updates description when nameDescription is provided",
+              "status": "passed"
+            },
+            {
+              "name": " template-service updateTemplateSettings updates VCPUs when vcpusMax and vcpusAtStartup are provided",
+              "status": "passed"
+            },
+            {
+              "name": " template-service updateTemplateSettings updates memory limits and uses current values for unspecified fields",
+              "status": "passed"
+            },
+            {
+              "name": " template-service updateTemplateSettings uses provided memory values when all are specified",
+              "status": "passed"
+            },
+            {
+              "name": " template-service updateTemplateSettings does not call any set method for empty payload (only templateRef)",
+              "status": "passed"
+            },
+            {
+              "name": " template-service updateTemplateSettings partial update: only calls set methods for provided fields",
+              "status": "passed"
+            },
+            {
+              "name": " template-service updateTemplateSettings propagates errors from XAPI",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "name": "tests/unit/vm-relocation-service.test.ts",
+          "status": "passed",
+          "assertions": [
+            {
+              "name": " vm-relocation.service builds an IPC-valid plan from XAPI host metrics and decimal capacity fields",
+              "status": "passed"
+            },
+            {
+              "name": " vm-relocation.service uses Async.VM.pool_migrate for same-pool host migration",
+              "status": "passed"
+            },
+            {
+              "name": " vm-relocation.service reports an unknown outcome when the completed migration has not changed host",
+              "status": "passed"
+            },
+            {
+              "name": " vm-relocation.service refuses same-pool migration when XAPI does not advertise it",
+              "status": "passed"
+            },
+            {
+              "name": " vm-relocation.service moves halted owner disks through pool_migrate and preserves VBD identity",
+              "status": "passed"
+            },
+            {
+              "name": " vm-relocation.service uses target host.migrate_receive and source Async.VM.migrate_send for cross-pool copy",
+              "status": "passed"
+            },
+            {
+              "name": " vm-relocation.service blocks same-pool migration before mutation when server target validation fails",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "name": "tests/unit/vm-service.test.ts",
+          "status": "passed",
+          "assertions": [
+            {
+              "name": " vm.service enriches VM IPs with one pool-scoped bulk read and excludes old stopped guest metrics",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service keeps VM inventory available when the optional guest metrics bulk read fails",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service getAllVms filters out templates and control domains and includes connection metadata",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service getAllVms throws when connectionId is invalid",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service normalizes XAPI decimal VM sizes for list, detail, and template IPC results",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service startVm calls VM.start with the correct params",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service shutdownVm calls VM.clean_shutdown",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service forceShutdownVm calls VM.hard_shutdown",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service rebootVm calls VM.clean_reboot",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service pauseVm calls VM.pause",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service unpauseVm calls VM.unpause",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service suspendVm calls VM.suspend",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service resumeVm calls VM.resume",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service destroyVm destroys a halted VM without deleting owner disks by default",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service destroyVm deletes only explicitly selected owner VDIs after VM.destroy",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service destroyVm rejects a selected VDI that is not an owner disk before destroying the VM",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service destroyVm does not treat owner=false as a deletable disk",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service destroyVm rejects an owner-marked disk connected to another VM",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service destroyVm reports remaining disks when post-destroy cleanup fails",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service destroyVm always deletes suspend VDI after VM.destroy",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service destroyVm rejects running VMs before calling VM.destroy",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service destroyVm rejects missing allowed operations before deleting",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service snapshotVm calls VM.snapshot with the version-compatible parameters and returns the new ref",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service migrateVm calls VM.pool_migrate",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service copyVm fast-clones a VM and updates description",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service copyVm full-copies a VM to the selected SR",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service copyVm rejects full copy without a target SR",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service startVm propagates errors from XAPI",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service shutdownVm propagates errors from XAPI",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service forceShutdownVm propagates errors",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service rebootVm propagates errors",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service suspendVm propagates errors",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service resumeVm propagates errors",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service migrateVm propagates errors",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service getVmRecord returns detailed record with guest metrics",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service getVmRecord handles missing guest metrics gracefully",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service setVmNameLabel calls VM.set_name_label",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service setVmNameDescription calls VM.set_name_description",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service setVmVcpus lowers startup before max to preserve the XAPI invariant",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service setVmVcpus raises max before startup",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service reports the read-back VCPU configuration after a second-step failure without retrying",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service reconciles a lost VCPU response only by reading the applied values",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service does not retry VCPU writes when the final read fails",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service rejects a VCPU edit when the current record forbids it ({\"power_state\":\"Running\"})",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service rejects a VCPU edit when the current record forbids it ({\"power_state\":\"Halted\",\"is_a_template\":true})",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service rejects a VCPU edit when the current record forbids it ({\"power_state\":\"Halted\",\"current_operations\":{\"task\":\"start\"}})",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service rejects a VCPU edit when the current record forbids it ({\"power_state\":\"Halted\",\"allowed_operations\":[]})",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service rejects destruction of an explicitly protected VM before reading or deleting disks",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service setVmMemoryLimits calls VM.set_memory_limits with string params",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service getVmVBDs returns filtered Disk-type VBDs with VDI info",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service plugVbd calls VBD.plug",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service unplugVbd calls VBD.unplug",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service detachVbd unplugs attached VBDs before destroying them",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service detachVbd destroys inactive VBDs without unplugging",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service getVmVIFs returns VIF records with network names",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service getVmSnapshots returns snapshot records sorted newest first",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service normalizes XML-RPC snapshot dates before sorting and IPC validation",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service revertVmSnapshot calls VM.revert",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service deleteVmSnapshot destroys the VM record before its exclusive RW VDI",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service renameVmSnapshot calls VM.set_name_label",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service getVmConsole returns console records",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service getVmConsole returns empty array when no consoles",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service getVmVBDs handles VDI.get_record error gracefully",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service listIsoImages returns ISO VDIs with SR names",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service mountVmIso inserts an ISO into an empty CD VBD",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service mountVmIso replaces a mounted ISO by ejecting before insert",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service mountVmIso creates an empty CD VBD when the VM has no CD drive",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service ejectVmIso ejects a mounted ISO",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service ejectVmIso treats an empty CD drive as a no-op",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service getVmVIFs handles network.get_record error gracefully",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service getVmSnapshots calculates size from VBDs",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service deleteVmSnapshot handles NULL VDI gracefully",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service deleteVmSnapshot retains shared VDIs and reports them",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service deleteVmSnapshot rejects an ordinary VM before deleting anything",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service getTemplates filters and sorts by name",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service reads back an empty CD drive after eject succeeds and insert fails",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service reports the detached VBD state when unplug succeeds and destroy fails",
+              "status": "passed"
+            },
+            {
+              "name": " vm.service releases a suspended checkpoint and removes its owned suspend VDI after the VM record",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "name": "tests/unit/vmActionGuard.test.ts",
+          "status": "passed",
+          "assertions": [
+            {
+              "name": " canRunVmAction allows start for a halted VM with the required XAPI operation",
+              "status": "passed"
+            },
+            {
+              "name": " canRunVmAction blocks start for a running VM",
+              "status": "passed"
+            },
+            {
+              "name": " canRunVmAction blocks actions on templates and control domains",
+              "status": "passed"
+            },
+            {
+              "name": " canRunVmAction blocks when the required allowed operation is missing",
+              "status": "passed"
+            },
+            {
+              "name": " canRunVmAction blocks actions while allowed operations are missing or empty",
+              "status": "passed"
+            },
+            {
+              "name": " canRunVmAction allows pause only for running VMs with pause operation",
+              "status": "passed"
+            },
+            {
+              "name": " canRunVmAction allows unpause only for paused VMs with unpause operation",
+              "status": "passed"
+            },
+            {
+              "name": " canRunVmAction follows XAPI copy capabilities for non-suspended VMs",
+              "status": "passed"
+            },
+            {
+              "name": " canRunVmAction blocks while another operation is running",
+              "status": "passed"
+            },
+            {
+              "name": " canRunVmAction uses XAPI blocked operation reasons when available",
+              "status": "passed"
+            },
+            {
+              "name": " canRunVmAction enables reboot and force shutdown when the VM permits them",
+              "status": "passed"
+            },
+            {
+              "name": " canRunVmAction opens running export through its preparation capabilities rather than direct export",
+              "status": "passed"
+            },
+            {
+              "name": " canRunVmAction keeps force shutdown available for paused, suspended and busy VMs only when XAPI permits it",
+              "status": "passed"
+            },
+            {
+              "name": " canRunVmAction requires snapshot itself and respects blockers on the chosen export mode",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "name": "tests/components/CopyVmSafetyGate.test.tsx",
+          "status": "passed",
+          "assertions": [
+            {
+              "name": " VM copy safety gate keeps copy details observable but blocks submission with its B6 reason",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "name": "tests/components/VmRelocateSafetyGate.test.tsx",
+          "status": "passed",
+          "assertions": [
+            {
+              "name": " VM relocation safety gate offers same-pool host migration while keeping storage relocation gated",
+              "status": "passed"
+            },
+            {
+              "name": " VM relocation safety gate blocks cross-pool migrate and copy with distinct reasons",
+              "status": "passed"
+            }
+          ]
+        }
+      ]
+    },
+    "reproductions": {
+      "success": true,
+      "total": 10,
+      "passed": 10,
+      "failed": 0,
+      "pending": 0,
+      "files": [
+        {
+          "name": "repro.test.tsx",
+          "status": "passed",
+          "assertions": [
+            {
+              "name": " Intentional defect reproductions; passing means current behavior reproduced R01 permits a second copy after the server creates a template but its reply is lost",
+              "status": "passed"
+            },
+            {
+              "name": " Intentional defect reproductions; passing means current behavior reproduced R02 submits a full copy to a disconnected, full SR offered without screening",
+              "status": "passed"
+            },
+            {
+              "name": " Intentional defect reproductions; passing means current behavior reproduced R03 an old pool SR response replaces the current template pool choices",
+              "status": "passed"
+            },
+            {
+              "name": " Intentional defect reproductions; passing means current behavior reproduced R04 a new pool fetch failure leaves old pool storage selectable and submittable",
+              "status": "passed"
+            },
+            {
+              "name": " Intentional defect reproductions; passing means current behavior reproduced R05 a long copy locks cancellation and closing and exposes no background action",
+              "status": "passed"
+            },
+            {
+              "name": " Intentional defect reproductions; passing means current behavior reproduced R06 cross-pool preflight advertises copy for a running VM",
+              "status": "passed"
+            },
+            {
+              "name": " Intentional defect reproductions; passing means current behavior reproduced R07 a user template cannot enter cross-pool copy at all",
+              "status": "passed"
+            },
+            {
+              "name": " Intentional defect reproductions; passing means current behavior reproduced R08 same pool UUID through different connection IDs is classified as cross-pool",
+              "status": "passed"
+            },
+            {
+              "name": " Intentional defect reproductions; passing means current behavior reproduced R09 same-pool preflight downloads each full inventory twice",
+              "status": "passed"
+            },
+            {
+              "name": " Intentional defect reproductions; passing means current behavior reproduced R10 late relocation plan restores pool A resources while target selector stays on pool B",
+              "status": "passed"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "sourceSha256": {
+    "src/renderer/src/components/vm/CopyVmDialog.tsx": "562f1d27d7258f3e3de0fc07b70635bc9225b0d578d6cd7c3c6d8533854bd138",
+    "src/renderer/src/components/template/CloneTemplateDialog.tsx": "780f63e4f981a8f788ddaf503b4576e3ee67f7b03439d101ab7d35d779e72ad4",
+    "src/renderer/src/components/vm/VmRelocateDialog.tsx": "8baa9d3a387219598333edf48b23655515d1b76fdcd88ff75e30b050541647c3",
+    "src/main/xapi/services/vm.service.ts": "f788dea7afed872224b8f745c56abab89cd9698ca4a765e66d561a979a854be4",
+    "src/main/xapi/services/vm-relocation.service.ts": "939ee738925fb7b4b3767d80a4788b4320cb21001d0d1c0ec5c5e878ca9cecbb",
+    "src/main/xapi/services/storage.service.ts": "cc2290b5046330a80e75e89519c67b481c7886cc44547c67c5cc0512c75c079b",
+    "src/main/xapi/services/xapi-task.ts": "121d260e27d6abc98bfcc0ee6228bbf5d3c1eb4888e04fe78a2118a436f1109c",
+    "src/main/ipc/handlers/vm.ts": "f775365f62e7a38c7177e8d73b7f14da46583479ebf671d2e9c130f3badbadff",
+    "src/shared/ipc-contracts/vm.ts": "16ec662e5da45de1b35c88df4093767d461053091c4ec1bddc209ef9fa7bac46",
+    "src/shared/vm-actions.ts": "1aea88795f865c5d5441388dee38e8ada657b5cf0f3dc927a25ab0c933624ced",
+    "src/renderer/src/pages/VmsPage.tsx": "b3c3a382290267941fec03ec97f881ff673ac53f8e9d55717dedfbe8634540e1",
+    "src/main/xapi/client.ts": "2856097febd7aa46a963a189499ed230af43fb569a995056becd10ab8df926ff"
+  }
+}

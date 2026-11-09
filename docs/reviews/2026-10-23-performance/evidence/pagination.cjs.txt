@@ -1,0 +1,42 @@
+const { chromium } = require('/Users/whs/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright')
+const fs = require('node:fs')
+const root = '/private/tmp/xenadmin-performance-20261023.JlaZxp'
+;(async () => {
+  const browser = await chromium.launch({ headless: true, executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' })
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } })
+  const errors = []
+  page.on('pageerror', (error) => errors.push(error.message))
+  await page.goto('file://' + root + '/index.html')
+  await page.waitForFunction(() => window.__review)
+  const cdp = await page.context().newCDPSession(page)
+  const longTasks = []
+  await page.evaluate(() => {
+    window.__longTasks = []
+    new PerformanceObserver((list) => window.__longTasks.push(...list.getEntries().map(({startTime, duration}) => ({startTime, duration})))).observe({ type: 'longtask', buffered: true })
+  })
+  const layouts = []
+  for (const width of [1024, 1280, 1440]) {
+    await page.setViewportSize({width, height: 900})
+    await page.evaluate(() => window.__review.mount(205))
+    const nav = page.getByRole('navigation', {name: '虚拟机列表分页'})
+    await nav.scrollIntoViewIfNeeded()
+    const initial = await nav.innerText()
+    await nav.getByRole('button', {name: '下一页'}).click()
+    const second = await nav.innerText()
+    await nav.getByRole('button', {name: '下一页'}).click()
+    const final = await nav.innerText()
+    const rows = await page.locator('tbody tr').count()
+    const nextDisabled = await nav.getByRole('button', {name: '下一页'}).isDisabled()
+    await page.getByRole('checkbox', {name: 'Select all VMs'}).check()
+    const selected = await page.evaluate(() => window.__review.selectionCount())
+    if (rows !== 5 || !nextDisabled || selected !== 205) throw new Error('Cross-page target mismatch')
+    await nav.scrollIntoViewIfNeeded()
+    const box = await nav.boundingBox()
+    if (!box || box.x < 0 || box.x + box.width > width + 1) throw new Error('Pagination overflows viewport')
+    await page.screenshot({path: root + '/pagination-' + width + '.png'})
+    layouts.push({width, initial, second, final, rows, nextDisabled, selected, paginationBox: box})
+  }
+  fs.writeFileSync(root + '/pagination-results.json', JSON.stringify({browser: await browser.version(), layouts, errors}, null, 2))
+  console.log(JSON.stringify({layouts, errors}))
+  await browser.close()
+})().catch((error) => { console.error(error); process.exitCode = 1 })

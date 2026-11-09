@@ -1,0 +1,172 @@
+{
+  "checkedOn": "2026-10-24",
+  "scope": "current dirty working tree, including previously present changes",
+  "head": "c5bcf2d90941a739c7609f00921a0d08d81a1707",
+  "supportedBatchOperations": [
+    "start",
+    "stop (clean only)",
+    "reboot (clean only)",
+    "suspend",
+    "resume"
+  ],
+  "removedBatchOperations": [
+    "force shutdown",
+    "delete",
+    "migrate",
+    "snapshot"
+  ],
+  "toolchain": {
+    "nodeVersion": "24.22.0",
+    "npmVersion": "11.19.1",
+    "lockfileVersion": 3
+  },
+  "fullTestGate": {
+    "schemaVersion": 1,
+    "kind": "xenadmin-test-gate",
+    "ok": true,
+    "toolchain": {
+      "nodeVersion": "24.22.0",
+      "npmVersion": "11.19.1",
+      "lockfileVersion": 3
+    },
+    "collection": {
+      "mode": "full",
+      "manifestChecked": true,
+      "fileCount": 198,
+      "testCount": 2116,
+      "expectedFileCount": 198,
+      "expectedTestCount": 2116,
+      "drift": {
+        "missing": [],
+        "unexpected": [],
+        "countMismatches": []
+      }
+    },
+    "tests": {
+      "passed": 2116,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "onlyDetected": false
+    },
+    "diagnostics": {
+      "warningCount": 0,
+      "stderr": {
+        "bytes": 0,
+        "lineCount": 0
+      }
+    },
+    "errors": [],
+    "evidence": "evidence/final-test-gate.json"
+  },
+  "checks": {
+    "node": {
+      "exitCode": 0,
+      "evidence": "evidence/node.log"
+    },
+    "web": {
+      "exitCode": 0,
+      "evidence": "evidence/web.log"
+    },
+    "lint": {
+      "exitCode": 0,
+      "evidence": "evidence/lint.log"
+    },
+    "build": {
+      "exitCode": 0,
+      "evidence": "evidence/build.log"
+    },
+    "diffCheck": {
+      "exitCode": 0
+    }
+  },
+  "browser": {
+    "scenarios": 8,
+    "evidence": "evidence/browser-checks.json",
+    "network": "localhost only; window.xapi fixtures"
+  },
+  "journalRegression": {
+    "items": 100,
+    "journalRecords": 203,
+    "maxJournalBytes": 180000,
+    "storage": "real temporary files; remote mutation mocked"
+  },
+  "sourceFiles": [
+    {
+      "path": "src/shared/batch-policy.ts",
+      "sha256": "f5dda77a59004ba343134011ffef4b44cc53290222c0667423db059bf8170818"
+    },
+    {
+      "path": "src/shared/types/xapi.ts",
+      "sha256": "a7214c5a6611f4ae3f8da2c0500b97f0e67516dbe971b6c4e15320536a771e93"
+    },
+    {
+      "path": "src/shared/ipc-contracts/infrastructure.ts",
+      "sha256": "2e02ac4d358f82f69bdfac53e67c90a99fb3047a584c1b82f8f9c9bff754a865"
+    },
+    {
+      "path": "src/shared/evidence-manifest.ts",
+      "sha256": "d0e9372ade678f11b5bdd2991a08cd09f7c6b7e4972ef003d804b1bc8d81e427"
+    },
+    {
+      "path": "src/main/batch/batch-command.service.ts",
+      "sha256": "d5fd7f35eca62c539955d9d723cfed1e6fe4d2002d9c5afe2cc6884c856554cd"
+    },
+    {
+      "path": "src/main/batch/batch-task.manager.ts",
+      "sha256": "ad12d36a7417ce4df9dcd5cfa3879143af8ba1d8d47485dac43537e753697cbc"
+    },
+    {
+      "path": "src/main/batch/batch-task.repository.ts",
+      "sha256": "711795a096d21f9bec2550f5d5375195dbc765d32f2cbfef4c49d199bd665cfe"
+    },
+    {
+      "path": "src/main/batch/batch-task.journal.ts",
+      "sha256": "2be976bd5a55d961cb0c46e19e4cc676288bb1cf398dba7ce91c0118682cb3b8"
+    },
+    {
+      "path": "src/main/ipc/handlers/infrastructure.ts",
+      "sha256": "7133679d3b700e37af1c9acbc168dea71e78bf5bf7b6b1b911da6d8a55407c65"
+    },
+    {
+      "path": "src/main/persistence/json-store.ts",
+      "sha256": "db581b290ba8d5ff8d976e4e50641e104711b855b90d13a49318dd40d8411fff"
+    },
+    {
+      "path": "src/renderer/src/store/batch.store.ts",
+      "sha256": "c1703219074acb508531542ab4654870689bc7f67a07d2c1c5d4d1b9ea3da471"
+    },
+    {
+      "path": "src/renderer/src/components/batch/BatchToolbar.tsx",
+      "sha256": "192f7415fd52b6b5739a0cc8f3eb3121cb7555001c5989f9fe2213545968f36b"
+    },
+    {
+      "path": "src/renderer/src/components/batch/BatchProgressDialog.tsx",
+      "sha256": "a3d93cb1b46adac620a54f99284b0f86e567fc3e13b6ea17f938e913f7ffcd61"
+    },
+    {
+      "path": "src/renderer/src/components/batch/BatchConfirmationDialog.tsx",
+      "sha256": "c9acb3f118b4f03b809b759796559a6e75c3c4d16e087be3f0dc5e77849ede14"
+    },
+    {
+      "path": "src/renderer/src/pages/BatchHistoryPage.tsx",
+      "sha256": "cfb877c36b9af44034e8b3ceb12c8fdd2deb0950adb43af7d2d7d72eecd6f7dc"
+    },
+    {
+      "path": "src/renderer/src/types/batch.ts",
+      "sha256": "cc0433e73305d6543f920105255968fe95a2617ac22a2186909b826e9537b418"
+    },
+    {
+      "path": "src/renderer/src/types/xapi.ts",
+      "sha256": "f6d8d791beb56babb658a34d45a4a1408b339558b0e459e1264c00bd21d8525a"
+    },
+    {
+      "path": "tests/test-collection.json",
+      "sha256": "891e9ea9b874d8b9d516c06cc31cb0a912365c3abdc016d2cbeec3941c543709"
+    }
+  ],
+  "unverified": [
+    "real XCP-ng operations and long-duration multi-task workloads",
+    "packaging and installed-app acceptance"
+  ]
+}

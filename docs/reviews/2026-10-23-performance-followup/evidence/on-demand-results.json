@@ -1,0 +1,6 @@
+{
+  "initialArchiveRequests": 1,
+  "subsequentHistoryQueries": 3,
+  "extraFullArchiveRequests": 3,
+  "totalPersistCalls": 4
+}

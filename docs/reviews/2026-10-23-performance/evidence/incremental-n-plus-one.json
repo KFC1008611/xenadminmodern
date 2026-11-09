@@ -1,0 +1,9 @@
+{
+  "vmCount": 200,
+  "syntheticMemoryLookupLatencyMs": 100,
+  "configuredIncrementalIntervalMs": 10000,
+  "totalMemoryLookupRequests": 200,
+  "peakMemoryLookupConcurrency": 1,
+  "firstIncrementalCompletedAfterMs": 20000,
+  "incrementalHttpRequestsAt30s": 1
+}

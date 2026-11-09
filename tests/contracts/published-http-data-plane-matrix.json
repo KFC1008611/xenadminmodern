@@ -1,0 +1,244 @@
+{
+  "schemaVersion": 1,
+  "authorities": [
+    {
+      "repository": "refs/xenadmin",
+      "commit": "ba43130ffb30d05d1eb40187b8ef9f2de111468a",
+      "paths": [
+        "XenModel/XenAPI/HTTP_actions.cs",
+        "XenModel/XenAPI/HTTP.cs",
+        "XenModel/Network/HTTPHelper.cs",
+        "XenModel/XenSearch/MetricUpdater.cs",
+        "XenAdmin/Controls/CustomDataGraph/ArchiveMaintainer.cs",
+        "XenModel/Actions/VM/ImportVmAction.cs"
+      ]
+    },
+    {
+      "repository": "xapi-project/xen-api",
+      "commit": "b59864f8ed40a99be4ef310859f6c6c803469e3f",
+      "paths": [
+        "doc/content/xen-api/topics/importexport.md",
+        "doc/content/xen-api/usage.md"
+      ]
+    }
+  ],
+  "unverifiedBoundaries": [
+    "真实 XCP-ng/XenServer HTTP/TLS 版本矩阵",
+    "打包 Electron CONNECT/WebSocket/RFB 链路",
+    "真实 pool-member redirect 与证书",
+    "RRD 对象归属与目标主机路由",
+    "guarded mutation"
+  ],
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/export",
+      "support": "published",
+      "schemeSource": "authenticated-management-transport",
+      "authoritySource": "pool-master",
+      "tlsPolicy": "reuse-management-connection-verification",
+      "queryParameters": [
+        "task_id",
+        "session_id",
+        "uuid",
+        "use_compression",
+        "preserve_power_state"
+      ],
+      "requiredHeaders": [],
+      "streamDirection": "download",
+      "terminalSource": "xapi-task-and-export-file-postcondition",
+      "cancellation": "abort-client-request-then-reconcile-xapi-task",
+      "timeoutPolicy": {
+        "mode": "disabled-pending-b5",
+        "reason": "large-file-idle-timeout-unverified",
+        "replay": "forbid"
+      },
+      "backpressurePolicy": "node-stream-source-pauses-until-destination-drain",
+      "redirectPolicy": {
+        "statusCodes": [302],
+        "maxHops": 10,
+        "scheme": "same-or-stronger",
+        "authority": "same-authority-only-pending-verified-pool-membership",
+        "preserve": ["method", "body", "query"],
+        "conflictingSessionOrTask": "fail-closed"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/import",
+      "support": "published",
+      "schemeSource": "authenticated-management-transport",
+      "authoritySource": "sr-storage-host-or-authenticated-management-authority",
+      "tlsPolicy": "reuse-management-connection-verification",
+      "queryParameters": ["task_id", "session_id", "restore", "force", "sr_id"],
+      "requiredHeaders": ["Content-Type: application/octet-stream", "Content-Length"],
+      "streamDirection": "upload",
+      "terminalSource": "xapi-task-and-imported-object-postcondition",
+      "cancellation": "abort-client-request-then-reconcile-xapi-task",
+      "timeoutPolicy": {
+        "mode": "disabled-pending-b5",
+        "reason": "large-file-idle-timeout-unverified",
+        "replay": "forbid"
+      },
+      "backpressurePolicy": "node-stream-source-pauses-until-destination-drain",
+      "redirectPolicy": {
+        "statusCodes": [302],
+        "maxHops": 10,
+        "scheme": "same-or-stronger",
+        "authority": "same-authority-only-pending-verified-pool-membership",
+        "preserve": ["method", "body", "query"],
+        "conflictingSessionOrTask": "fail-closed"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/host_rrd",
+      "support": "published",
+      "schemeSource": "authenticated-management-transport",
+      "authoritySource": "authenticated-management-authority",
+      "tlsPolicy": "reuse-management-connection-verification",
+      "queryParameters": ["task_id", "session_id", "json"],
+      "requiredHeaders": [],
+      "streamDirection": "download",
+      "terminalSource": "complete-http-response-with-host-ownership-unverified",
+      "cancellation": "abort-client-request",
+      "timeoutPolicy": {
+        "mode": "hard",
+        "milliseconds": 15000,
+        "scope": "dns-connect-tls-redirect-and-response-body",
+        "replay": "forbid"
+      },
+      "backpressurePolicy": "async-iteration-with-10MiB-response-limit",
+      "redirectPolicy": {
+        "statusCodes": [302],
+        "maxHops": 10,
+        "scheme": "same-or-stronger",
+        "authority": "same-authority-only-pending-verified-pool-membership",
+        "preserve": ["method", "body", "query"],
+        "conflictingSessionOrTask": "fail-closed"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/vm_rrd",
+      "support": "published",
+      "schemeSource": "authenticated-management-transport",
+      "authoritySource": "authenticated-management-authority",
+      "tlsPolicy": "reuse-management-connection-verification",
+      "queryParameters": ["task_id", "session_id", "uuid"],
+      "requiredHeaders": [],
+      "streamDirection": "download",
+      "terminalSource": "complete-http-response-with-vm-ownership-unverified",
+      "cancellation": "abort-client-request",
+      "timeoutPolicy": {
+        "mode": "hard",
+        "milliseconds": 15000,
+        "scope": "dns-connect-tls-redirect-and-response-body",
+        "replay": "forbid"
+      },
+      "backpressurePolicy": "async-iteration-with-10MiB-response-limit",
+      "redirectPolicy": {
+        "statusCodes": [302],
+        "maxHops": 10,
+        "scheme": "same-or-stronger",
+        "authority": "same-authority-only-pending-verified-pool-membership",
+        "preserve": ["method", "body", "query"],
+        "conflictingSessionOrTask": "fail-closed"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/rrd_updates",
+      "support": "published",
+      "schemeSource": "authenticated-management-transport",
+      "authoritySource": "authenticated-management-authority",
+      "tlsPolicy": "reuse-management-connection-verification",
+      "queryParameters": [
+        "task_id",
+        "session_id",
+        "start",
+        "cf",
+        "interval",
+        "host",
+        "uuid",
+        "json"
+      ],
+      "requiredHeaders": [],
+      "streamDirection": "download",
+      "terminalSource": "complete-http-response-with-resource-ownership-unverified",
+      "cancellation": "abort-client-request",
+      "timeoutPolicy": {
+        "mode": "hard",
+        "milliseconds": 15000,
+        "scope": "dns-connect-tls-redirect-and-response-body",
+        "replay": "forbid"
+      },
+      "backpressurePolicy": "async-iteration-with-10MiB-response-limit",
+      "redirectPolicy": {
+        "statusCodes": [302],
+        "maxHops": 10,
+        "scheme": "same-or-stronger",
+        "authority": "same-authority-only-pending-verified-pool-membership",
+        "preserve": ["method", "body", "query"],
+        "conflictingSessionOrTask": "fail-closed"
+      },
+      "queryAliases": [
+        {
+          "alias": "vm_uuid",
+          "canonicalParameter": "uuid",
+          "lifecycle": "xenadmin-observed"
+        }
+      ]
+    },
+    {
+      "method": "CONNECT",
+      "path": "/console",
+      "support": "published",
+      "schemeSource": "console-location-url",
+      "authoritySource": "console-location-url",
+      "tlsPolicy": "verify-console-location-with-management-connection-trust",
+      "queryParameters": ["console-location-parameters-except-session_id"],
+      "requiredHeaders": [
+        "Host",
+        "Cookie: session_id=<session-ref>"
+      ],
+      "streamDirection": "bidirectional-after-http-200",
+      "terminalSource": "tunnel-close-not-server-resource-state",
+      "cancellation": "close-client-tunnel",
+      "timeoutPolicy": {
+        "mode": "connect-header-deadline",
+        "milliseconds": 15000,
+        "scope": "tcp-tls-connect-and-http-connect-response-headers",
+        "replay": "forbid"
+      },
+      "backpressurePolicy": "pause-source-until-destination-drain",
+      "redirectPolicy": "forbid"
+    },
+    {
+      "method": "PUT",
+      "path": "/pool_patch_upload",
+      "support": "guarded",
+      "schemeSource": "authenticated-management-transport",
+      "authoritySource": "pool-master",
+      "tlsPolicy": "reuse-management-connection-verification",
+      "queryParameters": ["task_id", "session_id", "sr_id"],
+      "requiredHeaders": ["Content-Length"],
+      "streamDirection": "upload",
+      "terminalSource": "xapi-task-and-patch-postcondition",
+      "cancellation": "abort-client-request-then-reconcile-xapi-task",
+      "timeoutPolicy": {
+        "mode": "required-before-ungating",
+        "replay": "forbid"
+      },
+      "backpressurePolicy": "required-before-ungating",
+      "redirectPolicy": {
+        "statusCodes": [302],
+        "maxHops": 10,
+        "scheme": "same-or-stronger",
+        "authority": "same-authority-only-pending-verified-pool-membership",
+        "preserve": ["method", "body", "query"],
+        "conflictingSessionOrTask": "fail-closed"
+      }
+    }
+  ]
+}

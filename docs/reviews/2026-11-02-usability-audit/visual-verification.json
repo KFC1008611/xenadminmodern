@@ -1,0 +1,173 @@
+{
+  "fixture": "Offline React App and local API doubles only; no real XCP-ng requests",
+  "results": [
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "templateSaveFrozen": true,
+      "templateReadErrorPersistent": true,
+      "alertThresholdsValid": [
+        83,
+        82.5
+      ],
+      "alertSaveFrozen": true,
+      "savedPasswordReentry": true,
+      "noOverflow": true,
+      "dialogsInViewport": true,
+      "errors": [],
+      "screenshots": [
+        "template-light-1024x768.png",
+        "alert-light-1024x768.png",
+        "connection-light-1024x768.png"
+      ]
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "templateSaveFrozen": true,
+      "templateReadErrorPersistent": true,
+      "alertThresholdsValid": [
+        83,
+        82.5
+      ],
+      "alertSaveFrozen": true,
+      "savedPasswordReentry": true,
+      "noOverflow": true,
+      "dialogsInViewport": true,
+      "errors": [],
+      "screenshots": [
+        "template-light-1280x800.png",
+        "alert-light-1280x800.png",
+        "connection-light-1280x800.png"
+      ]
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "templateSaveFrozen": true,
+      "templateReadErrorPersistent": true,
+      "alertThresholdsValid": [
+        83,
+        82.5
+      ],
+      "alertSaveFrozen": true,
+      "savedPasswordReentry": true,
+      "noOverflow": true,
+      "dialogsInViewport": true,
+      "errors": [],
+      "screenshots": [
+        "template-light-1440x900.png",
+        "alert-light-1440x900.png",
+        "connection-light-1440x900.png"
+      ]
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "templateSaveFrozen": true,
+      "templateReadErrorPersistent": true,
+      "alertThresholdsValid": [
+        83,
+        82.5
+      ],
+      "alertSaveFrozen": true,
+      "savedPasswordReentry": true,
+      "noOverflow": true,
+      "dialogsInViewport": true,
+      "errors": [],
+      "screenshots": [
+        "template-light-1920x1080.png",
+        "alert-light-1920x1080.png",
+        "connection-light-1920x1080.png"
+      ]
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "templateSaveFrozen": true,
+      "templateReadErrorPersistent": true,
+      "alertThresholdsValid": [
+        83,
+        82.5
+      ],
+      "alertSaveFrozen": true,
+      "savedPasswordReentry": true,
+      "noOverflow": true,
+      "dialogsInViewport": true,
+      "errors": [],
+      "screenshots": [
+        "template-dark-1024x768.png",
+        "alert-dark-1024x768.png",
+        "connection-dark-1024x768.png"
+      ]
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "templateSaveFrozen": true,
+      "templateReadErrorPersistent": true,
+      "alertThresholdsValid": [
+        83,
+        82.5
+      ],
+      "alertSaveFrozen": true,
+      "savedPasswordReentry": true,
+      "noOverflow": true,
+      "dialogsInViewport": true,
+      "errors": [],
+      "screenshots": [
+        "template-dark-1280x800.png",
+        "alert-dark-1280x800.png",
+        "connection-dark-1280x800.png"
+      ]
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "templateSaveFrozen": true,
+      "templateReadErrorPersistent": true,
+      "alertThresholdsValid": [
+        83,
+        82.5
+      ],
+      "alertSaveFrozen": true,
+      "savedPasswordReentry": true,
+      "noOverflow": true,
+      "dialogsInViewport": true,
+      "errors": [],
+      "screenshots": [
+        "template-dark-1440x900.png",
+        "alert-dark-1440x900.png",
+        "connection-dark-1440x900.png"
+      ]
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "templateSaveFrozen": true,
+      "templateReadErrorPersistent": true,
+      "alertThresholdsValid": [
+        83,
+        82.5
+      ],
+      "alertSaveFrozen": true,
+      "savedPasswordReentry": true,
+      "noOverflow": true,
+      "dialogsInViewport": true,
+      "errors": [],
+      "screenshots": [
+        "template-dark-1920x1080.png",
+        "alert-dark-1920x1080.png",
+        "connection-dark-1920x1080.png"
+      ]
+    }
+  ]
+}

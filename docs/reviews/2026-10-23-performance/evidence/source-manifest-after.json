@@ -1,0 +1,35 @@
+{
+  "capturedAt": "2026-10-23T17:46:36.087594+08:00",
+  "head": "7c3e7e67bb3fea8e59b2c4bc53d720392d1c982d",
+  "note": "Final performance implementation sources; unrelated existing checkout changes are preserved.",
+  "files": [
+    {
+      "path": "src/main/persistence/json-store.ts",
+      "sha256": "aff2dd5e5275a45ce42dfd6c31f09744902b4dafe1815147a08ee8ceb244bb19"
+    },
+    {
+      "path": "src/main/xapi/services/metrics-db.service.ts",
+      "sha256": "ea95faf9c7f7c72a295772e55598ac3017f4dfbd9fb693cda41feae6c5d229a8"
+    },
+    {
+      "path": "src/main/xapi/services/metrics.service.ts",
+      "sha256": "4c879f7b8bb6288564d0531110c619c6f8d11e390a5164051ee0b83316f202a9"
+    },
+    {
+      "path": "src/main/xapi/services/rrd-client.service.ts",
+      "sha256": "3dcc8c344441247d552e72567836331c6dab9cd60f4f5152a6f576c697df72f6"
+    },
+    {
+      "path": "src/main/xapi/services/rrd-uuid-cache.service.ts",
+      "sha256": "b7304e4062b0d6dbabcc3b5c9d84790c5ce9f25bc04013c4b8e6c717303427ee"
+    },
+    {
+      "path": "src/renderer/src/pages/VmsPage.tsx",
+      "sha256": "80b5d240c42ff2c2d9f64694328ab17aedd3e3ec5e5f8099d3a07ea63e30f1b9"
+    },
+    {
+      "path": "src/renderer/src/store/multiData.store.ts",
+      "sha256": "b3cb2362e783349fe77a03f48953dc06f873669030fb0e78ba04c4281e7a6e92"
+    }
+  ]
+}

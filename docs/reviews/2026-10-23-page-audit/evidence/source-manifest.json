@@ -1,0 +1,90 @@
+{
+  "baseCommit": "c5bcf2d90941a739c7609f00921a0d08d81a1707",
+  "scope": "工作区源码与本地生产构建；未更新已安装应用",
+  "files": [
+    {
+      "path": "docs/desktop-workflows.md",
+      "sha256": "3f3459ea773b959bb5e1954e34507f2a1bc4a7f2218031f8b8b31fd71efe9b43"
+    },
+    {
+      "path": "docs/frontend-spec.md",
+      "sha256": "977df3bda5dcb34b52d0975342b952feae4c64953c9608b4c3755e499c62ec7c"
+    },
+    {
+      "path": "docs/validation.md",
+      "sha256": "4582693bdcffb04a22c2257186930eecb41056906bd91296f7410dfea71351b9"
+    },
+    {
+      "path": "src/renderer/src/components/alerts/NotificationConfigPanel.tsx",
+      "sha256": "b9561d3f12e732be2171a62652c586e3c847a391505e9a630921beb7fb29e292"
+    },
+    {
+      "path": "src/renderer/src/components/layout/Breadcrumb.tsx",
+      "sha256": "d94c8f6a2ad85388414b350fbf30a4d150331b6e33a1a4f34f6b4daefbfb68a9"
+    },
+    {
+      "path": "src/renderer/src/components/layout/Sidebar.tsx",
+      "sha256": "5177b3390c419bb117151fb2ab225ab86e707c6c2bfc32c0cfc955812be59580"
+    },
+    {
+      "path": "src/renderer/src/components/wizard/CreateVmWizard.tsx",
+      "sha256": "c5063aba0e89f2056966f682fffef1c05e89a70b936fd6e79b2b4be0f5ba4029"
+    },
+    {
+      "path": "src/renderer/src/components/wizard/steps/Step6Review.tsx",
+      "sha256": "1714f989e39f3b72cb071e5d6a644b0a5ea6524f96b08668e25e1ac60e2c7a3f"
+    },
+    {
+      "path": "src/renderer/src/pages/AlertsPage.tsx",
+      "sha256": "8b9d9b9c0e2ed3f1018035446cae1919e3ba9d8dcf9604fcf405e0d1ff41c6ef"
+    },
+    {
+      "path": "src/renderer/src/pages/DashboardPage.tsx",
+      "sha256": "28045a4669dac8da5652ffa8d092050180d60f241c53f51dbb3a9680310111f4"
+    },
+    {
+      "path": "src/renderer/src/pages/HostDetailPage.tsx",
+      "sha256": "3fd5680b6703a4ccfa686f3190ce1512affe73dbf56ae882264938381fc28cb2"
+    },
+    {
+      "path": "src/renderer/src/pages/HostsPage.tsx",
+      "sha256": "5d4f8ae85cd052160a18e0a23c4787ffbb1c6fbe7bfbf35eaa87e58cfa81bfc5"
+    },
+    {
+      "path": "src/renderer/src/pages/PoolManagerPage.tsx",
+      "sha256": "654826bf1aac7bfac203b72045204cdec9cba9f78b09ebd6c45ca83a02d08625"
+    },
+    {
+      "path": "src/renderer/src/pages/RbacPage.tsx",
+      "sha256": "7329540f57031a582d483b7680652975bb298a3b969297bd2060ac9b57f490b0"
+    },
+    {
+      "path": "src/renderer/src/pages/TasksPage.tsx",
+      "sha256": "54507c1256218aa1b74f0911a4489b90cdc3798c9d84a3fb396e11c7054363a0"
+    },
+    {
+      "path": "src/renderer/src/pages/VmsPage.tsx",
+      "sha256": "e952fe4f8d036157c4869fb1343d9ba3c8b930c5c8124cd46bd953a3ce3c61a7"
+    },
+    {
+      "path": "tests/components/CreateVmWizard.test.tsx",
+      "sha256": "f704d97e494704cbe6cd2d85db9df512a54ab6ffc210d602dbf3ad200d09610b"
+    },
+    {
+      "path": "tests/components/Sidebar.test.tsx",
+      "sha256": "fe31a3bdbc238c934e94338638004674005099b3d75b34fc20aa6a66783ff0b7"
+    },
+    {
+      "path": "tests/test-collection.json",
+      "sha256": "133311e25b51676b2c75c5a72819d430f020b75eab26868417fa73b688b31265"
+    },
+    {
+      "path": "tests/visual/frontend-theme.tsx",
+      "sha256": "232468184eaf2d291b0bf087331c6193b74c2dcd7098839fc6ef901b6e084620"
+    },
+    {
+      "path": "tests/components/PageAudit.test.tsx",
+      "sha256": "a8e22ad33e32860a8ed78ca37f64ae89f9319e19ccfda3c00348e62026781898"
+    }
+  ]
+}

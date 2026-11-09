@@ -1,0 +1,113 @@
+{
+  "name": "xenadmin-modern",
+  "version": "1.2.1",
+  "description": "Evidence-gated Electron desktop client for XCP-ng management",
+  "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KFC1008611/xenadminmodern.git"
+  },
+  "packageManager": "npm@11.19.1",
+  "main": "out/main/index.js",
+  "engines": {
+    "node": "24.22.0",
+    "npm": "11.19.1"
+  },
+  "scripts": {
+    "verify:toolchain": "node scripts/verify-toolchain.cjs",
+    "preinstall": "npm run verify:toolchain",
+    "pretest": "npm run verify:toolchain",
+    "precoverage": "npm run verify:toolchain",
+    "prelint": "npm run verify:toolchain",
+    "pretypecheck:node": "npm run verify:toolchain",
+    "typecheck:node": "tsc --noEmit -p tsconfig.node.json",
+    "pretypecheck:web": "npm run verify:toolchain",
+    "typecheck:web": "tsc --noEmit -p tsconfig.web.json",
+    "prebuild": "npm run verify:toolchain",
+    "prebuild:b0-observation": "npm run verify:toolchain",
+    "prepackage:audit": "npm run verify:toolchain",
+    "dev": "electron-vite dev",
+    "predev:visual": "npm run verify:toolchain",
+    "dev:visual": "vite --config tests/visual/vite.config.ts",
+    "build": "electron-vite build",
+    "build:win": "npm run build && electron-builder --win",
+    "build:mac": "npm run build && electron-builder --mac",
+    "build:linux": "npm run build && electron-builder --linux",
+    "build:b0-observation": "node scripts/b0-observation.cjs",
+    "package:audit": "node scripts/package-audit.cjs",
+    "preview": "electron-vite preview",
+    "test": "node scripts/test-gate.cjs",
+    "coverage": "node scripts/test-gate.cjs --coverage",
+    "lint": "eslint src tests scripts electron.vite.config.ts vitest.config.mts vite.renderer.config.ts postcss.config.js tailwind.config.js --ext .js,.cjs,.mjs,.ts,.tsx --max-warnings 0"
+  },
+  "devDependencies": {
+    "@electron-toolkit/tsconfig": "^1.0.1",
+    "@electron-toolkit/utils": "^4.0.0",
+    "@electron/rebuild": "^3.7.1",
+    "@originjs/vite-plugin-commonjs": "^1.0.3",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^14.0.0",
+    "@types/node": "^24.0.0",
+    "@types/nodemailer": "^8.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@types/ws": "^8.18.1",
+    "@types/xmlrpc": "^1.3.9",
+    "@typescript-eslint/parser": "7.18.0",
+    "@vitejs/plugin-react": "^4.0.0",
+    "@vitest/coverage-v8": "^1.6.1",
+    "autoprefixer": "^10.0.0",
+    "electron": "44.9.1",
+    "electron-builder": "^24.0.0",
+    "electron-vite": "5.0.0",
+    "eslint": "8.57.1",
+    "jsdom": "^29.0.2",
+    "postcss": "^8.0.0",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.0.0",
+    "vite": "6.0.0",
+    "vitest": "^1.0.0"
+  },
+  "dependencies": {
+    "@novnc/novnc": "1.5.0",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-tabs": "^1.0.4",
+    "clsx": "^2.0.0",
+    "fast-xml-parser": "^5.5.11",
+    "lucide-react": "^0.300.0",
+    "nodemailer": "^8.0.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.0",
+    "recharts": "^3.8.1",
+    "tailwind-merge": "^2.0.0",
+    "ws": "^8.20.0",
+    "xmlrpc": "^1.3.2",
+    "zustand": "^4.4.0"
+  },
+  "build": {
+    "files": [
+      "out/**/*",
+      "package.json",
+      "!node_modules/**/*"
+    ],
+    "afterPack": "scripts/package-audit.cjs",
+    "mac": {
+      "icon": "assets/icons/icon.icns"
+    },
+    "win": {
+      "icon": "assets/icons/icon.ico"
+    },
+    "linux": {
+      "icon": "assets/icons/icon.png"
+    }
+  },
+  "allowScripts": {
+    "esbuild@0.25.12": true,
+    "esbuild@0.14.54": true,
+    "esbuild@0.21.5": true,
+    "esbuild@0.24.2": true,
+    "fsevents@2.3.3": true
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-25",
+  "toolchain": {
+    "nodeVersion": "24.22.0",
+    "npmVersion": "11.19.1",
+    "lockfileVersion": 3
+  },
+  "fullTestGate": "full-test-gate.json",
+  "sourceManifest": "source-manifest.json",
+  "checks": [
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "log": "test-gate.log"
+    },
+    {
+      "command": "npm run typecheck:node",
+      "exitCode": 0,
+      "log": "node-typecheck.log"
+    },
+    {
+      "command": "npm run typecheck:web",
+      "exitCode": 0,
+      "log": "web-typecheck.log"
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "log": "lint.log"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "log": "build.log"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "log": "diff-check.log"
+    }
+  ],
+  "ui": {
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "data": "isolated fixed data",
+    "scenarios": [
+      "VIF move light/dark",
+      "NFS ISO type and review"
+    ],
+    "realXapiWrites": false
+  },
+  "realPoolAcceptance": false,
+  "installedAppAcceptance": false
+}

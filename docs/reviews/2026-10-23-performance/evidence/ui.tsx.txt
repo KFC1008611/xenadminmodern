@@ -1,0 +1,50 @@
+import React from 'react'
+import { createRoot } from 'react-dom/client'
+import { flushSync } from 'react-dom'
+import { MemoryRouter } from 'react-router-dom'
+import VmsPage from '/Volumes/zt/dev/xenadminmodern/src/renderer/src/pages/VmsPage'
+import { ToastProvider } from '/Volumes/zt/dev/xenadminmodern/src/renderer/src/components/toast/ToastProvider'
+import { useConnectionManagerStore } from '/Volumes/zt/dev/xenadminmodern/src/renderer/src/store/connectionManager.store'
+import { useMultiDataStore } from '/Volumes/zt/dev/xenadminmodern/src/renderer/src/store/multiData.store'
+import { useBatchStore } from '/Volumes/zt/dev/xenadminmodern/src/renderer/src/store/batch.store'
+const noop = async () => undefined
+const blank = async () => []
+window.xapi = { vm: { templates: async () => ({ user: [], system: [] }), list: blank }, batch: { list: blank, onProgress: () => () => {} } } as any
+useConnectionManagerStore.setState({ connections: [{ id: 'review', name: 'Review', host: 'example.invalid', state: 'connected', connectedAt: 1, poolUuid: 'review-pool' }] as any })
+useMultiDataStore.setState({ refreshVms: noop, vms: [], hosts: [], srs: [], tasks: [], networks: [], pools: [], domainStates: {}, loading: false })
+const root = createRoot(document.getElementById('root')!)
+let rowCount = 0
+const frame = () => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))
+async function mount(count: number) {
+  flushSync(() => root.render(null))
+  useBatchStore.setState({ selectedVms: [] })
+  rowCount = count
+  useMultiDataStore.setState({ vms: Array.from({ length: count }, (_, i) => ({
+    ref: `OpaqueRef:vm-${i}`, uuid: `vm-${i}`, name_label: `VM-${String(i).padStart(5, '0')}`, connectionId: 'review', poolName: 'Review',
+    power_state: 'Running', resident_on: 'host', VCPUs_max: 4, memory_static_max: 4294967296,
+    is_a_template: false, is_a_snapshot: false, is_control_domain: false, guest_metrics: 'guest', networks: { '0/ip': `192.0.2.${i % 254 + 1}` },
+    allowed_operations: ['clean_shutdown', 'hard_shutdown', 'clean_reboot', 'snapshot', 'suspend', 'pause', 'copy', 'export'], current_operations: {},
+  })) as any })
+  const start = performance.now()
+  flushSync(() => root.render(<MemoryRouter initialEntries={['/vms']}><ToastProvider><VmsPage /></ToastProvider></MemoryRouter>))
+  const commitMs = performance.now() - start
+  await frame()
+  await frame()
+  return { rows: count, commitMs, visibleRowsInDOM: document.querySelectorAll('tbody tr').length, domNodes: document.querySelectorAll('*').length }
+}
+async function unrelatedUpdate() {
+  const before = performance.now()
+  flushSync(() => useMultiDataStore.setState({ tasks: [] }))
+  const commitMs = performance.now() - before
+  await frame()
+  return { rows: rowCount, kind: 'tasks-only store update', commitMs }
+}
+async function selection() {
+  const target = document.querySelector('thead input[type=checkbox]') as HTMLInputElement
+  const start = performance.now()
+  flushSync(() => target.click())
+  const commitMs = performance.now() - start
+  await frame()
+  return { rows: rowCount, kind: 'select all', commitMs }
+}
+;(window as any).__review = { mount, unrelatedUpdate, selection }

@@ -1,0 +1,198 @@
+[
+  {
+    "file": "src/main/ipc/handlers/storage.ts",
+    "sha256": "14f721b123b53d56bb0c6f56a3e12a224b4c224978b3d255f3af701b5cc942ac"
+  },
+  {
+    "file": "src/main/xapi/services/mutation-result.ts",
+    "sha256": "2a0276897f2fa737f779b7c39a5b07630ffb933e16f1ffbcd44f8fb16f3dd363"
+  },
+  {
+    "file": "src/main/xapi/services/network.service.ts",
+    "sha256": "b9fc8178bd8be0a560119fb5d92cff8748e6c5521b44f1b01f01bde66b75c6fe"
+  },
+  {
+    "file": "src/main/xapi/services/sr.service.ts",
+    "sha256": "3b3779b195c264a1e6fd0e7e083050f507dcce553d4f2634f8bcdd00557b60d1"
+  },
+  {
+    "file": "src/main/xapi/services/vif-creation-journal.ts",
+    "sha256": "6fe81fc7099a70a79a3a9372df958a92d53ac7c41a9e25b606daea8e7e6bd1c0"
+  },
+  {
+    "file": "src/main/xapi/services/vm-advanced.service.ts",
+    "sha256": "4f6e76121548a314133250cd407c6d7ed046c40bcb1e455c3417316dc60a0724"
+  },
+  {
+    "file": "src/main/xapi/services/vm.service.ts",
+    "sha256": "d69d1ff5b24eeb7e8d0e98c5909b493166bfc352437f3426cb9ad0b2835b0e8b"
+  },
+  {
+    "file": "src/preload/network-api.ts",
+    "sha256": "7b8e248ac5600d29704c5029758e5cc4c83122220c5a390e4b5e726c88bc1940"
+  },
+  {
+    "file": "src/renderer/src/components/feedback/FeedbackOverlay.tsx",
+    "sha256": "6e73f3366be1046b71a23b53640f465a1defc41ddfab41a0782539a6a2ddb5ea"
+  },
+  {
+    "file": "src/renderer/src/components/sr/CreateSrWizard/Step1Type.tsx",
+    "sha256": "5811d0e39b3db5e207e47ae187f4d87e799324d3c19976f59872112ac2652b6d"
+  },
+  {
+    "file": "src/renderer/src/components/sr/CreateSrWizard/Step2Params.tsx",
+    "sha256": "eb35900d0b43f9addc831ca39ef729fead5898d4aac5220aa9989efe01f4776c"
+  },
+  {
+    "file": "src/renderer/src/components/sr/CreateSrWizard/Step3Scan.tsx",
+    "sha256": "6308803ed2a72c441c43a6b1d118885f5f21399919e53a38c01627f93f840f12"
+  },
+  {
+    "file": "src/renderer/src/components/sr/CreateSrWizard/Step5Review.tsx",
+    "sha256": "f83438e11055421796dcce63577ddbc66f3f4e12f16717d358bb0dde05fd9c37"
+  },
+  {
+    "file": "src/renderer/src/components/sr/CreateSrWizard/index.tsx",
+    "sha256": "52f4a04429067aaf2d339692de5a73e171d4dc2d5dff49e36bbc62b9e48c9919"
+  },
+  {
+    "file": "src/renderer/src/components/vm/AddVifDialog.tsx",
+    "sha256": "2c0d734e2ba7200573320d423fa2c1894a0ac4c5b13f4257517b5487c8ca5f97"
+  },
+  {
+    "file": "src/renderer/src/components/vm/VifManager.tsx",
+    "sha256": "c641672d5f3e851cd9d8faf256493b49781bb25a7cfad4e133094f8787110b10"
+  },
+  {
+    "file": "src/renderer/src/components/vm/VmAdvancedSettingsTab.tsx",
+    "sha256": "6b604e22a27c2e98ce4a48226fa8aca1f578fa8bb0c2d168010c2ec3f1813f81"
+  },
+  {
+    "file": "src/renderer/src/components/vm/VmAffinityDialog.tsx",
+    "sha256": "5f4cbaa0f1db462e84a5dc098e00bbeb2dcda791bc1d487a05570958cc106b4b"
+  },
+  {
+    "file": "src/renderer/src/lib/executeAction.ts",
+    "sha256": "8d925769ba6c49a6d7b2cec10aced1b3ba1a8cc431fddb7f16289ded6c6a0e10"
+  },
+  {
+    "file": "src/renderer/src/store/srWizard.store.ts",
+    "sha256": "16ed1dbe1cc7ef7d1df7eaf5a6507f024394a9b795c2e643dd0385ff28015490"
+  },
+  {
+    "file": "src/renderer/src/store/vm-advanced.store.ts",
+    "sha256": "cc7d1ea55b1c66b7c160de455f57e175511b33c43b5f6c6630712154d635e0a3"
+  },
+  {
+    "file": "src/renderer/src/types/xapi.ts",
+    "sha256": "1fbb6eb0ab6564e99eaa5831aef191f3f5c1a66401686ecf8bb67d827353da9c"
+  },
+  {
+    "file": "src/shared/channels.ts",
+    "sha256": "c1ee42e128c6bde5284ae55b736e714d38efa4e2d863831a7d66067d18751fbf"
+  },
+  {
+    "file": "src/shared/evidence-manifest.ts",
+    "sha256": "ee050b556841e325180b3d4cc7a06207398a0f615f01db765f8c5d5528c00d5f"
+  },
+  {
+    "file": "src/shared/ipc-contracts/network.ts",
+    "sha256": "af9a0acc2c48d109dd2cb4c3fa7b1394a6d4b2c2d89b10f19d88704d862d01a5"
+  },
+  {
+    "file": "src/shared/ipc-contracts/storage.ts",
+    "sha256": "a35d2da989faeb0b8e1baf5c6fb6a845b65ba57c89379913830096e7cb3e33e1"
+  },
+  {
+    "file": "src/shared/ipc-contracts/vm-advanced.ts",
+    "sha256": "92e96ca1ae4e5cae7b590b785d9032421eca57d21c46e388ba69df9ee6bc926f"
+  },
+  {
+    "file": "src/shared/types/xapi.ts",
+    "sha256": "24930703d75c3783503ee71ae648fe542ebc946dc22a2c1c9cb78d065012a7f9"
+  },
+  {
+    "file": "tests/components/FeedbackWorkflow.test.tsx",
+    "sha256": "5f99449e00c41f014c456f6061ede25b354b827b6ed5751d60176dd546bf8659"
+  },
+  {
+    "file": "tests/components/HumanStorageWorkflows.test.tsx",
+    "sha256": "7c81d4d66afe80a5ddbbb50a3172333ac15c83b433379407975ea8f4df0a4128"
+  },
+  {
+    "file": "tests/components/NetworkTopologyGates.test.tsx",
+    "sha256": "9cc1692a71026565285bb271f53c92ddba26f79f8547809e76b2dccbf04591ea"
+  },
+  {
+    "file": "tests/components/SrTypeSafetyGates.test.tsx",
+    "sha256": "e14f4fbce1909340bdb531f3efd95720429dccef4cb3ebd2e4b17eccb382178b"
+  },
+  {
+    "file": "tests/components/VmAdvancedSettingsTab.test.tsx",
+    "sha256": "097808cccb8f748a235eb6ff8377e3f50cb61a6090bfa1b0b0bfeec7aa4d55bb"
+  },
+  {
+    "file": "tests/test-collection.json",
+    "sha256": "537c8a8d28bdfe34bc79e73b47af532b948af8418ea7fd3f8529ddfda6ac20f8"
+  },
+  {
+    "file": "tests/unit/execute-action.test.ts",
+    "sha256": "3ecb101c82fad73b9af42aeac0101e08759870ab431221dedc748f0a02b15413"
+  },
+  {
+    "file": "tests/unit/ipc-global-contract-inventory.test.ts",
+    "sha256": "b460391923d52bbcf29ace0bcd73ec7688e9d4824ed67382735516dfdf91a318"
+  },
+  {
+    "file": "tests/unit/ipc-handlers.test.ts",
+    "sha256": "dfdbcfd62873489f2aff0f96bb88ab75adc53e632ea2f55e12aab8c350495cc0"
+  },
+  {
+    "file": "tests/unit/ipc-network-contract.test.ts",
+    "sha256": "4b63f50f428ba80a4791053ec972753ff7e2c5936eb73d0357c8e2933e95f5a3"
+  },
+  {
+    "file": "tests/unit/ipc-network-preload.test.ts",
+    "sha256": "874ea39b76f691f16ed23f8cf47704eb0eed8ac514263d54e676bc32acfe7103"
+  },
+  {
+    "file": "tests/unit/ipc-preload-contract-pairing.test.ts",
+    "sha256": "2e8cd8450cda14bac8d2e9f1ba7435d3b8c4233b2d699fb9d64d372fc3767660"
+  },
+  {
+    "file": "tests/unit/ipc-storage-network-tracer.test.ts",
+    "sha256": "102ef00a5e4d9f8f58b2219dde4a0b6e0faf49328760717ff4e8d0554c8bf029"
+  },
+  {
+    "file": "tests/unit/ipc-vm-advanced-tracer.test.ts",
+    "sha256": "8d236e0be5b2a6479d88013ad60bc5411800e963b07476233ad68573ea4e7e3d"
+  },
+  {
+    "file": "tests/unit/network-service.test.ts",
+    "sha256": "838509a635771e1eb48a4a2253a3a5a09531782583591fdcf53da7430450bfde"
+  },
+  {
+    "file": "tests/unit/sr-service.test.ts",
+    "sha256": "087a1d19538b76a5a7bbbb5b8c83903b4e63f3244ebf03479531e2526684dab2"
+  },
+  {
+    "file": "tests/unit/sr-wizard-store.test.ts",
+    "sha256": "d5f1b422e86fd2e6f0988246c9f9a838d60bee6c364c4baafd599536c27b89bf"
+  },
+  {
+    "file": "tests/unit/vm-advanced-store.test.ts",
+    "sha256": "79f0b190262e9660047dd115731f451d3ff4850526719edd06baaaeb1e5c7898"
+  },
+  {
+    "file": "tests/unit/vm-advanced.service.test.ts",
+    "sha256": "c4de88701c620a4b57f34ba7f13b17b6cdcd272a4a83ad0af51e8912be439985"
+  },
+  {
+    "file": "tests/unit/vm-service.test.ts",
+    "sha256": "8b7a4976dab09f752ea54059529f0e50258cf66d18b57478878be2310e4591a3"
+  },
+  {
+    "file": "tests/visual/frontend-theme.tsx",
+    "sha256": "33cbb79f3b4f6cac3198f115591ab2cf5311f367706e2885f795401cd40cc3aa"
+  }
+]

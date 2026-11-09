@@ -1,0 +1,26 @@
+import { describe, it, expect, vi } from 'vitest'
+import { writeFileSync } from 'node:fs'
+import { useConnectionManagerStore } from '/Volumes/zt/dev/xenadminmodern/src/renderer/src/store/connectionManager.store'
+import { useMultiDataStore } from '/Volumes/zt/dev/xenadminmodern/src/renderer/src/store/multiData.store'
+describe('performance review: real VM event store, synthetic IPC', () => {
+  it('avoids inventory amplification from a continuous authoritative event stream', async () => {
+    vi.useFakeTimers()
+    const list = vi.fn().mockResolvedValue([])
+    ;(globalThis as any).window = { xapi: { vm: { list } } }
+    useConnectionManagerStore.setState({ connections: [{ id: 'performance-review', host: 'example.invalid', poolName: 'Review', state: 'connected', connectedAt: 1 }] as any })
+    useMultiDataStore.setState({ vms: [], domainStates: {} })
+    let events = 0
+    const timer = setInterval(() => {
+      events++
+      useMultiDataStore.getState().handleVmChangeEvent({ connectionId: 'performance-review', operation: 'mod', ref: 'vm',
+        snapshot: { name_label: 'VM', power_state: 'Halted', is_a_template: false, is_a_snapshot: false, is_control_domain: false } as any, receivedAt: Date.now() })
+    }, 100)
+    try {
+      await vi.advanceTimersByTimeAsync(60_000)
+      clearInterval(timer)
+      const result = { events, durationMs: 60_000, fullVmInventoryReads: list.mock.calls.length, globalThirtySecondPollingRunning: false, listPageFiveSecondPollingRunning: false }
+      expect(result.fullVmInventoryReads).toBe(0)
+      writeFileSync('/private/tmp/xenadmin-performance-20261023.JlaZxp/event-amplification-after.json', JSON.stringify(result, null, 2))
+    } finally { vi.clearAllTimers(); vi.useRealTimers(); delete (globalThis as any).window }
+  })
+})

@@ -1,0 +1,51 @@
+{
+  "browser": "156.0.8078.47",
+  "layouts": [
+    {
+      "width": 1024,
+      "initial": "1–100 / 205\n上一页\n1 / 3\n下一页",
+      "second": "101–200 / 205\n上一页\n2 / 3\n下一页",
+      "final": "201–205 / 205\n上一页\n3 / 3\n下一页",
+      "rows": 5,
+      "nextDisabled": true,
+      "selected": 205,
+      "paginationBox": {
+        "x": 2,
+        "y": 603.5,
+        "width": 1022,
+        "height": 59
+      }
+    },
+    {
+      "width": 1280,
+      "initial": "1–100 / 205\n上一页\n1 / 3\n下一页",
+      "second": "101–200 / 205\n上一页\n2 / 3\n下一页",
+      "final": "201–205 / 205\n上一页\n3 / 3\n下一页",
+      "rows": 5,
+      "nextDisabled": true,
+      "selected": 205,
+      "paginationBox": {
+        "x": 2,
+        "y": 603.5,
+        "width": 1278,
+        "height": 59
+      }
+    },
+    {
+      "width": 1440,
+      "initial": "1–100 / 205\n上一页\n1 / 3\n下一页",
+      "second": "101–200 / 205\n上一页\n2 / 3\n下一页",
+      "final": "201–205 / 205\n上一页\n3 / 3\n下一页",
+      "rows": 5,
+      "nextDisabled": true,
+      "selected": 205,
+      "paginationBox": {
+        "x": 2,
+        "y": 603.5,
+        "width": 1438,
+        "height": 59
+      }
+    }
+  ],
+  "errors": []
+}

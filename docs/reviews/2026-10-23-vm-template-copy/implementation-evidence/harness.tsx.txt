@@ -1,0 +1,24 @@
+import React, {useState} from 'react'
+import {createRoot} from 'react-dom/client'
+import {MemoryRouter} from 'react-router-dom'
+import {CopyVmDialog} from '/Volumes/zt/dev/xenadminmodern/src/renderer/src/components/vm/CopyVmDialog'
+import {CopyTaskPanel} from '/Volumes/zt/dev/xenadminmodern/src/renderer/src/components/vm/CopyTaskPanel'
+import {useConnectionManagerStore} from '/Volumes/zt/dev/xenadminmodern/src/renderer/src/store/connectionManager.store'
+import {useMultiDataStore} from '/Volumes/zt/dev/xenadminmodern/src/renderer/src/store/multiData.store'
+const params=new URLSearchParams(location.search)
+const object={ref:'OpaqueRef:source',name_label:params.has('long')?'production-template-ubuntu-24.04-amd64-golden-image-release-2026-10-23-database-and-monitoring-services-primary-region':'生产环境 Ubuntu 24.04 基础镜像',connectionId:'source'}
+const state={operations:[] as any[],starts:0,refreshes:[] as string[]}
+;(window as any).__copyTest=state
+useMultiDataStore.setState({refreshVms:async (opts:any)=>{state.refreshes.push(opts.connectionId)}})
+;(window as any).xapi={vm:{
+ copyPlan:async(source:string,vmRef:string,target:string)=>({sourceConnectionId:source,targetConnectionId:target,vmRef,sourceUuid:'source-uuid',isTemplate:params.get('mode')==='template',powerState:'Halted',allowedModes:target==='source'?['clone','copy']:['cross-pool-copy'],blockers:[],warnings:[target==='source'?'快速克隆保留原存储位置；完整复制会复制磁盘数据。快照历史不会随同池副本复制。':'跨池复制包含快照历史及挂起镜像，请逐项确认存储与网络映射。','源对象会保留。容量与耗时取决于存储后端、已分配数据和快照链，提交时会重新预检。'],
+ disks:[{vdiRef:'OpaqueRef:disk',vbdRef:'OpaqueRef:vbd',vmRef,vmName:object.name_label,history:false,suspend:false,device:'0',name:'系统盘 · Ubuntu',size:85899345920,srRef:'OpaqueRef:sourceSr'},...(target==='source'?[]:Array.from({length:4},(_,i)=>({vdiRef:'OpaqueRef:history'+i,vbdRef:'OpaqueRef:hvbd'+i,vmRef:'OpaqueRef:snapshot'+i,vmName:'升级前快照 2026-10-'+(19+i),history:true,suspend:i===3,device:'0',name:i===3?'挂起镜像':'历史系统盘',size:42949672960,srRef:'OpaqueRef:sourceSr'})))],
+ vifs:[{vifRef:'OpaqueRef:vif',vmRef,vmName:object.name_label,history:false,device:'0',networkRef:'OpaqueRef:sourceNetwork',networkName:'生产业务网络 VLAN 108'},...(target==='source'?[]:[{vifRef:'OpaqueRef:historicalVif',vmRef:'OpaqueRef:snapshot',vmName:'升级前快照',history:true,device:'1',networkRef:'OpaqueRef:oldNet',networkName:'历史业务网络 VLAN 102'}])],
+ hosts:[{ref:'OpaqueRef:host',name:'xcp-ng-host-02'}],srs:[{ref:'OpaqueRef:targetSr',name:'共享 NFS · 数据中心存储',freeBytes:549755813888,hostRefs:['OpaqueRef:host']}],networks:[{ref:'OpaqueRef:network',name:'管理与存储传输网络',hostRefs:['OpaqueRef:host'],transferHostRefs:['OpaqueRef:host']},{ref:'OpaqueRef:business',name:'生产业务 VLAN 108',hostRefs:['OpaqueRef:host'],transferHostRefs:[]}]}),
+ copy:async(source:string,payload:any)=>{state.starts++;const operation={id:'copy-1',sourceConnectionId:source,targetConnectionId:payload.targetConnectionId,sourcePoolUuid:'pool-a',targetPoolUuid:payload.targetConnectionId==='source'?'pool-a':'pool-b',sourcePoolName:'生产资源池 A',targetPoolName:payload.targetConnectionId==='source'?'生产资源池 A':'灾备资源池 B',sourceVmRef:payload.vmRef,name:payload.newName,isTemplate:params.get('mode')==='template',mode:payload.mode,status:'pending',progress:42,message:'服务器正在复制，可关闭窗口继续在后台观察',warnings:[],cancellable:true,createdAt:Date.now(),taskRef:'OpaqueRef:copy-task'};state.operations=[operation];return operation},
+ copyOperations:async()=>state.operations,
+ cancelCopy:async()=>{state.operations[0]={...state.operations[0],status:'cancelling',cancellable:false,message:'已请求取消，等待服务器确认终态'};return state.operations[0]},
+}}
+useConnectionManagerStore.setState({connections:[{id:'source',name:'源池',poolName:'生产资源池 A',state:'connected',epoch:1,poolUuid:'pool-a'},{id:'target',name:'目标池',poolName:'灾备资源池 B',state:'connected',epoch:1,poolUuid:'pool-b'}] as any})
+function Harness(){const[open,setOpen]=useState(true);return <MemoryRouter future={{v7_startTransition:true,v7_relativeSplatPath:true}}><main className="p-8 text-slate-400"><h1>XenAdmin Modern · 复制流程受控 UI 验证</h1><CopyVmDialog open={open} onClose={()=>setOpen(false)} vm={object} isTemplate={params.get('mode')==='template'} initialTargetConnectionId={params.get('mode')==='cross'?'target':'source'}/><CopyTaskPanel /></main></MemoryRouter>}
+createRoot(document.getElementById('root')!).render(<Harness />)

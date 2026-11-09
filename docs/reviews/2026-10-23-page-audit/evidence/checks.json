@@ -1,0 +1,28 @@
+{
+  "toolchain": {
+    "nodeVersion": "24.22.0",
+    "npmVersion": "11.19.1",
+    "lockfileVersion": 3
+  },
+  "checks": {
+    "lint": {
+      "exitCode": 0,
+      "logSha256": "37be22847c60ce3b916fbfe424ce6788d136090459074dae3bc9b7ebbfacca1d"
+    },
+    "typecheck:web": {
+      "exitCode": 0,
+      "logSha256": "b49a5d0a218e36249c615896e885ce33152dc07f16cec36e6bc27104de28a137"
+    },
+    "typecheck:node": {
+      "exitCode": 0,
+      "logSha256": "be3e0e66bd7d66e5607b4ed01cac8f38ae4f75d42166e56c41aba5bbb4e32266"
+    },
+    "build": {
+      "exitCode": 0,
+      "logSha256": "def5b822ac28c1b50e0065cbd662006e1d4418fcb37b619a02c7d5a604ab2acd"
+    }
+  },
+  "visualCombinations": 104,
+  "visualOverflows": 0,
+  "edgeCases": 22
+}

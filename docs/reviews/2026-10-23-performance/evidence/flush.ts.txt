@@ -1,0 +1,33 @@
+import { performance } from 'node:perf_hooks'
+import { mkdtempSync, statSync, writeFileSync } from 'node:fs'
+import { configureJsonStoreDirectory } from '/Volumes/zt/dev/xenadminmodern/src/main/persistence/json-store'
+import { initDatabase, closeDatabase, persistMetricBatch, persistVmMetricBatch, flushMetricStore } from '/Volumes/zt/dev/xenadminmodern/src/main/xapi/services/metrics-db.service'
+const output = '/private/tmp/xenadmin-performance-20261023.JlaZxp'
+let directory = mkdtempSync(output + '/state-')
+configureJsonStoreDirectory(directory)
+const results = []
+for (const count of [1000, 10_000, 50_000, 100_000]) {
+  initDatabase()
+  const base = Date.now() - 600_000
+  const points = Array.from({ length: count }, (_, i) => ({ timestamp: base + (i % 120) * 5000, cpuPercent: 25.5, memoryPercent: 40.5,
+    networkRxBytes: 1234567, networkTxBytes: 2345678, diskReadBytes: 3456789, diskWriteBytes: 4567890,
+    availableMetrics: ['cpuPercent', 'memoryPercent', 'networkRxBytes', 'networkTxBytes', 'diskReadBytes', 'diskWriteBytes'],
+    connectionId: 'performance-review', poolUuid: '00000000-0000-4000-8000-000000000000',
+  }))
+  persistMetricBatch(points.map((point, i) => ({ ...point, hostRef: `OpaqueRef:host-${Math.floor(i / 120)}` })))
+  persistVmMetricBatch(points.map((point, i) => ({ ...point, vmRef: `OpaqueRef:vm-${Math.floor(i / 120)}` })))
+  const durations = [], timerDelays = []
+  for (let trial = 0; trial < 3; trial++) {
+    const start = performance.now()
+    const timer = new Promise<number>((resolve) => setTimeout(() => resolve(performance.now() - start), 0))
+    flushMetricStore()
+    durations.push(performance.now() - start)
+    timerDelays.push(await timer)
+  }
+  results.push({ samplesPerKind: count, totalSamples: count * 2, snapshotBytes: statSync(directory + '/metric-samples.json').size, durationsMs: durations, timerDelayMs: timerDelays })
+  closeDatabase()
+  directory = mkdtempSync(output + '/state-')
+  configureJsonStoreDirectory(directory)
+}
+writeFileSync(output + '/flush-results.json', JSON.stringify({ node: process.versions.node, results }, null, 2))
+console.log(JSON.stringify(results))

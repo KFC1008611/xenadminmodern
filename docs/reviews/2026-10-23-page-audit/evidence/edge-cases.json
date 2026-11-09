@@ -1,0 +1,193 @@
+[
+  {
+    "query": "long-names",
+    "path": "/dashboard",
+    "alerts": [],
+    "bodyWidth": 1024,
+    "heading": "仪表盘",
+    "scroll": 786,
+    "width": 786
+  },
+  {
+    "query": "long-names",
+    "path": "/hosts",
+    "alerts": [],
+    "bodyWidth": 1024,
+    "heading": "主机",
+    "scroll": 786,
+    "width": 786
+  },
+  {
+    "query": "long-names",
+    "path": "/vms",
+    "alerts": [],
+    "bodyWidth": 1024,
+    "heading": "虚拟机与模板",
+    "scroll": 786,
+    "width": 786
+  },
+  {
+    "query": "long-names",
+    "path": "/storage",
+    "alerts": [],
+    "bodyWidth": 1024,
+    "heading": "存储",
+    "scroll": 792,
+    "width": 792
+  },
+  {
+    "query": "long-names",
+    "path": "/networks",
+    "alerts": [],
+    "bodyWidth": 1024,
+    "heading": "网络",
+    "scroll": 786,
+    "width": 786
+  },
+  {
+    "query": "long-names",
+    "path": "/tasks",
+    "alerts": [],
+    "bodyWidth": 1024,
+    "heading": "任务",
+    "scroll": 786,
+    "width": 786
+  },
+  {
+    "query": "long-names",
+    "path": "/batch-tasks",
+    "alerts": [],
+    "bodyWidth": 1024,
+    "heading": "批量任务",
+    "scroll": 792,
+    "width": 792
+  },
+  {
+    "query": "long-names",
+    "path": "/rbac",
+    "alerts": [],
+    "bodyWidth": 1024,
+    "heading": "用户与权限",
+    "scroll": 792,
+    "width": 792
+  },
+  {
+    "query": "long-names",
+    "path": "/pool-manager",
+    "alerts": [],
+    "bodyWidth": 1024,
+    "heading": "资源池管理",
+    "scroll": 786,
+    "width": 786
+  },
+  {
+    "query": "long-names",
+    "path": "/alerts",
+    "alerts": [],
+    "bodyWidth": 1024,
+    "heading": "告警中心",
+    "scroll": 792,
+    "width": 792
+  },
+  {
+    "query": "empty",
+    "path": "/dashboard",
+    "alerts": [],
+    "bodyWidth": 1024,
+    "heading": "仪表盘",
+    "scroll": 786,
+    "width": 786
+  },
+  {
+    "query": "empty",
+    "path": "/hosts",
+    "alerts": [],
+    "bodyWidth": 1024,
+    "heading": "主机",
+    "scroll": 792,
+    "width": 792
+  },
+  {
+    "query": "empty",
+    "path": "/vms",
+    "alerts": [],
+    "bodyWidth": 1024,
+    "heading": "虚拟机与模板",
+    "scroll": 792,
+    "width": 792
+  },
+  {
+    "query": "empty",
+    "path": "/storage",
+    "alerts": [],
+    "bodyWidth": 1024,
+    "heading": "存储",
+    "scroll": 792,
+    "width": 792
+  },
+  {
+    "query": "empty",
+    "path": "/networks",
+    "alerts": [],
+    "bodyWidth": 1024,
+    "heading": "网络",
+    "scroll": 792,
+    "width": 792
+  },
+  {
+    "query": "empty",
+    "path": "/tasks",
+    "alerts": [],
+    "bodyWidth": 1024,
+    "heading": "任务",
+    "scroll": 792,
+    "width": 792
+  },
+  {
+    "query": "empty",
+    "path": "/batch-tasks",
+    "alerts": [],
+    "bodyWidth": 1024,
+    "heading": "批量任务",
+    "scroll": 792,
+    "width": 792
+  },
+  {
+    "query": "empty",
+    "path": "/rbac",
+    "alerts": [],
+    "bodyWidth": 1024,
+    "heading": "用户与权限",
+    "scroll": 792,
+    "width": 792
+  },
+  {
+    "query": "empty",
+    "path": "/pool-manager",
+    "alerts": [],
+    "bodyWidth": 1024,
+    "heading": "资源池管理",
+    "scroll": 792,
+    "width": 792
+  },
+  {
+    "query": "empty",
+    "path": "/alerts",
+    "alerts": [],
+    "bodyWidth": 1024,
+    "heading": "告警中心",
+    "scroll": 792,
+    "width": 792
+  },
+  {
+    "query": "read-error",
+    "path": "/pool/prod/vms",
+    "text": "生产资源池 的 VM 列表读取失败：测试：虚拟机清单读取失败。当前显示上次数据，请刷新后再操作。\n重新读取 VM 列表"
+  },
+  {
+    "query": "notify-error",
+    "path": "/alerts?tab=notify",
+    "error": "测试：通知配置读取失败",
+    "retry": true
+  }
+]

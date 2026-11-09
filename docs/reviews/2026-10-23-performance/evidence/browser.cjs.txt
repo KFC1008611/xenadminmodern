@@ -1,0 +1,32 @@
+const { chromium } = require('/Users/whs/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright')
+const fs = require('node:fs')
+const root = '/private/tmp/xenadmin-performance-20261023.JlaZxp'
+;(async () => {
+  const browser = await chromium.launch({ headless: true, executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' })
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } })
+  const errors = []
+  page.on('pageerror', (error) => errors.push(error.message))
+  await page.goto('file://' + root + '/index.html')
+  await page.waitForFunction(() => window.__review)
+  const cdp = await page.context().newCDPSession(page)
+  const longTasks = []
+  await page.evaluate(() => {
+    window.__longTasks = []
+    new PerformanceObserver((list) => window.__longTasks.push(...list.getEntries().map(({startTime, duration}) => ({startTime, duration})))).observe({ type: 'longtask', buffered: true })
+  })
+  await page.evaluate(() => window.__review.mount(10))
+  const results = []
+  for (const count of [100, 500, 1000, 2000]) {
+    await cdp.send('HeapProfiler.collectGarbage')
+    const mounted = await page.evaluate((n) => window.__review.mount(n), count)
+    const unrelatedUpdates = []
+    for (let i = 0; i < 3; i++) unrelatedUpdates.push(await page.evaluate(() => window.__review.unrelatedUpdate()))
+    const selection = await page.evaluate(() => window.__review.selection())
+    results.push({ mounted, unrelatedUpdates, selection })
+    if (count === 1000) await page.screenshot({ path: root + '/vms-1000.png' })
+  }
+  longTasks.push(...await page.evaluate(() => window.__longTasks))
+  fs.writeFileSync(root + '/browser-results.json', JSON.stringify({ browser: await browser.version(), viewport: { width: 1440, height: 900 }, reactBuild: 'production', sourceComponent: 'src/renderer/src/pages/VmsPage.tsx', results, longTasks, errors }, null, 2))
+  console.log(JSON.stringify({ results, errors }))
+  await browser.close()
+})().catch((error) => { console.error(error); process.exitCode = 1 })

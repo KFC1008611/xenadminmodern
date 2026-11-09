@@ -1,0 +1,8 @@
+{
+  "simulatedRequestLatencyMs": 90000,
+  "elapsedMs": 60000,
+  "pollIntervalMs": 30000,
+  "requests": 3,
+  "active": 3,
+  "peak": 3
+}

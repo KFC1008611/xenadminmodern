@@ -1,0 +1,4 @@
+const esbuild = require('/Volumes/zt/dev/xenadminmodern/node_modules/vite/node_modules/esbuild')
+const root = '/private/tmp/xenadmin-performance-20261023.JlaZxp'
+esbuild.buildSync({ entryPoints: [root + '/flush-after.ts'], outfile: root + '/flush-after.mjs', bundle: true, platform: 'node', format: 'esm', target: 'node24' })
+esbuild.buildSync({ entryPoints: [root + '/ui.tsx'], outfile: root + '/ui.js', bundle: true, platform: 'browser', jsx: 'automatic', nodePaths: ['/Volumes/zt/dev/xenadminmodern/node_modules'], define: { 'process.env.NODE_ENV': '"production"', 'import.meta.env.DEV': 'false' }, minify: true })

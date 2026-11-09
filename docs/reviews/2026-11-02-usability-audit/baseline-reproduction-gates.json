@@ -1,0 +1,134 @@
+[
+  {
+    "log": "xenadmin-usability-baseline.log",
+    "gate": {
+      "schemaVersion": 1,
+      "kind": "xenadmin-test-gate",
+      "ok": false,
+      "toolchain": {
+        "nodeVersion": "24.22.0",
+        "npmVersion": "11.19.1",
+        "lockfileVersion": 3
+      },
+      "collection": {
+        "mode": "focused",
+        "manifestChecked": false,
+        "fileCount": 2,
+        "testCount": 20,
+        "expectedFileCount": null,
+        "expectedTestCount": null,
+        "drift": {
+          "missing": [],
+          "unexpected": [],
+          "countMismatches": []
+        }
+      },
+      "tests": {
+        "passed": 11,
+        "failed": 9,
+        "skipped": 0,
+        "todo": 0,
+        "onlyDetected": false
+      },
+      "diagnostics": {
+        "warningCount": 0,
+        "stderr": {
+          "bytes": 69996,
+          "lineCount": 1497
+        }
+      },
+      "errors": [
+        "Vitest exited with status 1",
+        "Vitest wrote 1497 stderr lines"
+      ]
+    }
+  },
+  {
+    "log": "xenadmin-template-form-baseline.log",
+    "gate": {
+      "schemaVersion": 1,
+      "kind": "xenadmin-test-gate",
+      "ok": false,
+      "toolchain": {
+        "nodeVersion": "24.22.0",
+        "npmVersion": "11.19.1",
+        "lockfileVersion": 3
+      },
+      "collection": {
+        "mode": "focused",
+        "manifestChecked": false,
+        "fileCount": 1,
+        "testCount": 3,
+        "expectedFileCount": null,
+        "expectedTestCount": null,
+        "drift": {
+          "missing": [],
+          "unexpected": [],
+          "countMismatches": []
+        }
+      },
+      "tests": {
+        "passed": 0,
+        "failed": 3,
+        "skipped": 0,
+        "todo": 0,
+        "onlyDetected": false
+      },
+      "diagnostics": {
+        "warningCount": 4,
+        "stderr": {
+          "bytes": 20538,
+          "lineCount": 414
+        }
+      },
+      "errors": [
+        "Vitest exited with status 1",
+        "Vitest wrote 414 stderr lines"
+      ]
+    }
+  },
+  {
+    "log": "xenadmin-alert-form-baseline.log",
+    "gate": {
+      "schemaVersion": 1,
+      "kind": "xenadmin-test-gate",
+      "ok": false,
+      "toolchain": {
+        "nodeVersion": "24.22.0",
+        "npmVersion": "11.19.1",
+        "lockfileVersion": 3
+      },
+      "collection": {
+        "mode": "focused",
+        "manifestChecked": false,
+        "fileCount": 1,
+        "testCount": 18,
+        "expectedFileCount": null,
+        "expectedTestCount": null,
+        "drift": {
+          "missing": [],
+          "unexpected": [],
+          "countMismatches": []
+        }
+      },
+      "tests": {
+        "passed": 14,
+        "failed": 4,
+        "skipped": 0,
+        "todo": 0,
+        "onlyDetected": false
+      },
+      "diagnostics": {
+        "warningCount": 0,
+        "stderr": {
+          "bytes": 2005,
+          "lineCount": 42
+        }
+      },
+      "errors": [
+        "Vitest exited with status 1",
+        "Vitest wrote 42 stderr lines"
+      ]
+    }
+  }
+]

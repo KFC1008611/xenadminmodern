@@ -1,0 +1,40 @@
+const {chromium}=require('/Users/whs/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright')
+const fs=require('fs')
+const base='/private/tmp/xen-copy-implementation-20261023/'
+;(async()=>{
+ const browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'})
+ const page=await browser.newPage()
+ const errors=[];page.on('pageerror',e=>errors.push(e.message))
+ const results=[]
+ for(const [width,height] of [[1024,720],[1280,800],[1440,900]]){
+  await page.setViewportSize({width,height})
+  for(const mode of ['copy','template','cross']){
+   await page.goto('file://'+base+'index.html?mode='+mode+'&long=1')
+   await page.getByRole('dialog').waitFor()
+   if(mode==='cross') await page.getByLabel('目标主机',{exact:true}).waitFor()
+   else await page.getByRole('radio',{name:'快速克隆'}).waitFor()
+   const measure=await page.getByRole('dialog').evaluate(el=>{
+    const r=el.getBoundingClientRect()
+    return {x:r.x,y:r.y,width:r.width,height:r.height,clientWidth:el.clientWidth,scrollWidth:el.scrollWidth,bodyOverflow:document.documentElement.scrollWidth>innerWidth,footerButtons:[...el.querySelectorAll('form>div:last-child button')].map(b=>{const range=document.createRange();range.selectNodeContents(b);return {text:b.textContent,width:b.getBoundingClientRect().width,textLines:[...range.getClientRects()].length,bottom:b.getBoundingClientRect().bottom}})}
+   })
+   if(measure.scrollWidth>measure.clientWidth||measure.bodyOverflow||measure.x<0||measure.y<0||measure.footerButtons.some(b=>b.textLines!==1||b.bottom>height)) throw new Error('overflow '+JSON.stringify(measure))
+   results.push({viewportWidth:width,viewportHeight:height,mode,...measure});await page.screenshot({path:base+mode+'-'+width+'.png'})
+  }
+ }
+ await page.setViewportSize({width:1024,height:720})
+ await page.goto('file://'+base+'index.html?mode=copy')
+ await page.getByRole('radio',{name:'完整复制'}).click()
+ await page.getByLabel('目标 SR',{exact:true}).selectOption('OpaqueRef:targetSr')
+ await page.getByLabel('新VM名称').fill('桌面复制验证')
+ await page.getByLabel('新VM名称').press('Enter')
+ await page.getByRole('complementary',{name:'复制任务'}).waitFor()
+ await page.getByText('42% · OpaqueRef:copy-task').waitFor()
+ await page.screenshot({path:base+'background-1024.png'})
+ await page.getByRole('button',{name:'请求取消',exact:true}).click()
+ await page.getByText('已请求取消，等待服务器确认终态').waitFor()
+ await page.screenshot({path:base+'cancelling-1024.png'})
+ const state=await page.evaluate(()=>window.__copyTest)
+ if(state.starts!==1||errors.length)throw new Error(JSON.stringify({state,errors}))
+ fs.writeFileSync(base+'visual-results.json',JSON.stringify({checks:results,workflow:state,errors},null,2))
+ await browser.close()
+})().catch(e=>{console.error(e);process.exit(1)})

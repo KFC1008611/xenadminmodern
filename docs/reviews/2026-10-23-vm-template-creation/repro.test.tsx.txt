@@ -1,0 +1,224 @@
+import React from 'react'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import Step4Disk from '/Volumes/zt/dev/xenadminmodern/src/renderer/src/components/wizard/steps/Step4Disk'
+import { getSupportedInstallModes, validateWizardStep } from '/Volumes/zt/dev/xenadminmodern/src/renderer/src/components/wizard/vmWizardModel'
+import { vmCreateFromTemplateContract } from '/Volumes/zt/dev/xenadminmodern/src/shared/ipc-contracts/vm'
+
+const mock = vi.hoisted(() => ({ call: vi.fn(), client: {} as any }))
+vi.mock('/Volumes/zt/dev/xenadminmodern/src/main/xapi/connection-manager', () => ({
+  connectionManager: { getClient: () => mock.client },
+}))
+const GIB = 1073741824
+const REF = { tpl: 'OpaqueRef:template', vm: 'OpaqueRef:newvm', host: 'OpaqueRef:host', sr: 'OpaqueRef:sr', isoSr: 'OpaqueRef:iso-sr', iso: 'OpaqueRef:iso', net: 'OpaqueRef:net' }
+const srUuid = '11111111-1111-1111-1111-111111111111'
+let source: any
+let created: any
+let records: any
+let vbds: Record<string, any>
+let vdis: Record<string, any>
+let sequence: number
+let failVif: boolean
+
+function payload(overrides: any = {}) {
+  return { templateRef: REF.tpl, vmName: 'audit', vmDescription: '', vcpus: 2, memoryBytes: 2 * GIB,
+    installMode: 'iso', isoRef: REF.iso, targetHostRef: REF.host,
+    disks: [{ templateVdiRef: '', srRef: REF.sr, sizeBytes: 10 * GIB, device: '0', bootable: true }],
+    vifs: [{ device: '0', networkRef: REF.net }], startAfter: false, ...overrides }
+}
+function attach(vm: any, vdi: string, type = 'Disk', device = '0', mode = 'RW') {
+  const ref = `OpaqueRef:vbd-${++sequence}`
+  vbds[ref] = { VM: vm === source ? REF.tpl : REF.vm, VDI: vdi, type, userdevice: device, mode, empty: vdi === 'OpaqueRef:NULL', bootable: type === 'Disk' }
+  vm.VBDs.push(ref)
+  if (vdis[vdi]) vdis[vdi].VBDs = [ref]
+  return ref
+}
+function addSourceDisk(mode = 'RW', device = '0') {
+  const ref = `OpaqueRef:source-disk-${device}`
+  vdis[ref] = { SR: REF.sr, type: 'user', virtual_size: String(10 * GIB), VBDs: [], read_only: mode === 'RO', sharable: false, is_a_snapshot: false }
+  attach(source, ref, 'Disk', device, mode)
+}
+beforeEach(() => {
+  sequence = 0; failVif = false; created = undefined; vbds = {}; vdis = { [REF.iso]: { SR: REF.isoSr, type: 'user', read_only: true } }
+  source = { is_a_template: true, is_default_template: true, VCPUs_at_startup: 2, memory_static_min: GIB,
+    HVM_boot_policy: 'BIOS order', HVM_boot_params: { order: 'cdn' }, other_config: { 'install-methods': 'cdrom,nfs' }, VBDs: [], VIFs: [] }
+  records = {
+    'host.get_all_records': { [REF.host]: { enabled: true, metrics: 'hm', name_label: 'host' } },
+    'host_metrics.get_all_records': { hm: { live: true, memory_free: String(16 * GIB) } },
+    'host_cpu.get_all_records': Object.fromEntries(Array.from({ length: 8 }, (_, n) => [String(n), { host: REF.host }])),
+    'SR.get_all_records': { [REF.sr]: { uuid: srUuid, type: 'nfs', shared: true, physical_size: String(100 * GIB), physical_utilisation: '0' }, [REF.isoSr]: { type: 'iso', content_type: 'iso' } },
+    'PBD.get_all_records': { disk: { SR: REF.sr, host: REF.host, currently_attached: true }, iso: { SR: REF.isoSr, host: REF.host, currently_attached: true } },
+    'network.get_all_records': { [REF.net]: { managed: true, PIFs: [], other_config: {} } },
+    'PIF.get_all_records': {},
+  }
+  mock.client = { callWithSession: mock.call }
+  mock.call.mockReset().mockImplementation(async (method: string, args: any[]) => {
+    if (method === 'VDI.get_all_records') return structuredClone(vdis)
+    if (method === 'VBD.get_all_records') return structuredClone(vbds)
+    if (records[method]) return structuredClone(records[method])
+    if (method === 'VM.get_record') return structuredClone(args[0] === REF.tpl ? source : created)
+    if (method === 'VM.clone' || method === 'VM.copy') {
+      created = { ...structuredClone(source), VBDs: [], is_default_template: false }
+      for (const srcRef of source.VBDs) {
+        const srcVbd = vbds[srcRef]
+        let vdiRef = srcVbd.VDI
+        if (srcVbd.type === 'Disk' && vdis[vdiRef]) {
+          const copy = `OpaqueRef:copied-${++sequence}`
+          vdis[copy] = { ...structuredClone(vdis[vdiRef]), VBDs: [] }
+          vdiRef = copy
+        }
+        attach(created, vdiRef, srcVbd.type, srcVbd.userdevice, srcVbd.mode)
+      }
+      return REF.vm
+    }
+    if (method === 'VM.set_other_config') { created.other_config = structuredClone(args[1]); return }
+    if (method === 'VM.provision') {
+      created.is_a_template = false
+      if (created.other_config.disks) {
+        const doc = new DOMParser().parseFromString(created.other_config.disks, 'application/xml')
+        for (const node of Array.from(doc.getElementsByTagName('disk'))) {
+          const ref = `OpaqueRef:provisioned-${++sequence}`
+          vdis[ref] = { SR: REF.sr, type: 'user', virtual_size: node.getAttribute('size'), VBDs: [], sharable: false, is_a_snapshot: false }
+          attach(created, ref, 'Disk', node.getAttribute('device')!)
+        }
+        delete created.other_config.disks
+      }
+      return
+    }
+    if (method === 'VM.get_allowed_VBD_devices') return Array.from({ length: 16 }, (_, n) => String(n)).filter(n => !created.VBDs.some((r: string) => vbds[r].userdevice === n))
+    if (method === 'VDI.create') {
+      const ref = `OpaqueRef:manual-${++sequence}`; vdis[ref] = { ...args[0], VBDs: [] }; return ref
+    }
+    if (method === 'VBD.create') {
+      const ref = attach(created, args[0].VDI, args[0].type, args[0].userdevice, args[0].mode)
+      vbds[ref] = { ...vbds[ref], ...structuredClone(args[0]) }; return ref
+    }
+    if (method === 'VBD.get_record') return structuredClone(vbds[args[0]])
+    if (method === 'VDI.get_record') return structuredClone(vdis[args[0]])
+    if (method === 'VM.get_VIFs') return created.VIFs
+    if (method === 'VM.get_allowed_VIF_devices') return ['0', '1']
+    if (method === 'VIF.create') { if (failVif) throw new Error('VIF_CREATE_FAILED'); return 'OpaqueRef:vif' }
+    if (method === 'VM.destroy') { for (const r of created.VBDs) delete vbds[r]; created.VBDs = []; return }
+    if (method === 'VBD.destroy') { delete vbds[args[0]]; created.VBDs = created.VBDs.filter((r: string) => r !== args[0]); return }
+    if (method === 'VDI.destroy') { delete vdis[args[0]]; return }
+    return undefined
+  })
+})
+afterEach(() => cleanup())
+const disks = () => created.VBDs.map((ref: string) => vbds[ref]).filter((vbd: any) => vbd.type === 'Disk')
+
+describe('Current defect reproductions: passing asserts the problematic behavior', () => {
+  it('R01 adds a second disk when a system-marked template already has a disk', async () => {
+    addSourceDisk()
+    const { createFromWizard } = await import('/Volumes/zt/dev/xenadminmodern/src/main/xapi/services/vm-creation.service')
+    await createFromWizard('conn', payload())
+    expect(disks()).toHaveLength(2)
+    expect(disks().map((d: any) => d.userdevice)).toEqual(['0', '1'])
+  })
+  it('R02 custom full copy provisions extra XML disks outside its displayed disk plan', async () => {
+    source.is_default_template = false; addSourceDisk()
+    source.other_config.disks = `<provision><disk device="1" size="${5 * GIB}" sr="${srUuid}" bootable="false" type="user"/></provision>`
+    const { createFromWizard } = await import('/Volumes/zt/dev/xenadminmodern/src/main/xapi/services/vm-creation.service')
+    await createFromWizard('conn', payload({ installMode: 'none', isoRef: undefined, targetSrRef: REF.sr, disks: [] }))
+    expect(disks()).toHaveLength(2)
+    expect(mock.call.mock.calls.find(([m]) => m === 'VM.set_other_config')).toBeUndefined()
+  })
+  it('R03 keeps the inherited CD and creates a second CD for ISO installation', async () => {
+    attach(source, 'OpaqueRef:NULL', 'CD', '3', 'RO')
+    const { createFromWizard } = await import('/Volumes/zt/dev/xenadminmodern/src/main/xapi/services/vm-creation.service')
+    await createFromWizard('conn', payload())
+    expect(created.VBDs.map((r: string) => vbds[r]).filter((v: any) => v.type === 'CD')).toHaveLength(2)
+  })
+  it('R04 ISO creation leaves disk-first HVM order and marks disk plus CD bootable', async () => {
+    const { createFromWizard } = await import('/Volumes/zt/dev/xenadminmodern/src/main/xapi/services/vm-creation.service')
+    await createFromWizard('conn', payload())
+    expect(mock.call.mock.calls.some(([m]) => m === 'VM.set_HVM_boot_params')).toBe(false)
+    expect(created.HVM_boot_params.order).toBe('cdn')
+    expect(created.VBDs.map((r: string) => vbds[r]).filter((v: any) => v.bootable)).toHaveLength(2)
+  })
+  it('R05 models an eliloader HTTP installer as PXE and never sets its install repository', async () => {
+    source.HVM_boot_policy = ''; source.PV_bootloader = 'eliloader'; source.other_config = { 'install-methods': 'http' }
+    expect(getSupportedInstallModes(source)).toEqual(['pxe'])
+    const { createFromWizard } = await import('/Volumes/zt/dev/xenadminmodern/src/main/xapi/services/vm-creation.service')
+    await createFromWizard('conn', payload({ installMode: 'pxe', isoRef: undefined }))
+    expect(mock.call.mock.calls.some(([m]) => m === 'VM.set_HVM_boot_params')).toBe(true)
+    expect(created.other_config['install-repository']).toBeUndefined()
+  })
+  it('R06 blocks HVM PXE on cdrom-only templates and exposes no fallback without install-methods', () => {
+    expect(getSupportedInstallModes({ HVM_boot_policy: 'BIOS order', other_config: {} })).toEqual([])
+    expect(getSupportedInstallModes({ HVM_boot_policy: 'BIOS order', other_config: { 'install-methods': 'cdrom' } })).toEqual(['iso'])
+  })
+  it('R07 accepts diskless PXE without any VIF and proceeds to VM.start', async () => {
+    expect(validateWizardStep('network', { installMode: 'pxe', vifs: [], resourceStatus: { network: 'ready' } }).valid).toBe(true)
+    const { createFromWizard } = await import('/Volumes/zt/dev/xenadminmodern/src/main/xapi/services/vm-creation.service')
+    await createFromWizard('conn', payload({ installMode: 'pxe', isoRef: undefined, disks: [], vifs: [], startAfter: true }))
+    expect(mock.call).toHaveBeenCalledWith('VM.start', [REF.vm, false, false])
+    expect(mock.call.mock.calls.some(([m]) => m === 'VIF.create')).toBe(false)
+  })
+  it('R08 passes fractional bytes from UI through validation, IPC and VDI.create', async () => {
+    let chosen: any[] = []
+    render(<Step4Disk templateKind="system" installMode="iso" template={null} options={[]} targetHostRef="" disks={[{ templateVdiRef: '', srRef: REF.sr, sizeBytes: GIB }]} targetSrRef="" onChangeTargetSrRef={vi.fn()} onChangeDisks={d => { chosen = d }} />)
+    fireEvent.change(screen.getByLabelText('磁盘 1 大小'), { target: { value: '10.1' } })
+    expect(Number.isInteger(chosen[0].sizeBytes)).toBe(false)
+    expect(validateWizardStep('storage', { templateKind: 'system', installMode: 'iso', disks: chosen }).valid).toBe(true)
+    const [, parsed] = vmCreateFromTemplateContract.argsSchema.parse(['conn', payload({ disks: chosen })])
+    const { createFromWizard } = await import('/Volumes/zt/dev/xenadminmodern/src/main/xapi/services/vm-creation.service')
+    await createFromWizard('conn', parsed)
+    expect(mock.call).toHaveBeenCalledWith('VDI.create', [expect.objectContaining({ virtual_size: '10844792422.4' })])
+  })
+  it('R09 counts an empty CD as a second hard disk', () => {
+    source.VBDs = ['disk-vbd', 'cd-vbd']
+    render(<Step4Disk templateKind="custom" installMode="none" template={source} options={[]} targetHostRef="" disks={[]} targetSrRef="" onChangeDisks={vi.fn()} onChangeTargetSrRef={vi.fn()} />)
+    expect(screen.getByText('完整复制模板的 2 块磁盘')).toBeInTheDocument()
+  })
+  it('R10 cannot resolve provision XML SR UUID and silently picks the first SR', async () => {
+    source.other_config.disks = `<provision><disk device="0" size="${GIB}" sr="${srUuid}" bootable="true"/></provision>`
+    let selected: any[] = []
+    render(<Step4Disk templateKind="system" installMode="iso" template={source} options={[
+      { ref: 'OpaqueRef:wrong', name: 'Wrong first SR', freeBytes: 100 * GIB, shared: true, hostRefs: [REF.host] },
+      { ref: REF.sr, name: 'Requested SR', freeBytes: 100 * GIB, shared: true, hostRefs: [REF.host] },
+    ]} targetHostRef="" disks={[]} targetSrRef="" onChangeDisks={d => { selected = d }} onChangeTargetSrRef={vi.fn()} />)
+    await waitFor(() => expect(selected).toHaveLength(1))
+    expect(selected[0].srRef).toBe('OpaqueRef:wrong')
+  })
+  it('R11 leaves a newly copied read-only disk after a definite later failure', async () => {
+    source.is_default_template = false; addSourceDisk('RO'); failVif = true
+    const { createFromWizard } = await import('/Volumes/zt/dev/xenadminmodern/src/main/xapi/services/vm-creation.service')
+    await expect(createFromWizard('conn', payload({ installMode: 'none', isoRef: undefined, targetSrRef: REF.sr, disks: [] }))).rejects.toThrow('VIF_CREATE_FAILED')
+    expect(mock.call).toHaveBeenCalledWith('VM.destroy', [REF.vm])
+    expect(Object.keys(vdis).filter(ref => ref.startsWith('OpaqueRef:copied-'))).toHaveLength(1)
+    expect(mock.call.mock.calls.some(([m]) => m === 'VDI.destroy')).toBe(false)
+  })
+  it('R12 erases template VIF QoS and address restrictions during replacement', async () => {
+    source.is_default_template = false; source.VIFs = ['OpaqueRef:template-vif']; addSourceDisk()
+    const { createFromWizard } = await import('/Volumes/zt/dev/xenadminmodern/src/main/xapi/services/vm-creation.service')
+    await createFromWizard('conn', payload({ installMode: 'none', isoRef: undefined, targetSrRef: REF.sr, disks: [] }))
+    expect(mock.call).toHaveBeenCalledWith('VIF.destroy', ['OpaqueRef:template-vif'])
+    expect(mock.call).toHaveBeenCalledWith('VIF.create', [expect.objectContaining({ MTU: 1500, qos_algorithm_type: '', qos_algorithm_params: {}, locking_mode: 'network_default', ipv4_allowed: [], ipv6_allowed: [] })])
+  })
+  it('R13 changes vCPU count without reconciling inherited cores-per-socket', async () => {
+    source.is_default_template = false; source.VCPUs_at_startup = 4; source.platform = { 'cores-per-socket': '4' }; addSourceDisk()
+    const { createFromWizard } = await import('/Volumes/zt/dev/xenadminmodern/src/main/xapi/services/vm-creation.service')
+    await createFromWizard('conn', payload({ installMode: 'none', isoRef: undefined, targetSrRef: REF.sr, disks: [], vcpus: 3, startAfter: true }))
+    expect(mock.call).toHaveBeenCalledWith('VM.set_VCPUs_max', [REF.vm, 3])
+    expect(created.platform['cores-per-socket']).toBe('4')
+    expect(mock.call.mock.calls.some(([m]) => m === 'VM.set_platform' || m === 'VM.add_to_platform')).toBe(false)
+    expect(mock.call).toHaveBeenCalledWith('VM.start', [REF.vm, false, false])
+  })
+  it('C01 a stock diskless system template creates exactly the requested single disk', async () => {
+    source.other_config.disks = `<provision><disk device="0" size="${GIB}" sr="${srUuid}" bootable="true"/></provision>`
+    const { createFromWizard } = await import('/Volumes/zt/dev/xenadminmodern/src/main/xapi/services/vm-creation.service')
+    await createFromWizard('conn', payload())
+    expect(disks()).toHaveLength(1)
+    expect(disks()[0].userdevice).toBe('0')
+    expect(vdis[disks()[0].VDI].virtual_size).toBe(String(10 * GIB))
+  })
+  it('C02 a custom template without provision XML preserves exactly its copied disk', async () => {
+    source.is_default_template = false; addSourceDisk()
+    const { createFromWizard } = await import('/Volumes/zt/dev/xenadminmodern/src/main/xapi/services/vm-creation.service')
+    await createFromWizard('conn', payload({ installMode: 'none', isoRef: undefined, targetSrRef: REF.sr, disks: [] }))
+    expect(disks()).toHaveLength(1)
+    expect(mock.call.mock.calls.some(([m]) => m === 'VDI.create')).toBe(false)
+    expect(source.VBDs).toHaveLength(1)
+  })
+})

@@ -1,0 +1,98 @@
+[
+  {
+    "width": 1024,
+    "height": 768,
+    "theme": "light",
+    "hiddenTargetsReviewed": true,
+    "noPageOverflow": true,
+    "allTasksVisible": true,
+    "cancelById": true,
+    "retryReviewed": true,
+    "appearanceWithProgressPanel": true,
+    "pageErrors": []
+  },
+  {
+    "width": 1024,
+    "height": 768,
+    "theme": "dark",
+    "hiddenTargetsReviewed": true,
+    "noPageOverflow": true,
+    "allTasksVisible": true,
+    "cancelById": true,
+    "retryReviewed": true,
+    "appearanceWithProgressPanel": true,
+    "pageErrors": []
+  },
+  {
+    "width": 1280,
+    "height": 800,
+    "theme": "light",
+    "hiddenTargetsReviewed": true,
+    "noPageOverflow": true,
+    "allTasksVisible": true,
+    "cancelById": true,
+    "retryReviewed": true,
+    "appearanceWithProgressPanel": true,
+    "pageErrors": []
+  },
+  {
+    "width": 1280,
+    "height": 800,
+    "theme": "dark",
+    "hiddenTargetsReviewed": true,
+    "noPageOverflow": true,
+    "allTasksVisible": true,
+    "cancelById": true,
+    "retryReviewed": true,
+    "appearanceWithProgressPanel": true,
+    "pageErrors": []
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "light",
+    "hiddenTargetsReviewed": true,
+    "noPageOverflow": true,
+    "allTasksVisible": true,
+    "cancelById": true,
+    "retryReviewed": true,
+    "appearanceWithProgressPanel": true,
+    "pageErrors": []
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "theme": "dark",
+    "hiddenTargetsReviewed": true,
+    "noPageOverflow": true,
+    "allTasksVisible": true,
+    "cancelById": true,
+    "retryReviewed": true,
+    "appearanceWithProgressPanel": true,
+    "pageErrors": []
+  },
+  {
+    "width": 1920,
+    "height": 1080,
+    "theme": "light",
+    "hiddenTargetsReviewed": true,
+    "noPageOverflow": true,
+    "allTasksVisible": true,
+    "cancelById": true,
+    "retryReviewed": true,
+    "appearanceWithProgressPanel": true,
+    "pageErrors": []
+  },
+  {
+    "width": 1920,
+    "height": 1080,
+    "theme": "dark",
+    "hiddenTargetsReviewed": true,
+    "noPageOverflow": true,
+    "allTasksVisible": true,
+    "cancelById": true,
+    "retryReviewed": true,
+    "appearanceWithProgressPanel": true,
+    "pageErrors": []
+  }
+]

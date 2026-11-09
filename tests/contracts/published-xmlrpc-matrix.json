@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "authority": {
+    "repository": "refs/xenadmin",
+    "commit": "ba43130ffb30d05d1eb40187b8ef9f2de111468a",
+    "paths": [
+      "XenModel/XenAPI/JsonRpcClient.cs",
+      "XenModel/XenAPI/Session.cs",
+      "XenModel/XenAPI/Pool.cs",
+      "XenModel/XenAPI/Host.cs"
+    ]
+  },
+  "responseEnvelope": {
+    "success": {
+      "status": "Success",
+      "requiredFields": ["Status", "Value"]
+    },
+    "failure": {
+      "status": "Failure",
+      "requiredFields": ["Status", "ErrorDescription"]
+    }
+  },
+  "loginFallbackPolicy": {
+    "method": "session.login_with_password",
+    "allowedLifecycle": [4, 3, 2],
+    "allowedOnlyOn": "MESSAGE_PARAMETER_COUNT_MISMATCH",
+    "stopOn": [
+      "SESSION_AUTHENTICATION_FAILED",
+      "RBAC_PERMISSION_DENIED",
+      "PERMISSION_DENIED",
+      "MESSAGE_PARAMETER_TYPE_ERROR",
+      "MESSAGE_METHOD_UNKNOWN",
+      "transport-error",
+      "unknown-envelope"
+    ]
+  },
+  "unverifiedBoundaries": [
+    "真实 XCP-ng/XenServer 版本矩阵",
+    "TLS 与 RBAC 服务器行为",
+    "打包 Electron 应用",
+    "未登记 mutation"
+  ],
+  "methods": [
+    {
+      "method": "session.login_with_password",
+      "support": "published",
+      "session": "none",
+      "parameterLifecycles": [
+        ["username", "password", "version", "originator"],
+        ["username", "password", "version"],
+        ["username", "password"]
+      ],
+      "returnType": "opaque-ref:session",
+      "resultFieldLifecycles": []
+    },
+    {
+      "method": "session.logout",
+      "support": "published",
+      "session": "explicit",
+      "parameterLifecycles": [["session"]],
+      "returnType": "void",
+      "resultFieldLifecycles": []
+    },
+    {
+      "method": "session.get_this_host",
+      "support": "published",
+      "session": "prepended",
+      "parameterLifecycles": [["targetSession"]],
+      "returnType": "opaque-ref:host",
+      "resultFieldLifecycles": []
+    },
+    {
+      "method": "pool.get_all",
+      "support": "published",
+      "session": "prepended",
+      "parameterLifecycles": [[]],
+      "returnType": "list:opaque-ref:pool",
+      "resultFieldLifecycles": []
+    },
+    {
+      "method": "pool.get_record",
+      "support": "published",
+      "session": "prepended",
+      "parameterLifecycles": [["poolRef"]],
+      "returnType": "record:pool",
+      "resultFieldLifecycles": [
+        { "field": "name_label", "lifecycle": "published" },
+        { "field": "master", "lifecycle": "published" }
+      ]
+    },
+    {
+      "method": "host.get_uuid",
+      "support": "published",
+      "session": "prepended",
+      "parameterLifecycles": [["hostRef"]],
+      "returnType": "string:uuid",
+      "resultFieldLifecycles": []
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "capturedAt": "2026-10-23T17:13:42.900815+08:00",
+  "note": "Hashes of current working source at report archival; the checkout already contained unrelated uncommitted changes.",
+  "head": "7c3e7e67bb3fea8e59b2c4bc53d720392d1c982d",
+  "files": [
+    {
+      "path": "src/main/xapi/services/metrics.service.ts",
+      "sha256": "86ad07fc21fe58a02c9c3c07cad0e456642c22ce874e07ec3da5be0442dd6292"
+    },
+    {
+      "path": "src/main/xapi/services/metrics-db.service.ts",
+      "sha256": "6840b0f16d6c382a3df851943f6b2691111ba82c3ba97731ae0d93b6b195ebe9"
+    },
+    {
+      "path": "src/main/persistence/json-store.ts",
+      "sha256": "8d07901ad3d51371a71ea814a901507881b4d2c1b12669388ff8f5a0e98fcc50"
+    },
+    {
+      "path": "src/main/xapi/services/rrd-uuid-cache.service.ts",
+      "sha256": "5ea1e54b2b478b95a70dd8087294345fcd6aac9c2576a520852935cf5612935a"
+    },
+    {
+      "path": "src/main/xapi/services/rrd-client.service.ts",
+      "sha256": "4cdcd478b1592b0736de54889a98493263211055011a4af9aaaafe7a438cf47b"
+    },
+    {
+      "path": "src/main/xapi/services/vm.service.ts",
+      "sha256": "f03bdc1a7577dfac1ecd574ff35e1db4bca4d0b256f8783f822ea4c70a87eac5"
+    },
+    {
+      "path": "src/renderer/src/store/multiData.store.ts",
+      "sha256": "263431aa41bc4af8e359f7f809714a732537e491f73b9107f1f99ef18dd8af06"
+    },
+    {
+      "path": "src/renderer/src/pages/VmsPage.tsx",
+      "sha256": "075b90722021cd22c9c4e34ca994c4c2ee047b7d4ba1825b6e7f7c732a8ecd96"
+    },
+    {
+      "path": "src/renderer/src/store/syncManager.store.ts",
+      "sha256": "91ce0294f76e30e7106d6559fa7843cd75364eb1ba4c8c6e32939bb16f2e2578"
+    },
+    {
+      "path": "src/renderer/src/store/batch.store.ts",
+      "sha256": "e02fe14fe697b52712bc71296c0600a8354f6d1d29c2370cb2cbd1395065c883"
+    }
+  ]
+}

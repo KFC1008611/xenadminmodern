@@ -1,0 +1,139 @@
+{
+  "date": "2026-10-23",
+  "scope": "Current working source, synthetic scheduler and transport, real temporary files, production React in isolated Chrome. No live XCP-ng requests, installed application update, commit or release acceptance.",
+  "fullTestGate": {
+    "schemaVersion": 1,
+    "kind": "xenadmin-test-gate",
+    "ok": true,
+    "toolchain": {
+      "nodeVersion": "24.22.0",
+      "npmVersion": "11.19.1",
+      "lockfileVersion": 3
+    },
+    "collection": {
+      "mode": "full",
+      "manifestChecked": true,
+      "fileCount": 196,
+      "testCount": 2045,
+      "expectedFileCount": 196,
+      "expectedTestCount": 2045,
+      "drift": {
+        "missing": [],
+        "unexpected": [],
+        "countMismatches": []
+      }
+    },
+    "tests": {
+      "passed": 2045,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "onlyDetected": false
+    },
+    "diagnostics": {
+      "warningCount": 0,
+      "stderr": {
+        "bytes": 0,
+        "lineCount": 0
+      }
+    },
+    "errors": []
+  },
+  "focusedGateBeforeFinalShutdownCompletionCase": {
+    "schemaVersion": 1,
+    "kind": "xenadmin-test-gate",
+    "ok": true,
+    "toolchain": {
+      "nodeVersion": "24.22.0",
+      "npmVersion": "11.19.1",
+      "lockfileVersion": 3
+    },
+    "collection": {
+      "mode": "focused",
+      "manifestChecked": false,
+      "fileCount": 10,
+      "testCount": 138,
+      "expectedFileCount": null,
+      "expectedTestCount": null,
+      "drift": {
+        "missing": [],
+        "unexpected": [],
+        "countMismatches": []
+      }
+    },
+    "tests": {
+      "passed": 138,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "onlyDetected": false
+    },
+    "diagnostics": {
+      "warningCount": 0,
+      "stderr": {
+        "bytes": 0,
+        "lineCount": 0
+      }
+    },
+    "errors": []
+  },
+  "finalShutdownPersistenceGate": {
+    "schemaVersion": 1,
+    "kind": "xenadmin-test-gate",
+    "ok": true,
+    "toolchain": {
+      "nodeVersion": "24.22.0",
+      "npmVersion": "11.19.1",
+      "lockfileVersion": 3
+    },
+    "collection": {
+      "mode": "focused",
+      "manifestChecked": false,
+      "fileCount": 3,
+      "testCount": 49,
+      "expectedFileCount": null,
+      "expectedTestCount": null,
+      "drift": {
+        "missing": [],
+        "unexpected": [],
+        "countMismatches": []
+      }
+    },
+    "tests": {
+      "passed": 49,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "onlyDetected": false
+    },
+    "diagnostics": {
+      "warningCount": 0,
+      "stderr": {
+        "bytes": 0,
+        "lineCount": 0
+      }
+    },
+    "errors": []
+  },
+  "checks": {
+    "typecheckNode": "passed",
+    "typecheckWeb": "passed",
+    "lint": "passed",
+    "productionBuild": "passed",
+    "gitDiffCheck": "passed"
+  },
+  "toolchain": {
+    "node": "24.22.0",
+    "npm": "11.19.1"
+  },
+  "performance": {
+    "scheduler": "metrics-overlap-after.json",
+    "bulkMemoryMetadata": "incremental-n-plus-one-after.json",
+    "events": "event-amplification-after.json",
+    "persistence": "flush-results-after.json",
+    "productionReact": "browser-results-after.json",
+    "pagination": "pagination-results.json"
+  },
+  "sourceManifest": "source-manifest-after.json",
+  "testFixtureAlignment": "Added pool.get_all_records to the existing XVA HTTP test helper; no import production behavior changed."
+}

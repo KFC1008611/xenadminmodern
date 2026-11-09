@@ -1,0 +1,38 @@
+{
+  "scope": "Current source review and local synthetic performance probes; no real XCP-ng pool, installed app, or release acceptance.",
+  "date": "2026-10-23",
+  "toolchain": {
+    "node": "24.22.0",
+    "npm": "11.19.1",
+    "preflight": "passed"
+  },
+  "reproductions": {
+    "passed": 3,
+    "failed": 0,
+    "success": true
+  },
+  "existingTests": {
+    "command": "PATH=/private/tmp/xenadmin-toolchain-24.22.0/bin:$PATH npm test -- tests/unit/metrics-service.test.ts tests/unit/metrics-db-service.test.ts tests/unit/multiData-vm-events.test.ts tests/unit/metrics-store-isolation.test.ts tests/components/DashboardMetricsPanel.test.tsx",
+    "gateObserved": {
+      "ok": true,
+      "mode": "focused",
+      "files": 5,
+      "passed": 73,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "warningCount": 0,
+      "stderrBytes": 0
+    },
+    "note": "Recorded from the actual tool output; the gate removes its own temporary JSON report."
+  },
+  "browser": {
+    "react": "production",
+    "component": "VmsPage",
+    "viewport": "1440x900",
+    "pageErrors": 0,
+    "fullApplicationLayout": false
+  },
+  "modifiedProductSource": false,
+  "originalTemporaryEvidence": "/private/tmp/xenadmin-performance-20261023.JlaZxp"
+}

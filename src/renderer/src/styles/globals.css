@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Palette contract: docs/frontend-spec.md. All renderer surfaces share these tokens. */
+@layer base {
+  :root {
+    color-scheme: light;
+    --window-top-offset: 0px;
+    --radius: 7px;
+    --background: 240.00 12.50% 96.86%;
+    --foreground: 240.00 8.24% 16.67%;
+    --card: 0.00 0.00% 100.00%;
+    --card-foreground: 240.00 8.24% 16.67%;
+    --sidebar: 240.00 11.11% 94.71%;
+    --raised: 0.00 0.00% 100.00%;
+    --popover: 0.00 0.00% 100.00%;
+    --popover-foreground: 240.00 8.24% 16.67%;
+    --primary: 250.59 59.80% 60.98%;
+    --primary-hover: 251.09 51.52% 54.71%;
+    --primary-foreground: 0.00 0.00% 100.00%;
+    --secondary: 240.00 14.29% 94.51%;
+    --secondary-foreground: 240.00 6.76% 29.02%;
+    --muted: 240.00 14.29% 95.88%;
+    --muted-foreground: 240.00 5.61% 41.96%;
+    --subtle: 240.00 5.73% 44.51%;
+    --accent: 251.25 66.67% 95.29%;
+    --accent-foreground: 251.79 52.47% 56.27%;
+    --destructive: 353.10 45.38% 48.82%;
+    --destructive-foreground: 0.00 0.00% 100.00%;
+    --border: 240.00 14.29% 91.76%;
+    --input: 240.00 14.71% 86.67%;
+    --ring: 250.59 59.80% 60.98%;
+    --success: 164.82 56.46% 28.82%;
+    --success-soft: 152.73 35.48% 93.92%;
+    --success-solid: 163.90 50.62% 31.76%;
+    --warning: 34.51 62.43% 35.49%;
+    --warning-soft: 40.00 67.74% 93.92%;
+    --warning-solid: 33.82 61.11% 35.29%;
+    --danger: 353.10 45.38% 48.82%;
+    --danger-soft: 350.77 61.90% 95.88%;
+    --danger-solid: 353.10 45.38% 48.82%;
+    --info: 197.05 54.29% 34.31%;
+    --info-soft: 201.43 50.00% 94.51%;
+    --info-solid: 197.05 54.29% 34.31%;
+    --on-solid: 0.00 0.00% 100.00%;
+    --chart-cpu: 252.12 61.18% 66.67%;
+    --chart-memory: 160.00 42.86% 42.55%;
+    --chart-network-rx: 250.59 59.80% 60.98%;
+    --chart-network-tx: 36.43 46.67% 47.06%;
+    --chart-disk-read: 194.73 49.11% 43.92%;
+    --chart-disk-write: 350.32 45.37% 59.80%;
+  }
+
+  :root.dark {
+    color-scheme: dark;
+    --background: 228.00 9.80% 10.00%;
+    --foreground: 250.00 18.75% 93.73%;
+    --card: 230.00 9.09% 12.94%;
+    --card-foreground: 250.00 18.75% 93.73%;
+    --sidebar: 230.00 10.00% 11.76%;
+    --raised: 232.50 9.76% 16.08%;
+    --popover: 232.50 9.76% 16.08%;
+    --popover-foreground: 250.00 18.75% 93.73%;
+    --primary: 253.04 82.14% 78.04%;
+    --primary-hover: 253.17 93.18% 82.75%;
+    --primary-foreground: 255.65 29.87% 15.10%;
+    --secondary: 233.33 8.57% 20.59%;
+    --secondary-foreground: 250.91 12.64% 82.94%;
+    --muted: 232.50 9.09% 17.25%;
+    --muted-foreground: 245.00 7.50% 68.63%;
+    --subtle: 244.62 6.81% 62.55%;
+    --accent: 252.86 25.00% 21.96%;
+    --accent-foreground: 254.12 93.41% 82.16%;
+    --destructive: 354.00 71.43% 75.29%;
+    --border: 233.33 9.09% 19.41%;
+    --input: 235.00 9.09% 25.88%;
+    --ring: 253.04 82.14% 78.04%;
+    --success: 159.77 43.88% 61.57%;
+    --success-soft: 160.00 23.60% 17.45%;
+    --warning: 38.02 57.71% 65.69%;
+    --warning-soft: 36.00 21.28% 18.43%;
+    --danger: 354.00 71.43% 75.29%;
+    --danger-soft: 342.86 20.79% 19.80%;
+    --info: 195.71 54.55% 69.80%;
+    --info-soft: 201.43 29.17% 18.82%;
+    --chart-cpu: 254.19 83.78% 78.24%;
+    --chart-memory: 159.77 43.88% 61.57%;
+    --chart-network-rx: 254.19 83.78% 78.24%;
+    --chart-network-tx: 38.02 57.71% 65.69%;
+    --chart-disk-read: 195.71 54.55% 69.80%;
+    --chart-disk-write: 354.00 71.43% 75.29%;
+  }
+
+  * { @apply border-border; }
+  html, body, #root { width: 100%; min-width: 0; min-height: 100%; }
+  body {
+    @apply bg-background text-foreground;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+  }
+  button, input, select, textarea { font: inherit; }
+  input, select, textarea { color-scheme: inherit; }
+  input[type="checkbox"], input[type="radio"], input[type="range"] { accent-color: hsl(var(--primary)); }
+  button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+  :where(button, a, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+  button:disabled { cursor: not-allowed; }
+  table { font-variant-numeric: tabular-nums; }
+  thead { background: hsl(var(--muted) / 0.6); }
+  ::selection { background: hsl(var(--accent)); color: hsl(var(--accent-foreground)); }
+}
+
+html.platform-macos { --window-top-offset: 30px; }
+.app-drag-region { -webkit-app-region: drag; }
+.app-no-drag { -webkit-app-region: no-drag; }
+
+/* The VNC image is guest content and must keep its original colors. */
+.vnc-console-target > div { width: 100% !important; height: 100% !important; background: #000 !important; }
+.vnc-console-target canvas { max-width: 100%; max-height: 100%; }
+.console-viewport { --foreground: 240 20% 94%; --muted-foreground: 240 10% 72%; --subtle: 244.62 6.81% 62.55%; --danger: 354 72% 75%; }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: hsl(var(--input)); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--subtle)); }
+
+/* Moving activity marker for phases with no measurable completion fraction. */
+.progress-indeterminate { width: 30%; animation: pending-progress 1.5s linear infinite; }
+@keyframes pending-progress {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(334%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}

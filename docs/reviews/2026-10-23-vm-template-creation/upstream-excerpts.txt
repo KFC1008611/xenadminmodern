@@ -1,0 +1,983 @@
+SOURCE: https://github.com/xenserver/xenadmin/blob/b210cd2c2d8547f5bb48b49d71f17429c7d65e44/XenModel/Actions/VM/CreateVMAction.cs
+SHA256: 187337095ccc6745b69d5864e0e032360e1dc67b4b04cb7f0398ec8899d2394e
+
+ 180:         }
+ 181:
+ 182:         protected override void Run()
+ 183:         {
+ 184:             if (_fullCopySr != null)
+ 185:             {
+ 186:                 Description = string.Format(Messages.COPYING_TEMPLATE, Helpers.GetName(Template), _fullCopySr.Name());
+ 187:                 RelatedTask = VM.async_copy(Session, Template.opaque_ref, Helpers.MakeHiddenName(_nameLabel), _fullCopySr.opaque_ref);
+ 188:             }
+ 189:             else
+ 190:             {
+ 191:                 Description = string.Format(Messages.CLONING_TEMPLATE, Helpers.GetName(Template));
+ 192:                 RelatedTask = VM.async_clone(Session, Template.opaque_ref, Helpers.MakeHiddenName(_nameLabel));
+ 193:             }
+ 194:
+ 195:             PollToCompletion(0, 10);
+ 196:
+ 197:             VM = Connection.WaitForCache(new XenRef<VM>(Result));
+ 198:
+ 199:             ApplyRecommendationsForVendorDevice();
+ 200:             CopyBiosStrings();
+ 201:             SetXenCenterProperties();
+ 202:             ProvisionVM();
+ 203:             SetVMParams();
+ 204:             SetVMBootParams();
+ 205:             AddCdDrive();
+ 206:             AddDisks();
+ 207:             AddNetworks();
+ 208:             XenAdminConfigManager.Provider.ShowObject(VM.opaque_ref);
+
+ 318:             AppliesTo.Add(VM.opaque_ref);
+ 319:         }
+ 320:
+ 321:         private void SetVMParams()
+ 322:         {
+ 323:             Description = Messages.SETTING_VM_PROPERTIES;
+ 324:             VM.set_name_label(Session, VM.opaque_ref, _nameLabel);
+ 325:             VM.set_name_description(Session, VM.opaque_ref, _nameDescription);
+ 326:             ChangeVCPUSettingsAction vcpuAction = new ChangeVCPUSettingsAction(VM, _vcpusMax, _vcpusAtStartup);
+ 327:             vcpuAction.RunSync(Session);
+ 328:
+ 329:             // set cores-per-socket
+ 330:             Dictionary<string, string> platform = VM.platform == null ?
+ 331:                             new Dictionary<string, string>() :
+ 332:                             new Dictionary<string, string>(VM.platform);
+ 333:             platform["cores-per-socket"] = _coresPerSocket.ToString();
+ 334:             VM.set_platform(Session, VM.opaque_ref, platform);
+ 335:
+ 336:             // Check these values have changed before setting them, as they are RBAC protected
+ 337:             if (HomeServerChanged())
+ 338:                 VM.set_affinity(Session, VM.opaque_ref, _homeServer != null ? _homeServer.opaque_ref : Helper.NullOpaqueRef);
+
+ 353:         private void SetVMBootParams()
+ 354:         {
+ 355:             if (Template.IsHVM() && (_disks.Count == 0 || _installMethod == InstallMethod.Network)) // CA-46213
+ 356:             {
+ 357:                 // boot from network
+ 358:                 Dictionary<string, string> hvm_params = VM.HVM_boot_params;
+ 359:                 hvm_params["order"] = GetBootOrderNetworkFirst();
+ 360:                 VM.set_HVM_boot_params(Session, VM.opaque_ref, hvm_params);
+ 361:             }
+ 362:             else if (IsEli() && _installMethod == InstallMethod.Network)
+ 363:             {
+ 364:                 Dictionary<string, string> other_config = VM.other_config;
+ 365:                 string normal_url = IsRhel() ? NormalizeRepoUrlForRHEL(_url) : _url;
+ 366:                 other_config["install-repository"] = normal_url;
+ 367:                 VM.set_other_config(Session, VM.opaque_ref, other_config);
+ 368:             }
+ 369:             else if (IsEli() && _installMethod == InstallMethod.CD)
+ 370:             {
+ 371:                 Dictionary<string, string> other_config = VM.other_config;
+ 372:                 other_config["install-repository"] = "cdrom";
+ 373:                 VM.set_other_config(Session, VM.opaque_ref, other_config);
+ 374:             }
+ 375:
+ 376:             if (!Template.IsHVM())
+ 377:             {
+ 378:                 VM.set_PV_args(Session, VM.opaque_ref, _pvArgs);
+ 379:             }
+ 380:             else
+ 381:             {
+ 382:                 var hvmParams = VM.HVM_boot_params;
+ 383:                 hvmParams["firmware"] = _bootMode == VmBootMode.Bios ? "bios" : "uefi";
+ 384:                 VM.set_HVM_boot_params(Session, VM.opaque_ref, hvmParams);
+ 385:
+ 386:                 var platform = VM.platform;
+ 387:                 platform["secureboot"] = _bootMode == VmBootMode.SecureUefi ? "true" : "false";
+ 388:                 VM.set_platform(Session, VM.opaque_ref, platform);
+ 389:             }
+ 390:         }
+ 391:
+ 392:         private bool IsEli()
+ 393:         {
+ 394:             return !Template.IsHVM() && Template.PV_bootloader == "eliloader";
+ 395:         }
+ 396:
+ 397:         private bool IsRhel()
+ 398:         {
+ 399:             string distro = VM.InstallDistro();
+ 400:             return distro == "rhel41" || distro == "rhel44" || distro == "rhlike";
+ 401:         }
+ 402:
+ 403:         private string NormalizeRepoUrlForRHEL(string url)
+ 404:         {
+ 405:             Uri uri = new Uri(url);
+ 406:             return uri.Scheme == "nfs" ? string.Format("nfs:{0}:{1}", uri.Host, uri.PathAndQuery) : url;
+ 407:         }
+ 408:
+ 409:         private void ProvisionVM()
+ 410:         {
+ 411:             Description = Messages.PROVISIONING_VM;
+ 412:             RewriteProvisionXML();
+ 413:             RelatedTask = VM.async_provision(Session, VM.opaque_ref);
+ 414:
+ 415:             PollToCompletion(10, 60);
+ 416:         }
+ 417:
+ 418:         private void RewriteProvisionXML()
+ 419:         {
+ 420:             XmlNode xml = VM.ProvisionXml();
+ 421:
+ 422:             if (xml == null)
+ 423:                 return;
+ 424:
+ 425:             // set the new vm's provision xml: remove "disks" entry, as we are going to explicitly create all the disks
+ 426:             Dictionary<string, string> other_config = VM.other_config;
+ 427:             other_config.Remove("disks");
+
+ 430:
+ 431:         private void AddCdDrive()
+ 432:         {
+ 433:             if (Helpers.CustomWithNoDVD(Template))
+ 434:                 return; // we have skipped the install media page because we are a custom template with no cd drive - the user doesnt want a cd drive
+ 435:
+ 436:             Description = Messages.CREATE_CD_DRIVE;
+ 437:             VBD cd_drive = null;
+ 438:             foreach (VBD vbd in Connection.ResolveAll(VM.VBDs))
+ 439:             {
+ 440:                 if (vbd.type != vbd_type.CD)
+ 441:                     continue;
+ 442:
+ 443:                 if ("0123".IndexOf(vbd.userdevice) < 0)  // userdevice is not 0, 1, 2 or 3: these are the valid positions for CD drives
+ 444:                     continue;
+ 445:
+ 446:                 cd_drive = vbd;
+ 447:                 break;
+ 448:             }
+ 449:
+ 450:             if (cd_drive == null)
+ 451:             {
+ 452:                 cd_drive = CreateCdDrive();
+ 453:             }
+ 454:
+ 455:             if (!cd_drive.empty)
+ 456:             {
+ 457:                 RelatedTask = VBD.async_eject(Session, cd_drive.opaque_ref);
+ 458:                 PollToCompletion(65, 67);
+ 459:             }
+ 460:
+ 461:             if (_installMethod == InstallMethod.CD && _cd != null) // obviously don't insert the empty cd
+ 462:             {
+ 463:                 RelatedTask = VBD.async_insert(Session, cd_drive.opaque_ref, _cd.opaque_ref);
+ 464:                 PollToCompletion(67, 70);
+ 465:             }
+ 466:         }
+ 467:
+ 468:         private VBD CreateCdDrive()
+ 469:         {
+ 470:             var devices = VM.get_allowed_VBD_devices(Session, VM.opaque_ref);
+ 471:             if (devices.Length == 0)
+ 472:                 throw new Exception(Messages.NO_MORE_USERDEVICES);
+ 473:
+ 474:             VBD vbd = new VBD
+ 475:             {
+ 476:                 bootable = _installMethod == InstallMethod.CD,
+ 477:                 empty = true,
+ 478:                 unpluggable = true,
+ 479:                 mode = vbd_mode.RO,
+ 480:                 type = vbd_type.CD,
+ 481:                 userdevice = devices.Contains("3") ? "3" : devices[0],
+ 482:                 VM = new XenRef<VM>(VM.opaque_ref)
+ 483:             };
+ 484:             RelatedTask = VBD.async_create(Session, vbd);
+ 485:             PollToCompletion(60, 65);
+ 486:
+ 487:             return Connection.WaitForCache(new XenRef<VBD>(Result));
+ 488:         }
+ 489:
+ 490:
+
+ 491:         private void AddDisks()
+ 492:         {
+ 493:             Description = Messages.CREATING_DISKS;
+ 494:             List<VBD> vbds = Connection.ResolveAll(VM.VBDs);
+ 495:
+ 496:             bool firstDisk = true;
+ 497:             string suspendSr = null;
+ 498:
+ 499:             double progress = 70;
+ 500:             double step = 20.0 / _disks.Count;
+ 501:             foreach (DiskDescription disk in _disks)
+ 502:             {
+ 503:                 VBD vbd = GetDiskVBD(disk, vbds);
+ 504:                 VDI vdi = null;
+ 505:                 if (vbd != null)
+ 506:                 {
+ 507:                     vdi = Connection.Resolve(vbd.VDI);
+ 508:                 }
+ 509:                 if (!DiskOk(disk, vbd))
+ 510:                 {
+ 511:                     if (vbd != null)
+ 512:                         vdi = MoveDisk(disk, vbd, progress, step);
+ 513:                     else
+ 514:                         vdi = CreateDisk(disk, progress, step);
+ 515:                 }
+ 516:
+ 517:                 if (vdi == null)
+ 518:                     continue;
+ 519:
+ 520:                 if (vdi.name_description != disk.Disk.name_description)
+ 521:                     VDI.set_name_description(Session, vdi.opaque_ref, disk.Disk.name_description);
+ 522:                 if (vdi.name_label != disk.Disk.name_label)
+ 523:                     VDI.set_name_label(Session, vdi.opaque_ref, disk.Disk.name_label);
+ 524:
+ 525:                 if (firstDisk)
+ 526:                 {
+ 527:                     //use the first disk to set the VM.suspend_SR
+ 528:                     SR vdiSR = Connection.Resolve(vdi.SR);
+ 529:                     _firstSr = vdiSR;
+ 530:                     if(vdiSR != null && !vdiSR.HBALunPerVDI())
+ 531:                         suspendSr = vdi.SR;
+ 532:                     firstDisk = false;
+ 533:                 }
+ 534:
+ 535:                 progress += step;
+ 536:             }
+ 537:
+ 538: 			VM.set_suspend_SR(Session, VM.opaque_ref, suspendSr);
+ 539:         }
+ 540:
+ 541:         private VBD GetDiskVBD(DiskDescription disk, List<VBD> vbds)
+ 542:         {
+ 543:             foreach (VBD vbd in vbds)
+ 544:             {
+ 545:                 if (disk.Device.userdevice == vbd.userdevice)
+ 546:                     return vbd;
+ 547:             }
+ 548:             return null;
+ 549:         }
+ 550:
+ 551:         private bool DiskOk(DiskDescription disk, VBD vbd)
+ 552:         {
+ 553:             if (vbd == null)
+ 554:                 return false;
+ 555:
+ 556:             VDI vdi = Connection.Resolve(vbd.VDI);
+ 557:
+ 558:             return vdi != null && disk.Disk.SR.opaque_ref == vdi.SR.opaque_ref;
+ 559:         }
+ 560:
+
+ 679:             VIF vif;
+ 680:             List<VIF> existingTemplateVifs = Connection.ResolveAll(VM.VIFs);
+ 681:             double step = 5.0 / existingTemplateVifs.Count;
+ 682:             for (int i = 0; i < existingTemplateVifs.Count; i++)
+ 683:             {
+ 684:                 vif = existingTemplateVifs[i];
+ 685:                 RelatedTask = VIF.async_destroy(Session, vif.opaque_ref);
+ 686:
+ 687:                 PollToCompletion(progress, progress + step);
+ 688:                 progress += step;
+ 689:             }
+ 690:
+ 691:             // then we add the ones the user has specified
+ 692:             step = 5.0 / _vifs.Count;
+ 693:             for (int i = 0; i < _vifs.Count; i++)
+ 694:             {
+ 695:                 vif = _vifs[i];
+ 696:                 var devices = VM.get_allowed_VIF_devices(Session, VM.opaque_ref);
+ 697:
+ 698:                 if (devices.Length < 1)
+ 699:                 {
+ 700:                     // If we have assigned more VIFs than we have space for then don't try to create them
+ 701:                     log.Warn("Tried to create more VIFs than the server allows. Ignoring remaining vifs");
+ 702:                     return;
+ 703:                 }
+ 704:
+ 705:                 VIF new_vif = new VIF();
+ 706:                 new_vif.device = devices.Contains(vif.device) ? vif.device : devices[0];
+ 707:                 new_vif.MAC = vif.MAC;
+ 708:                 new_vif.network = vif.network;
+ 709:                 new_vif.VM = new XenRef<VM>(VM.opaque_ref);
+ 710:                 new_vif.qos_algorithm_type = vif.qos_algorithm_type;
+ 711:                 new_vif.qos_algorithm_params = vif.qos_algorithm_params;
+ 712:                 RelatedTask = VIF.async_create(Session, new_vif);
+ 713:
+ 714:                 PollToCompletion(progress, progress + step);
+ 715:                 progress += step;
+ 716:
+ 717:                 Connection.WaitForCache(new XenRef<VIF>(Result));
+
+SOURCE: https://github.com/xenserver/xenadmin/blob/b210cd2c2d8547f5bb48b49d71f17429c7d65e44/XenModel/Actions/VM/CreateVMFastAction.cs
+SHA256: 0440e70d304c3ad850e158862c34c134634f8081e99c8447ed88a69ae12fc1e7
+
+  73:                 VM.IsBeingCreated = true;
+  74:             }
+  75:
+  76:             XenAdminConfigManager.Provider.HideObject(new_vm_ref);
+  77:
+  78:             Description = Messages.PROVISIONING_VM;
+  79:             RelatedTask = VM.async_provision(Session, new_vm_ref);
+  80:             PollToCompletion(80, 90);
+  81:
+  82:             Description = Messages.SAVING_VM_PROPERTIES_ACTION_TITLE;
+  83:             var newName = Helpers.DefaultVMName(originalName, Connection);
+  84:             VM.set_name_label(Session, new_vm_ref, newName);
+  85:             XenAdminConfigManager.Provider.ShowObject(new_vm_ref);
+  86:
+  87:             if (_markVmAsBeingCreated)
+  88:             {
+  89:                 VM.name_label = newName; //the set_name_label method takes some time, we want to show the VM right away
+  90:                 VM.IsBeingCreated = false;
+  91:             }
+  92:
+  93:             Result = new_vm_ref;
+  94:             Description = string.Format(Messages.INSTANT_VM_CREATE_DESC_COMPLETED, newName);
+  95:         }
+  96:     }
+  97: }
+
+SOURCE: https://github.com/xenserver/xenadmin/blob/b210cd2c2d8547f5bb48b49d71f17429c7d65e44/XenAdmin/Wizards/NewVMWizard/Page_Storage.cs
+SHA256: 7904a9095781d3690192aa2a5d2100a88db181d20bf4cd9c331accb1308a23e2
+
+ 106:         private void LoadDisks()
+ 107:         {
+ 108:             DisksGridView.Rows.Clear();
+ 109:             var rowList = new List<DataGridViewRow>();
+ 110:
+ 111:             XmlNode provision = Template.ProvisionXml();
+ 112:             if (provision != null)
+ 113:             {
+ 114:                 foreach (XmlNode diskNode in provision.ChildNodes)
+ 115:                 {
+ 116:                     var device = new VBD
+ 117:                     {
+ 118:                         userdevice = diskNode.Attributes["device"].Value,
+ 119:                         bootable = diskNode.Attributes["bootable"].Value == "true",
+ 120:                         mode = vbd_mode.RW
+ 121:                     };
+ 122:
+ 123:                     var disk = new VDI
+ 124:                     {
+ 125:                         name_label = string.Format(Messages.STRING_SPACE_STRING, SelectedName, device.userdevice),
+ 126:                         name_description = Messages.NEWVMWIZARD_STORAGEPAGE_DISK_DESCRIPTION,
+ 127:                         virtual_size = long.Parse(diskNode.Attributes["size"].Value),
+ 128:                         type = (vdi_type)Enum.Parse(typeof(vdi_type), diskNode.Attributes["type"].Value),
+ 129:                         read_only = false
+ 130:                     };
+ 131:
+ 132:                     SR srUuid = Connection.Cache.Find_By_Uuid<SR>(diskNode.Attributes["sr"].Value);
+ 133:                     SR sr = GetBestDiskStorage(Connection, new[] { disk }, Affinity, srUuid, out Image icon,
+ 134:                         out string tooltip);
+ 135:                     disk.SR = new XenRef<SR>(sr != null ? sr.opaque_ref : Helper.NullOpaqueRef);
+ 136:
+ 137:                     var row = new DiskGridRowItem(Connection, disk, device, DiskSource.FromDefaultTemplate);
+ 138:                     row.UpdateStatus(icon, tooltip);
+ 139:                     rowList.Add(row);
+ 140:                 }
+ 141:             }
+ 142:             else
+ 143:             {
+ 144:                 _canCreateFullCopy = true;
+ 145:                 var vbds = Connection.ResolveAll(Template.VBDs);
+ 146:
+ 147:                 foreach (VBD vbd in vbds)
+ 148:                 {
+ 149:                     if (vbd.type != vbd_type.Disk)
+ 150:                         continue;
+ 151:
+ 152:                     VDI vdi = Connection.Resolve(vbd.VDI);
+ 153:                     if (vdi == null)
+ 154:                         continue;
+ 155:
+ 156:                     if (!vdi.allowed_operations.Contains(vdi_operations.copy))
+ 157:                         _canCreateFullCopy = false;
+ 158:
+ 159:                     var sourceSr = Connection.Resolve(vdi.SR);
+ 160:
+ 161:                     var device = new VBD
+ 162:                     {
+
+SOURCE: https://github.com/xenserver/xenadmin/blob/b210cd2c2d8547f5bb48b49d71f17429c7d65e44/XenAdmin/Wizards/NewVMWizard/Page_InstallationMedia.cs
+SHA256: ae4f13e54158d4a36e215774feb8b60b856723b641cbbfc5b92a5faaa590576c
+
+  91:
+  92:         private void AnalyseTemplate(out bool isUserTemplate, out bool hvm, out bool eli,
+  93:             out string installMethods, out bool installCd, out bool installUrl)
+  94:         {
+  95:             isUserTemplate = !m_template.DefaultTemplate();
+  96:             hvm = m_template.IsHVM();
+  97:             eli = !hvm && m_template.PV_bootloader == "eliloader";
+  98:             installMethods = m_template.InstallMethods();
+  99:             installCd = installMethods != null && installMethods.Contains("cdrom");
+ 100:             installUrl = installMethods != null &&
+ 101:                          (installMethods.Contains("http") || installMethods.Contains("ftp") || installMethods.Contains("nfs"));
+ 102:         }
+ 103:
+ 104:         private void EnableCdRadioButton(bool isUserTemplate, bool hvm, bool eli, string installMethods, bool installCd)
+ 105:         {
+ 106:             if (isUserTemplate && m_template.GetBootOrder().StartsWith("N"))
+ 107:                 CdRadioButton.Enabled = false;
+ 108:             else
+ 109:                 CdRadioButton.Enabled = isUserTemplate || string.IsNullOrEmpty(installMethods) || installCd && (hvm || eli);
+ 110:         }
+
+ 128:         protected override void PageLoadedCore(PageLoadedDirection direction)
+ 129:         {
+ 130:             if (m_template == SelectedTemplate)
+ 131:                 return;
+ 132:
+ 133:             /* This method is supposed to do the following:
+ 134:              *
+ 135:              * PV      -> Install from DVD drive (selecting <empty> disables Next)
+ 136:              *         -> Url
+ 137:              *
+ 138:              * HVM     -> Install from DVD drive (selecting <empty> disables Next)
+ 139:              *         -> Boot from network
+ 140:              *
+ 141:              * Custom with DVD drive    -> DVD drive (selecting <empty> does not disable Next)
+ 142:              *
+ 143:              * Custom without DVD drive -> Disable Installation method section
+ 144:              */
+ 145:
+
+ 158:             if (isUserTemplate && cdDrive == null ||
+ 159:                 !isUserTemplate && string.IsNullOrEmpty(m_template.InstallMethods()))
+ 160:             {
+ 161:                 CdRadioButton.Checked = UrlRadioButton.Checked = false;
+ 162:                 CdDropDownBox.Items.Clear();
+ 163:                 UrlTextBox.Text = string.Empty;
+ 164:                 panelInstallationMethod.Enabled = false;
+ 165:                 OnPageUpdated();
+ 166:                 return;
+ 167:             }
+ 168:
+ 169:             panelInstallationMethod.Enabled = true;
+ 170:
+ 171:             CdRadioButton.Text = isUserTemplate || string.IsNullOrEmpty(installMethods)
+ 172:                 ? Messages.NEWVMWIZARD_INSTALLMEDIA_DVD
+ 173:                 : Messages.NEWVMWIZARD_INSTALLMEDIA_INSTALLDVD;
+ 174:
+ 175:             EnableCdRadioButton(isUserTemplate, hvm, eli, installMethods, installCd);
+ 176:             CdDropDownBox.Enabled = CdRadioButton.Enabled;
+ 177:
+ 178:             UrlRadioButton.Text = hvm ? Messages.NEWVMWIZARD_INSTALLMEDIA_INSTALLPXE : Messages.NEWVMWIZARD_INSTALLMEDIA_INSTALLURL;
+ 179:
+ 180:             UrlRadioButton.Enabled = isUserTemplate && m_template.GetBootOrder().StartsWith("N") ||
+ 181:                                      !isUserTemplate && !string.IsNullOrEmpty(installMethods) && (hvm || eli && installUrl);
+ 182:
+ 183:             UrlTextBox.Enabled = UrlRadioButton.Enabled;
+ 184:             UrlTextBox.Visible = !hvm;
+ 185:             UrlTextBox.Text = isUserTemplate || string.IsNullOrEmpty(installMethods) ? "" : m_template.InstallRepository() ?? "";
+ 186:
+ 187:             if (CdRadioButton.Enabled)
+ 188:             {
+ 189:                 CdRadioButton.Checked = true;
+ 190:                 CdDropDownBox.Select();
+ 191:             }
+ 192:             else if (UrlRadioButton.Enabled)
+ 193:             {
+ 194:                 UrlRadioButton.Checked = true;
+ 195:                 UrlTextBox.Select();
+ 196:             }
+ 197:
+ 198:             CdDropDownBox.VM = m_template;
+ 199:
+ 200:             VDI cd = null;
+
+SOURCE: https://github.com/vatesfr/xen-orchestra/blob/a508ca7897cc869026c54f2b693d67abefb71a21/packages/xo-server/src/xapi/mixins/vm.mjs
+SHA256: ae2fd8ad292c17bb41fcdd0ee53275bf6999f0e9aa9c8ebef63e0271b577fd08
+
+  71:     const template = this.getObject(templateId)
+  72:
+  73:     // Clones the template.
+  74:     const vmRef = await this[clone ? '_cloneVm' : '_copyVm'](template, nameLabel)
+  75:     $defer.onFailure(() => this.VM_destroy(vmRef))
+  76:
+  77:     // Copy BIOS strings
+  78:     // https://support.citrix.com/article/CTX230618
+  79:     if (
+  80:       isEmpty(template.bios_strings) &&
+  81:       props.hvmBootFirmware !== 'uefi' &&
+  82:       isVmHvm(template) &&
+  83:       copyHostBiosStrings
+  84:     ) {
+  85:       await this.callAsync(
+  86:         'VM.copy_bios_strings',
+  87:         vmRef,
+  88:         this.getObject(props.affinityHost ?? this.getObject(template.$pool).master).$ref
+  89:       )
+  90:     }
+  91:
+  92:     // Removes disks from the provision XML, we will create them by
+  93:     // ourselves.
+  94:     await this.call('VM.remove_from_other_config', vmRef, 'disks')::ignoreErrors()
+  95:
+  96:     // Creates the VDIs and executes the initial steps of the
+  97:     // installation.
+  98:     await this.callAsync('VM.provision', vmRef)
+
+ 115:       const isHvm = isVmHvm(vm)
+ 116:
+ 117:       if (isHvm) {
+ 118:         // For HVM, boot order is controlled exclusively by HVM_boot_params.order ('c'=disk, 'd'=CD, 'n'=network).
+ 119:         // Only modify the order when an install method is set, otherwise preserve the template's boot order to avoid unintended network boot attempts.
+ 120:         if (installMethod === 'network') {
+ 121:           const { order } = vm.HVM_boot_params
+ 122:           vm.update_HVM_boot_params('order', order ? 'n' + order.replace('n', '') : 'ncd')
+ 123:         } else if (installMethod === 'cd') {
+ 124:           const { order } = vm.HVM_boot_params
+ 125:           vm.update_HVM_boot_params('order', order ? 'd' + order.replace('d', '') : 'dcn')
+ 126:         }
+ 127:       } else {
+ 128:         // PV
+ 129:         if (vm.PV_bootloader === 'eliloader') {
+ 130:           if (installMethod === 'network') {
+ 131:             // TODO: normalize RHEL URL?
+ 132:
+ 133:             await vm.update_other_config('install-repository', installRepository)
+ 134:           } else if (installMethod === 'cd') {
+ 135:             await vm.update_other_config('install-repository', 'cdrom')
+ 136:           }
+ 137:         }
+ 138:       }
+ 139:     }
+ 140:
+ 141:     let hasBootableDisk = false
+ 142:
+ 143:     // Inserts the CD if necessary.
+ 144:     if (installMethod === 'cd') {
+ 145:       // When the VM is started, if PV, the CD drive will become not
+ 146:       // bootable and the first disk bootable.
+ 147:       await this._insertCdIntoVm(installRepository, vm, {
+ 148:         bootable: true,
+ 149:       })
+ 150:       hasBootableDisk = true
+ 151:     }
+
+ 173:       const _vdisToDestroy = []
+ 174:
+ 175:       vdis.forEach(({ destroy, ...vdi }) => {
+ 176:         const { userdevice } = vdi
+ 177:
+ 178:         if (userdevice === undefined) {
+ 179:           _vdisToCreate.push(vdi)
+ 180:           return
+ 181:         }
+ 182:
+ 183:         // If the userdevice match no vbd, create the VDI
+ 184:         const vbd = find(vm.$VBDs, { userdevice })
+ 185:         if (vbd === undefined) {
+ 186:           if (destroy) {
+ 187:             log.warn('VDI ignored because it is marked as "destroy"', vdi)
+ 188:             return
+ 189:           }
+ 190:
+ 191:           _vdisToCreate.push(vdi)
+ 192:           return
+ 193:         }
+ 194:
+ 195:         if (vbd.VDI === Ref.EMPTY) {
+ 196:           throw new Error(`VBD with userdevice: ${userdevice} exist but has no VDI`)
+ 197:         }
+ 198:
+ 199:         vdi.$ref = this.getObject(vbd.VDI).$ref
+ 200:         if (destroy) {
+ 201:           _vdisToDestroy.push(vdi)
+ 202:           return
+ 203:         }
+ 204:
+ 205:         _vdisToUpdate.push(vdi)
+ 206:       })
+ 207:
+ 208:       await Promise.all(_vdisToDestroy.map(vdi => this.VDI_destroy(vdi.$ref)))
+ 209:
+ 210:       // Some VBDs may be destroyed with the VDI_destroy. We need to get a fresh VBDs list
+ 211:       const vbdRefs = await this.getField('VM', vmRef, 'VBDs')
+ 212:       const vbds = await asyncMap(vbdRefs, vbdRef => this._getOrWaitObject(vbdRef))
+ 213:
+ 214:       if (!hasBootableDisk) {
+ 215:         hasBootableDisk = vbds.some(vbd => vbd.bootable)
+ 216:       }
+ 217:
+ 218:       // TODO: set vm.suspend_SR
+ 219:       // Creates the user defined VDIs.
+ 220:       for (const [i, vdi] of _vdisToCreate.entries()) {
+ 221:         const vdiRef = await this.VDI_create({
+ 222:           name_description: vdi.name_description,
+ 223:           name_label: vdi.name_label,
+ 224:           virtual_size: vdi.size,
+ 225:           SR: this.getObject(vdi.sr, 'SR').$ref,
+ 226:         })
+ 227:         $defer.onFailure(() => this.VDI_destroy(vdiRef))
+ 228:
+ 229:         // Either the CD or the 1st disk is bootable (only useful for PV VMs)
+ 230:         await this.VBD_create({
+ 231:           bootable: !hasBootableDisk && i === 0,
+ 232:           userdevice: vdi.userdevice,
+ 233:           VDI: vdiRef,
+ 234:           VM: vm.$ref,
+ 235:         })
+ 236:       }
+ 237:
+ 238:       // Modify existing (previous template) disks if necessary
+ 239:       // Wait until all VDIs are created; otherwise, VBD_create may throw an OTHER_OPERATION_IN_PROGRESS error
+ 240:       // in case a VDI is migrating
+ 241:       await Promise.all(
+ 242:         _vdisToUpdate.map(async ({ $ref, sr, size, userdevice, ...properties }) => {
+ 243:           await this._setObjectProperties({ $ref, $type: 'VDI' }, properties)
+ 244:
+ 245:           let _vdi = this.getObject($ref)
+ 246:           // if another SR is set, move it there
+ 247:           if (sr !== undefined) {
+ 248:             _vdi = await this.moveVdi(_vdi.$id, sr)
+ 249:           }
+ 250:
+ 251:           // update VDI size if is bigger
+ 252:           if (size != null) {
+ 253:             if (size < _vdi.virtual_size) {
+ 254:               throw new Error(
+ 255:                 `Unable to update to a smaller VDI size for VDI with PBD userdevice: ${userdevice}. Current size: ${_vdi.virtual_size}, new size: ${size}`
+ 256:               )
+ 257:             }
+ 258:             await this.resizeVdi(_vdi.$id, size)
+
+ 265:       // Destroys the VIFs cloned from the template.
+ 266:       await Promise.all(vm.$VIFs.map(vif => this._deleteVif(vif)))
+ 267:     }
+ 268:
+ 269:     // Creates the VIFs specified by the user.
+ 270:     if (vifs) {
+ 271:       const devices = await this.call('VM.get_allowed_VIF_devices', vm.$ref)
+ 272:       const _vifsToCreate = []
+ 273:       const _vifsToDestroy = []
+ 274:       const vmVifByDevice = keyBy(vm.$VIFs, 'device')
+ 275:
+ 276:       vifs.forEach(vif => {
+ 277:         if (vif.device === undefined) {
+ 278:           vif.device = devices.shift()
+ 279:           _vifsToCreate.push(vif)
+ 280:           return
+ 281:         }
+ 282:
+ 283:         const vmVif = vmVifByDevice[vif.device]
+ 284:         if (vif.destroy) {
+ 285:           if (vmVif !== undefined) {
+ 286:             _vifsToDestroy.push(vmVif)
+ 287:           }
+ 288:           return
+ 289:         }
+ 290:
+ 291:         if (vmVif !== undefined) {
+ 292:           _vifsToDestroy.push(vmVif)
+ 293:         }
+ 294:         _vifsToCreate.push(vif)
+ 295:       })
+ 296:
+ 297:       await Promise.all(_vifsToDestroy.map(vif => this._deleteVif(vif)))
+ 298:
+ 299:       for (const vif of _vifsToCreate) {
+ 300:         await this.VIF_create(
+ 301:           {
+ 302:             ipv4_allowed: vif.ipv4_allowed,
+ 303:             ipv6_allowed: vif.ipv6_allowed,
+ 304:             device: vif.device,
+ 305:             locking_mode: isEmpty(vif.ipv4_allowed) && isEmpty(vif.ipv6_allowed) ? 'network_default' : 'locked',
+ 306:             MTU: vif.mtu,
+ 307:             network: this.getObject(vif.network).$ref,
+ 308:             VM: vm.$ref,
+ 309:           },
+ 310:           {
+ 311:             MAC: vif.mac,
+ 312:           }
+ 313:         )
+
+ 399:         cpus: lte,
+ 400:       },
+ 401:       get: vm => +vm.VCPUs_max,
+ 402:       set: [
+ 403:         'VCPUs_max',
+ 404:         (value, vm, { coresPerSocket }) => {
+ 405:           if (coresPerSocket !== undefined) {
+ 406:             // if coresPerSocket was explicitly passed as arguments
+ 407:             // to _editVm, ignore the topology compatibilty check
+ 408:             return
+ 409:           }
+ 410:
+ 411:           const currentCoresPerSocket = vm.platform['cores-per-socket']
+ 412:           if (currentCoresPerSocket > 0 && Number.isSafeInteger(value / currentCoresPerSocket)) {
+ 413:             return
+ 414:           }
+ 415:
+ 416:           log.warn(
+ 417:             "CPU topology set to 1 core per socket because the new CPU static max value doesn't match the current CPU topology",
+ 418:             {
+ 419:               vmId: vm.uuid,
+ 420:               newCpuStaticMax: value,
+ 421:               oldTopology: `${currentCoresPerSocket} cores per socket`,
+ 422:             }
+ 423:           )
+ 424:           return vm.update_platform('cores-per-socket', '1')
+ 425:         },
+ 426:       ],
+
+SOURCE: https://github.com/vatesfr/xen-orchestra/blob/a508ca7897cc869026c54f2b693d67abefb71a21/packages/xo-web/src/xo-app/new-vm/index.js
+SHA256: 838eeb5234cf49504d256c0ce92b56f7760d28e8304513c548ffda9a0be6fe69
+
+ 601:     const existingDisks = {}
+ 602:     forEach(template.$VBDs, vbdId => {
+ 603:       const vbd = getObject(storeState, vbdId, resourceSet)
+ 604:       if (!vbd || vbd.is_cd_drive) {
+ 605:         return
+ 606:       }
+ 607:       const vdi = getObject(storeState, vbd.VDI, resourceSet)
+ 608:       if (vdi) {
+ 609:         existingDisks[vbd.position] = {
+ 610:           name_label: vdi.name_label,
+ 611:           name_description: vdi.name_description,
+ 612:           size: vdi.size,
+ 613:           $SR: pool || isInResourceSet(vdi.$SR) ? vdi.$SR : this._getDefaultSr(template),
+ 614:         }
+ 615:       }
+ 616:     })
+ 617:
+
+SOURCE: https://github.com/xapi-project/xen-api/blob/e2d37d9c0949ebdab915c0f4061ac3b0e90341c9/ocaml/xapi/xapi_vm.ml
+SHA256: 8af5a8449f1ec19bc8143d04b0e3411c08d882cf276031d20eef1e947dcd32d3
+
+ 832: let provision ~__context ~vm =
+ 833:   (* This bit could be done in the guest: *)
+ 834:   debug "start: checking to see whether VM needs 'installing'" ;
+ 835:   Helpers.call_api_functions ~__context (fun rpc session_id ->
+ 836:       set_is_a_template ~__context ~self:vm ~value:false ;
+ 837:       if Xapi_templates.needs_to_be_installed rpc session_id vm then (
+ 838:         TaskHelper.set_progress ~__context 0.1 ;
+ 839:         debug "install: phase 1/3: creating VBDs and VDIs" ;
+ 840:         let script, vbds = Xapi_templates.pre_install rpc session_id vm in
+ 841:         (* If an error occurs after this then delete the created VDIs, VBDs... *)
+ 842:         try
+ 843:           debug "install: phase 2/3: running optional script (in domain 0)" ;
+ 844:           let dom0 = Helpers.get_domain_zero ~__context in
+ 845:           Xapi_templates_install.post_install_script rpc session_id __context
+ 846:             dom0 vm (script, vbds) ;
+ 847:           debug "install: phase 3/3: removing install information from VM" ;
+ 848:           Xapi_templates.post_install rpc session_id vm ;
+ 849:           debug "finished install"
+ 850:         with e ->
+ 851:           (* On error delete the VBDs and their associated VDIs *)
+ 852:           let vdis =
+ 853:             List.map
+ 854:               (fun self -> Client.VBD.get_VDI ~rpc ~session_id ~self)
+ 855:               vbds
+ 856:           in
+ 857:           List.iter
+ 858:             (Helpers.log_exn_continue "deleting auto-provisioned VBD"
+ 859:                (fun self -> Client.VBD.destroy ~rpc ~session_id ~self
+ 860:              )
+ 861:             )
+ 862:             vbds ;
+ 863:           List.iter
+ 864:             (Helpers.log_exn_continue "deleting auto-provisioned VDI"
+ 865:                (fun self -> Client.VDI.destroy ~rpc ~session_id ~self
+ 866:              )
+ 867:             )
+ 868:             vdis ;
+ 869:           raise e
+ 870:       )
+ 871:   )
+ 872:
+ 873: (** Sets the maximum number of VCPUs for a {b Halted} guest
+ 874:     	or a running guest that is a control domain other than dom0 *)
+
+SOURCE: https://github.com/xapi-project/xen-api/blob/e2d37d9c0949ebdab915c0f4061ac3b0e90341c9/ocaml/xapi/xapi_templates.ml
+SHA256: 964ca5e8e6bbdbe1aeac6c8f31d310a706a87fc9e336d4afc93593d9c3eada87
+
+  62:
+  63: let disk_of_xml = function
+  64:   | Element ("disk", params, []) -> (
+  65:     try
+  66:       let device = List.assoc "device" params
+  67:       and size = List.assoc "size" params
+  68:       and sr = List.assoc "sr" params
+  69:       and bootable = List.assoc "bootable" params
+  70:       and _type =
+  71:         try string2vdi_type (List.assoc "type" params) with _ -> `system
+  72:       in
+  73:       {
+  74:         device
+  75:       ; size= Int64.of_string size
+  76:       ; sr
+  77:       ; bootable= bootable = "true"
+  78:       ; _type
+  79:       }
+  80:     with _ -> raise Parse_failure
+  81:   )
+  82:   | _ ->
+  83:       raise Parse_failure
+  84:
+  85: let disks_of_xml = function
+  86:   | Element ("provision", [], disks) ->
+
+ 108:   in
+ 109:   try Client.SR.get_uuid ~rpc ~session_id ~self:sr
+ 110:   with _ ->
+ 111:     raise
+ 112:       (Api_errors.Server_error
+ 113:          (Api_errors.default_sr_not_found, [Ref.string_of sr])
+ 114:       )
+ 115:
+ 116: (** Templates ship with sr="" in their provision spec, meaning "the default
+ 117:     SR". xe vm-install substitutes it before provisioning; do the same here so
+ 118:     API clients calling VM.clone + VM.provision behave identically. *)
+ 119: let resolve_default_sr rpc session_id disks =
+ 120:   if List.exists (fun d -> d.sr = "") disks then
+ 121:     let default_sr = get_default_sr_uuid rpc session_id in
+ 122:     List.map
+ 123:       (fun d ->
+ 124:         if d.sr = "" then
+ 125:           {d with sr= default_sr}
+ 126:         else
+ 127:           d
+ 128:       )
+ 129:       disks
+ 130:   else
+ 131:     disks
+ 132:
+ 133: (** From a VM reference, return an 'install' record option. *)
+ 134: let get_template_record rpc session_id vm =
+ 135:   let other_config = Client.VM.get_other_config ~rpc ~session_id ~self:vm in
+ 136:   let disks =
+ 137:     if List.mem_assoc disks_key other_config then
+ 138:       disks_of_xml (Xml.parse_string (List.assoc disks_key other_config))
+ 139:       |> resolve_default_sr rpc session_id
+ 140:     else
+ 141:       []
+ 142:   in
+ 143:   let script =
+ 144:     if List.mem_assoc post_install_key other_config then
+ 145:       Some (List.assoc post_install_key other_config)
+ 146:     else
+ 147:       None
+ 148:   in
+ 149:   if disks = [] && script = None then
+ 150:     None
+ 151:   else
+ 152:     Some {disks; post_install_script= script}
+ 153:
+ 154: (** Returns true if the given VM is actually a template and must be pre-installed *)
+
+ 165:       D.error "Unable to find SR (uuid: %s) to provision the disk" disk.sr ;
+ 166:       raise (Api_errors.Server_error (Api_errors.uuid_invalid, ["sr"; disk.sr]))
+ 167:   in
+ 168:   debug "Provisioning VDI for new VM" ;
+ 169:   let vdi =
+ 170:     Client.VDI.create ~rpc ~session_id ~name_label:""
+ 171:       ~name_description:"Created by template provisioner" ~sR:sr
+ 172:       ~virtual_size:disk.size ~_type:disk._type ~sharable:false ~read_only:false
+ 173:       ~other_config:[] ~xenstore_data:[] ~sm_config ~tags:[]
+ 174:   in
+ 175:   let vbd_ref =
+ 176:     Client.VBD.create ~rpc ~session_id ~vM:vm ~vDI:vdi ~userdevice:disk.device
+ 177:       ~bootable:disk.bootable ~mode:`RW ~_type:`Disk
+ 178:       ~unpluggable:(disk._type <> `system) ~empty:false ~qos_algorithm_type:""
+ 179:       ~qos_algorithm_params:[]
+ 180:       ~other_config:[(Constants.owner_key, "")]
+ 181:       ~device:"" ~currently_attached:false
+ 182:   in
+ 183:   let device = Client.VBD.get_userdevice ~rpc ~session_id ~self:vbd_ref in
+ 184:   Client.VDI.set_name_label ~rpc ~session_id ~self:vdi ~value:device ;
+ 185:   vbd_ref
+ 186:
+ 187: (** For a given VM, if it needs to be installed, create each disk and return
+ 188:     the optional post-install script and a list of created VBDs *)
+ 189: let pre_install rpc session_id vm =
+ 190:   debug "Performing pre_install actions (ie creating disks)" ;
+ 191:   (* driver params for each call - vmhint and epochhint for netapp *)
+ 192:   let vmuuid = Client.VM.get_uuid ~rpc ~session_id ~self:vm in
+ 193:   let sm_config = [(Constants._sm_vm_hint, vmuuid)] in
+ 194:   match get_template_record rpc session_id vm with
+ 195:   | Some {disks; post_install_script= script} ->
+ 196:       let vbds = List.map (create_disk rpc session_id vm sm_config) disks in
+ 197:       (script, vbds)
+ 198:   | None ->
+ 199:       (None, [])
+ 200:
+ 201: (** For a given VM, perform post-install tidy-up (ie remove keys from other_config which would
+ 202:     cause the template to be installed twice) *)
+ 203: let post_install rpc session_id vm =
+ 204:   debug
+ 205:     "Performing post_install actions (ie removing template information from VM)" ;
+ 206:   ( try
+ 207:       Client.VM.remove_from_other_config ~rpc ~session_id ~self:vm
+ 208:         ~key:disks_key
+ 209:     with _ -> ()
+ 210:   ) ;
+ 211:   try
+ 212:     Client.VM.remove_from_other_config ~rpc ~session_id ~self:vm
+ 213:       ~key:post_install_key
+ 214:   with _ -> ()
+
+SOURCE: https://github.com/xapi-project/xen-api/blob/e2d37d9c0949ebdab915c0f4061ac3b0e90341c9/ocaml/xapi/xapi_vm_clone.ml
+SHA256: 459e714734ff3ccd7c7530768e0752aafb342aab0074dd04096593fbb1e3e984
+
+ 178: let safe_clone_disks rpc session_id disk_op ~__context vbds driver_params =
+ 179:   (* Find the sizes of the disks, and the total size in order to do progress *)
+ 180:   let sizes =
+ 181:     List.map
+ 182:       (fun vbd ->
+ 183:         try
+ 184:           ( vbd
+ 185:           , Db.VDI.get_virtual_size ~__context
+ 186:               ~self:(Db.VBD.get_VDI ~__context ~self:vbd)
+ 187:           )
+ 188:         with _ -> (vbd, 0L)
+ 189:       )
+ 190:       vbds
+ 191:   in
+ 192:   let total =
+ 193:     Int64.to_float
+ 194:       (List.fold_left (fun tot (_, size) -> Int64.add tot size) 0L sizes)
+ 195:   in
+ 196:   let fold_function (acc, done_so_far) (vbd, size) =
+ 197:     try
+ 198:       TaskHelper.exn_if_cancelling ~__context ;
+ 199:       let vbd_r = Client.VBD.get_record ~rpc ~session_id ~self:vbd in
+ 200:       (* If the VBD is empty there is no VDI to copy. *)
+ 201:       (* If the VBD is a CD then eject it (we cannot make copies of ISOs: they're identified *)
+ 202:       (* by their filename unlike other VDIs) *)
+ 203:       let newvdi, on_error_delete =
+ 204:         if vbd_r.API.vBD_empty then
+ 205:           (Ref.null, false)
+ 206:         else if vbd_r.API.vBD_type = `CD then
+ 207:           (vbd_r.API.vBD_VDI, false)
+ 208:         (* don't delete the original CD *)
+ 209:         else
+ 210:           ( clone_single_vdi ~progress:(done_so_far, size, total) rpc session_id
+ 211:               disk_op ~__context vbd_r.API.vBD_VDI driver_params
+ 212:           , true
+ 213:           )
+ 214:         (* do delete newly created VDI *)
+ 215:       in
+ 216:       ((vbd, newvdi, on_error_delete) :: acc, Int64.add done_so_far size)
+ 217:     with e ->
+ 218:       debug "Error in safe_clone_disks: %s" (Printexc.to_string e) ;
+
+ 471:         (* Copy every VBD using the new VDI as backend. If this fails halfway
+ 472:            through, delete the VM and the VDIs, but don't worry about any VBDs
+ 473:            left hanging around, as these will be GC'd later. *)
+ 474:         try
+ 475:           (* copy VBDs *)
+ 476:           List.iter
+ 477:             (fun (vbd, newvdi, _) ->
+ 478:               let vbd =
+ 479:                 Xapi_vbd_helpers.copy ~__context ~vm:ref ~vdi:newvdi vbd
+ 480:               in
+ 481:               (* CA-58405: when we make a clone/snapshot/checkpoint we consider
+ 482:                  the clone / snapshot / checkpoint VM to "own" all the clone /
+ 483:                  snapshot / checkpoint *disks* irrespective of the ownership of
+ 484:                  the original disks. We wish the clone / snapshot / checkpoint
+ 485:                  disks to be cleaned up with the VM. *)
+ 486:               if Db.VBD.get_type ~__context ~self:vbd = `Disk then
+ 487:                 let other_config =
+ 488:                   Db.VBD.get_other_config ~__context ~self:vbd
+ 489:                 in
+ 490:                 if not (List.mem_assoc Constants.owner_key other_config) then
+ 491:                   Db.VBD.add_to_other_config ~__context ~self:vbd
+ 492:                     ~key:Constants.owner_key ~value:""
+ 493:             )
+ 494:             cloned_disks ;
+ 495:           (* copy VIFs *)

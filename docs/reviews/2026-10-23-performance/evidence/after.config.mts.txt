@@ -1,0 +1,8 @@
+export default {
+  resolve: { alias: { vitest: '/Volumes/zt/dev/xenadminmodern/node_modules/vitest/dist/index.js' } },
+  test: {
+    root: '/Volumes/zt/dev/xenadminmodern',
+    include: ['/private/tmp/xenadmin-performance-20261023.JlaZxp/after-*.test.ts'],
+    environment: 'node', globals: true, fileParallelism: false, env: { LOG_LEVEL: 'silent' },
+  },
+}

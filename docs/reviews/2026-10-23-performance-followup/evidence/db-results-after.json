@@ -1,0 +1,76 @@
+{
+  "node": "24.22.0",
+  "cappedIngestion": [
+    {
+      "prefill": 50000,
+      "vmBatches": 500,
+      "samplesPerBatch": 2,
+      "trial": 0,
+      "synchronousMs": 5.028458999999998,
+      "timerDelayMs": 5.153209000000004
+    },
+    {
+      "prefill": 50000,
+      "vmBatches": 500,
+      "samplesPerBatch": 2,
+      "trial": 1,
+      "synchronousMs": 0.9478340000000003,
+      "timerDelayMs": 8.359791999999999
+    },
+    {
+      "prefill": 50000,
+      "vmBatches": 500,
+      "samplesPerBatch": 2,
+      "trial": 2,
+      "synchronousMs": 0.9820840000000146,
+      "timerDelayMs": 1.241624999999999
+    },
+    {
+      "prefill": 100000,
+      "vmBatches": 500,
+      "samplesPerBatch": 2,
+      "trial": 0,
+      "synchronousMs": 2.7325420000000236,
+      "timerDelayMs": 2.772083000000009
+    },
+    {
+      "prefill": 100000,
+      "vmBatches": 500,
+      "samplesPerBatch": 2,
+      "trial": 1,
+      "synchronousMs": 2.0517090000000167,
+      "timerDelayMs": 2.102125000000001
+    },
+    {
+      "prefill": 100000,
+      "vmBatches": 500,
+      "samplesPerBatch": 2,
+      "trial": 2,
+      "synchronousMs": 2.31574999999998,
+      "timerDelayMs": 2.373833999999988
+    }
+  ],
+  "startup": {
+    "snapshotBytes": 84556040,
+    "trials": [
+      {
+        "trial": 0,
+        "initiationMs": 0.31512499999996635,
+        "completionMs": 641.7760829999999,
+        "heartbeatMaxGapMs": 10.122499999999945
+      },
+      {
+        "trial": 1,
+        "initiationMs": 0.2608749999999418,
+        "completionMs": 612.2225840000001,
+        "heartbeatMaxGapMs": 10.211041999999907
+      },
+      {
+        "trial": 2,
+        "initiationMs": 0.26179099999990285,
+        "completionMs": 630.9790830000002,
+        "heartbeatMaxGapMs": 9.258041000000048
+      }
+    ]
+  }
+}
