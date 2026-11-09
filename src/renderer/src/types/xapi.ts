@@ -270,6 +270,13 @@ export type {
 declare global {
   interface Window {
     xapi: {
+      updates: {
+        getState: () => Promise<import('../../../shared/ipc-contracts/updates').UpdateState>
+        setEnabled: (enabled: boolean) => Promise<import('../../../shared/ipc-contracts/updates').UpdateState>
+        check: () => Promise<import('../../../shared/ipc-contracts/updates').UpdateState>
+        download: () => Promise<import('../../../shared/ipc-contracts/updates').UpdateState>
+        install: () => Promise<import('../../../shared/ipc-contracts/updates').UpdateState>
+      }
       connection: {
         connect: (opts: XapiConnectionOptions) => Promise<{ id: string }>
         disconnect: (id: string) => Promise<void>

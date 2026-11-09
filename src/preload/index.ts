@@ -7,6 +7,7 @@
  */
 import { contextBridge, ipcRenderer } from 'electron'
 import { createIpcBridgeApi } from './ipc-bridge'
+import { createUpdateApi } from './update-api'
 import { createConnectionSessionApi } from './connection-api'
 import { createVmApi } from './vm-api'
 import { createVmAdvancedApi } from './vm-advanced-api'
@@ -32,6 +33,7 @@ const patchApi = createPatchApi(ipcRenderer)
 const rbacApi = createRbacApi(ipcRenderer)
 
 const api = {
+  updates: createUpdateApi(ipcRenderer),
   // v4: Connection management (NEW)
   connection: connectionSessionApi.connection,
 

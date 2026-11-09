@@ -665,6 +665,11 @@ describe('ipc-handlers', () => {
       'session:connect',
       'session:disconnect',
       'session:status',
+      'updates:getState',
+      'updates:setEnabled',
+      'updates:check',
+      'updates:download',
+      'updates:install',
       'host:list',
       'host:metrics',
       'host:enable',
@@ -903,8 +908,8 @@ describe('ipc-handlers', () => {
       'vm:advSetStartOrder',
       'vm:changed',
     ])
-    expect(inventory.contracts).toHaveLength(245)
-    expect(inventory.contracts.filter(({ direction }) => direction === 'invoke')).toHaveLength(242)
+    expect(inventory.contracts).toHaveLength(250)
+    expect(inventory.contracts.filter(({ direction }) => direction === 'invoke')).toHaveLength(247)
     expect(inventory.contracts.filter(({ direction }) => direction === 'push').map(({ channel }) => channel))
       .toEqual(['alert:triggered', 'batch:progress', 'vm:changed'])
 

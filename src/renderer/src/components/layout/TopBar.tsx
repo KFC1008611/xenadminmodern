@@ -13,6 +13,7 @@ import { cn } from '../../lib/utils'
 import { TaskCenter } from './TaskCenter'
 import { feedback } from '../../store/feedback.store'
 import Breadcrumb from './Breadcrumb'
+import { SettingsLink } from './SettingsLink'
 import { AppearanceMenu } from './AppearanceMenu'
 
 interface TopBarProps {
@@ -87,6 +88,7 @@ export default function TopBar({ onOpenSidebar }: TopBarProps) {
           <span className="hidden sm:inline">断开</span>
         </button>
         <span className="mx-1 h-4 border-l border-border" aria-hidden="true" />
+        <SettingsLink />
         <AppearanceMenu />
       </div>
     </header>

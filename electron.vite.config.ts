@@ -23,7 +23,7 @@ const buildIdentity = {
 export default defineConfig({
   main: {
     define: buildIdentity,
-    plugins: [externalizeDepsPlugin({ exclude: ['fast-xml-parser', 'nodemailer', 'ws', 'xmlrpc'] })],
+    plugins: [externalizeDepsPlugin({ exclude: ['fast-xml-parser', 'nodemailer', 'ws', 'xmlrpc', 'electron-updater'] })],
     build: {
       rollupOptions: {
         external: ['electron', 'bufferutil', 'utf-8-validate', ...builtinModules.map(m => `node:${m}`), ...builtinModules]

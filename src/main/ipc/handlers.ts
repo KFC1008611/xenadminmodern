@@ -10,6 +10,7 @@ import type { BrowserWindow } from 'electron'
 // Re-export for backward compatibility with any local consumers
 export type { IpcErrorResponse } from '../../shared/types/xapi'
 
+import { registerUpdateHandlers } from './handlers/updates'
 import { registerConnectionHandlers } from './handlers/connection'
 import { registerHostHandlers } from './handlers/host'
 import { registerVmHandlers } from './handlers/vm'
@@ -35,6 +36,7 @@ export function bindIpcOwner(owner: BrowserWindow, trustedDocumentUrl: string): 
 export function registerIpcHandlers(mainWindow?: BrowserWindow): void {
   setVmEventWindow(mainWindow)
   registerConnectionHandlers()
+  registerUpdateHandlers()
   registerHostHandlers()
   registerVmHandlers()
   registerStorageHandlers()

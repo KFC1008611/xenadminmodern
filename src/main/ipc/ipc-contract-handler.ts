@@ -1,3 +1,4 @@
+import { enterApplicationRequest } from '../lifecycle/update-admission'
 import type { IpcMainInvokeEvent } from 'electron'
 import type { ScopedLogger } from '../logger'
 import type { IpcErrorResponse } from '../../shared/types/xapi'
@@ -46,7 +47,9 @@ export function createIpcContractHandler<TArgs extends readonly unknown[], TResu
     }
     dependencies.logger.debug(`${contract.channel} called`, redaction.payload)
 
+    let leave: (() => void) | undefined
     try {
+      leave = enterApplicationRequest(contract.channel)
       let args: TArgs
       try {
         args = contract.argsSchema.parse(rawArgs)
@@ -85,6 +88,6 @@ export function createIpcContractHandler<TArgs extends readonly unknown[], TResu
       }
       dependencies.logger.error(`${contract.channel} failed`, response)
       return response
-    }
+    } finally { leave?.() }
   }
 }

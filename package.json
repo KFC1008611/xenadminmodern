@@ -1,6 +1,6 @@
 {
   "name": "xenadmin-modern",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Evidence-gated Electron desktop client for XCP-ng management",
   "private": true,
   "license": "MIT",
@@ -74,6 +74,7 @@
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-tabs": "^1.0.4",
     "clsx": "^2.0.0",
+    "electron-updater": "6.8.12",
     "fast-xml-parser": "^5.5.11",
     "lucide-react": "^0.300.0",
     "nodemailer": "^8.0.5",
@@ -94,14 +95,33 @@
     ],
     "afterPack": "scripts/package-audit.cjs",
     "mac": {
-      "icon": "assets/icons/icon.icns"
+      "icon": "assets/icons/icon.icns",
+      "target": [
+        "dmg",
+        "zip"
+      ]
     },
     "win": {
-      "icon": "assets/icons/icon.ico"
+      "icon": "assets/icons/icon.ico",
+      "target": [
+        "nsis"
+      ]
     },
     "linux": {
-      "icon": "assets/icons/icon.png"
-    }
+      "icon": "assets/icons/icon.png",
+      "target": [
+        "AppImage"
+      ]
+    },
+    "appId": "com.xcpng.xenadmin-modern",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "KFC1008611",
+        "repo": "xenadminmodern",
+        "releaseType": "release"
+      }
+    ]
   },
   "allowScripts": {
     "esbuild@0.25.12": true,

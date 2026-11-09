@@ -23,6 +23,7 @@ interface BreadcrumbItem {
  */
 const ROUTE_LABELS: Record<string, string> = {
   dashboard: '仪表盘',
+  settings: '设置',
   hosts: '主机',
   vms: '虚拟机',
   storage: '存储',

@@ -239,6 +239,22 @@ describe('connection flow routing', () => {
     if (surface === 'dialog') await waitFor(() => expect(onClose).toHaveBeenCalledOnce())
   })
 
+  it('opens settings before connecting and returns to the connection page', async () => {
+    render(<MemoryRouter future={routerFuture} initialEntries={['/settings']}><App /></MemoryRouter>)
+    expect(await screen.findByRole('heading', { name: '设置' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: '软件更新' })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('link', { name: '返回连接' }))
+    expect(await screen.findByRole('button', { name: '添加服务器' })).toBeInTheDocument()
+  })
+
+  it('opens settings within the existing workspace when connected', async () => {
+    mockXapi.connection.list.mockResolvedValue([connection('conn-a')])
+    render(<MemoryRouter future={routerFuture} initialEntries={['/settings']}><App /></MemoryRouter>)
+    expect(await screen.findByRole('heading', { name: '设置' })).toBeInTheDocument()
+    expect(screen.getByTestId('app-shell')).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: '返回连接' })).not.toBeInTheDocument()
+  })
+
   it('renders ConnectPage when there are no connected connections', async () => {
     render(
       <MemoryRouter future={routerFuture} initialEntries={['/']}>

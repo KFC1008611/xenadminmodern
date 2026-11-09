@@ -1920,3 +1920,9 @@ export async function markAsTemplate(
   const client = getClient(connectionId)
   await convertVmToTemplate(client, vmRef)
 }
+
+export function hasPendingTransfers(): boolean {
+  ensureTransferJournalLoaded()
+  return [...importOperations.values()].some((operation) => !TERMINAL_TRANSFER_STATES.has(operation.status))
+    || [...exportOperations.entries()].some(([id, operation]) => !operation.cleanupAttempted || !TERMINAL_TRANSFER_STATES.has(exportProgressMap.get(id)?.status ?? ''))
+}

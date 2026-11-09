@@ -2,7 +2,7 @@
 
 基于 Electron + React 的 XCP-ng/XenServer 桌面管理客户端。能力状态表示已有实现与证据范围，不等同于正式发布或通用兼容认证。
 
-当前源码包版本为 1.2.1。macOS arm64 本地构建使用 ad-hoc 本机签名，未进行 Developer ID 签名或公证，正式发布门禁状态不变。
+当前源码包版本为 1.2.2。macOS arm64 本地构建使用 ad-hoc 本机签名，未进行 Developer ID 签名或公证，正式发布门禁状态不变。
 
 桌面交互见 [工作流说明](docs/desktop-workflows.md)。2026-10-22 已更新本机应用，并完成两个现有资源池的连接、存储清单、页面稳定性和主机 RRD 采集只读验收，结果与边界见 [验证记录](docs/validation.md)。其他实机验收另行安排，高级操作保留现有保护开关。
 
@@ -249,3 +249,19 @@ API实现参考：https://xapi-project.github.io/xen-api/
 2026-10-23 的复制优化已进入当前源码：VM 与模板统一复制窗口、明确快速克隆/完整复制和目标池、按主机可达性筛选目标、持久异步任务、未知结果防重复提交和结果定位。支持停机源对象；详细边界、XO/XenAdmin 对照和官方依据见 [复制规范](docs/vm-copy.md)。尚未更新已安装应用或执行真实池复制。
 
 同日合并的模板创建修复统一了磁盘计划、光驱复用、安装方式、容量、CPU 拓扑和网卡策略，见[实现记录](docs/reviews/2026-10-23-vm-template-creation/implementation.md)。[快速创建](docs/vm-quick-create.md)要求 `instant=true`，提供标记启用入口，依次异步 clone、provision 和启动；结果未确认时持久核对已有任务，启动失败保留 VM。实机验收仍待完成。
+
+## 内置更新
+
+连接页和工作区右上角的「设置」进入设置页面，「软件更新」区域提供自动检查开关、手动检查、应用内下载和「重启并安装」。发现更新时设置入口显示「有更新」。未连接服务器时可从设置返回连接页。自动检查默认开启，在启动 15 秒后及每 6 小时运行，关闭后停止后续自动检查并忽略在途检查响应，手动检查仍可使用。下载由用户点击开始，关闭自动检查不取消已主动开始的下载。应用普通退出时不自动安装更新。
+
+更新源固定为本仓库的正式 GitHub Releases，按语义版本检测升级，排除预发布和降级。下载校验失败不能安装，网络或发布文件错误显示检查失败。设置由主进程持久保存，开发运行禁用更新。Linux 内置更新使用 AppImage。
+
+安装前阻止进行中的 IPC 请求、批量任务、VM 复制及导入导出，并在准备期间阻止新的管理请求。macOS 先由系统更新器检查签名，再执行应用退出清理和安装；普通管理连接在安装时关闭。安装重启后的实际版本以新进程读取为准。
+
+### 发布更新包
+
+`.github/workflows/release.yml` 在 `v<package.json 版本>` 标签触发，完成检查、构建、打包与包内容审计后创建草稿 Release，汇总 macOS universal、Windows x64 NSIS 和 Linux x64 AppImage 及 `latest*.yml`、blockmap。人工核对产物后发布草稿，客户端才会检测到。安装包与更新元数据必须来自同一轮构建并同时发布。
+
+GitHub 仓库需配置 Secrets。macOS 使用 `CSC_LINK`、`CSC_KEY_PASSWORD`、`APPLE_ID`、`APPLE_APP_SPECIFIC_PASSWORD`、`APPLE_TEAM_ID`，分别提供 Developer ID 证书及公证身份；Windows 使用 `WIN_CSC_LINK`、`WIN_CSC_KEY_PASSWORD` 提供签名证书。证书密码和发布身份只在构建环境使用。工作流缺少签名条件即失败。
+
+现有 1.2.1 应用尚未包含更新入口，首次使用此功能需要安装包含该功能的新包。签名、公证、正式 Release 和真实跨版本安装验证分别记录在[验证记录](docs/validation.md)。

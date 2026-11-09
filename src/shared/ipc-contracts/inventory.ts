@@ -11,9 +11,12 @@ import { storageContracts } from './storage'
 import { vmAdvancedContracts } from './vm-advanced'
 import { vmContracts } from './vm'
 
+import { updateContracts } from './updates'
+
 export const ipcContractInventory = createIpcContractInventory({
   contracts: [
     ...connectionSessionContracts,
+    ...updateContracts,
     ...hostGovernanceInvokeContracts,
     ...vmContracts,
     ...storageContracts,

@@ -2,7 +2,14 @@
  * Electron main process entry point.
  * Creates the BrowserWindow and registers all IPC handlers before the renderer loads.
  */
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, autoUpdater as nativeUpdater } from 'electron'
+import { autoUpdater } from 'electron-updater'
+import { UpdateService, configureUpdateService } from './updates/update-service'
+import { stageMacUpdate } from './updates/mac-staging'
+import { beginUpdateInstallation, endUpdateInstallation, isUpdateInstalling } from './lifecycle/update-admission'
+import { isBatchRunning } from '../shared/batch-policy'
+import { hasPendingCopies } from './xapi/services/vm-copy.service'
+import { hasPendingTransfers } from './xapi/services/vm-import.service'
 import { join } from 'path'
 import { pathToFileURL } from 'url'
 import { connectionManager } from './xapi/connection-manager'
@@ -82,6 +89,37 @@ app.whenReady().then(() => {
 
   configureJsonStoreDirectory(join(app.getPath('userData'), 'state'))
 
+  autoUpdater.logger = null
+  autoUpdater.setFeedURL({ provider: 'github', owner: 'KFC1008611', repo: 'xenadminmodern', private: false })
+  const updates = new UpdateService(autoUpdater, app.getVersion(), app.isPackaged &&
+    (process.platform !== 'linux' || Boolean(process.env.APPIMAGE)), async () => {
+    beginUpdateInstallation()
+    try {
+      if (getBatchTaskManager().getAllTasks().some((task) => isBatchRunning(task.status)) || hasPendingCopies() || hasPendingTransfers()) {
+        throw new Error('仍有批量任务、复制或导入导出任务，请处理完成后再安装更新')
+      }
+      if (process.platform === 'darwin') await stageMacUpdate(nativeUpdater)
+      const failures: string[] = []
+      await cleanupApplication((name) => { failures.push(name) })
+      if (failures.length) throw new Error('退出清理失败，请重新启动应用后重试更新')
+      shutdownFinished = true
+      await new Promise<void>((resolve, reject) => {
+        const failed = (error: Error) => { app.removeListener('before-quit', quitting); reject(error) }
+        const quitting = () => { autoUpdater.removeListener('error', failed); resolve() }
+        autoUpdater.once('error', failed)
+        app.once('before-quit', quitting)
+        try { autoUpdater.quitAndInstall() } catch (error) { autoUpdater.emit('error', error as Error) }
+      })
+    } catch (error) {
+      shutdownFinished = false
+      endUpdateInstallation()
+      throw error
+    }
+  })
+  configureUpdateService(updates)
+  updates.start()
+  app.once('before-quit', () => updates.stop())
+
   connectionManager.onConnectionReady((id) => {
     void recoverTransfersForConnection(id).catch((error) => console.error('Transfer recovery failed', error))
   })
@@ -114,9 +152,16 @@ let shutdownFinished = false
 app.on('before-quit', (event) => {
   if (shutdownFinished) return
   event.preventDefault()
-  if (shutdownStarted) return
+  if (shutdownStarted || isUpdateInstalling()) return
   shutdownStarted = true
-  void runShutdownSteps([
+  void cleanupApplication((name, error) => console.error(`Shutdown cleanup failed: ${name}`, error)).finally(() => {
+    shutdownFinished = true
+    app.quit()
+  })
+})
+
+function cleanupApplication(report: (name: string, error: unknown) => void): Promise<void> {
+  return runShutdownSteps([
     { name: 'stop alert engine', run: stopAlertEngine },
     { name: 'stop metrics collection', run: stopAllCollections },
     { name: 'stop batch tasks', run: () => getBatchTaskManager().stopAll() },
@@ -125,8 +170,5 @@ app.on('before-quit', (event) => {
     { name: 'stop VM event watchers', run: stopAllVmEventWatchers },
     { name: 'disconnect servers', run: () => connectionManager.disconnectAll() },
     { name: 'flush metrics store', run: closeDatabase },
-  ], (name, error) => console.error(`Shutdown cleanup failed: ${name}`, error)).finally(() => {
-    shutdownFinished = true
-    app.quit()
-  })
-})
+  ], report)
+}

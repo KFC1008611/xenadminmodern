@@ -48,7 +48,7 @@ describe('preload IPC contract pairing', () => {
     }
 
     expect(unbound).toEqual([])
-    expect(paired).toHaveLength(245)
+    expect(paired).toHaveLength(250)
     expect(new Set(pathsByIdentity.keys())).toEqual(new Set(
       ipcContractInventory.contracts.map(({ channel, direction }) => `${direction}:${channel}`),
     ))

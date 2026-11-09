@@ -16,6 +16,7 @@ import { useMultiDataStore } from '../store/multiData.store'
 import type { ConnectionProfile } from '../types/xapi'
 import { AddServerDialog } from '../components/connection/AddServerDialog'
 import { SavedServerCards, type ConnectingState } from '../components/connection/SavedServerCards'
+import { SettingsLink } from '../components/layout/SettingsLink'
 import { AppearanceMenu } from '../components/layout/AppearanceMenu'
 import { TaskCenter } from '../components/layout/TaskCenter'
 import { FeedbackOverlay } from '../components/feedback/FeedbackOverlay'
@@ -161,6 +162,7 @@ export default function ConnectPage() {
       <div className="app-drag-region absolute top-0 left-0 right-0 h-[var(--window-top-offset)]" />
       <header className="app-drag-region absolute inset-x-0 top-[var(--window-top-offset)] z-[45] flex h-14 items-center justify-end gap-2 border-b border-border bg-card px-6">
         <TaskCenter />
+        <SettingsLink />
         <AppearanceMenu />
       </header>
       <FeedbackOverlay />

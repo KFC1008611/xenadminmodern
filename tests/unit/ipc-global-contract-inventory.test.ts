@@ -180,9 +180,9 @@ describe('global IPC contract inventory', () => {
     const pushes = contracts.filter(({ direction }) => direction === 'push')
     const publicChannels = Object.values(Ch)
 
-    expect(contracts).toHaveLength(245)
-    expect(new Set(contracts.map(({ channel }) => channel))).toHaveLength(245)
-    expect(invokes).toHaveLength(242)
+    expect(contracts).toHaveLength(250)
+    expect(new Set(contracts.map(({ channel }) => channel))).toHaveLength(250)
+    expect(invokes).toHaveLength(247)
     expect(pushes.map(({ channel }) => channel).sort()).toEqual([
       'alert:triggered',
       'batch:progress',

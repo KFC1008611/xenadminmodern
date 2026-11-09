@@ -12,6 +12,7 @@ import { useConnectionManagerStore } from './store/connectionManager.store'
 import { syncManager } from './store/syncManager.store'
 import { useMultiDataStore } from './store/multiData.store'
 import ConnectPage from './pages/ConnectPage'
+import SettingsPage from './pages/SettingsPage'
 import AppShell from './components/layout/AppShell'
 import DashboardPage from './pages/DashboardPage'
 import HostsPage from './pages/HostsPage'
@@ -95,7 +96,10 @@ export default function App() {
     return (
       <ErrorBoundary>
         <ToastProvider>
-          <ConnectPage />
+          <Routes>
+            <Route path="/settings" element={<SettingsPage standalone />} />
+            <Route path="*" element={<ConnectPage />} />
+          </Routes>
         </ToastProvider>
       </ErrorBoundary>
     )
@@ -108,6 +112,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/connect" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/settings" element={<SettingsPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/hosts" element={<HostsPage />} />
             <Route path="/vms" element={<VmsPage />} />

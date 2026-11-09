@@ -393,3 +393,10 @@ export const VM_ADV_SET_OTHER_CONFIG = 'vm:advSetOtherConfig'
 export const VM_ADV_ADD_TAG = 'vm:advAddTag'
 export const VM_ADV_REMOVE_TAG = 'vm:advRemoveTag'
 export const VM_ADV_SET_START_ORDER = 'vm:advSetStartOrder'
+
+// Built-in application updates
+export const UPDATE_GET_STATE = 'updates:getState'
+export const UPDATE_SET_ENABLED = 'updates:setEnabled'
+export const UPDATE_CHECK = 'updates:check'
+export const UPDATE_DOWNLOAD = 'updates:download'
+export const UPDATE_INSTALL = 'updates:install'

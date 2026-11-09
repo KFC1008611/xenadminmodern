@@ -306,3 +306,5 @@ export async function cancelCopy(id: string): Promise<VmCopyOperation> {
   if (reconcile) await observe(id)
   return structuredClone(currentRecord(id).operation)
 }
+
+export function hasPendingCopies(): boolean { return load().some((record) => !terminal(record.operation.status)) }
