@@ -18,6 +18,7 @@ import { BondList } from '../components/network/BondList'
 import { VlanList } from '../components/network/VlanList'
 import { NetworkDetailsPanel } from '../components/network/NetworkDetailsPanel'
 import { DesktopDialog } from '../components/layout/DesktopDialog'
+import { PifList } from '../components/network/PifList'
 
 
 function resourceKey(connectionId: string, ref: string): string {
@@ -77,12 +78,13 @@ function SummaryCell({ icon: Icon, label, value, detail, tone = 'text-secondary-
   )
 }
 
-export default function NetworksPage() {
+export default function NetworksPage({ hostRef, connectionId: hostConnectionId }: { hostRef?: string; connectionId?: string } = {}) {
   const { networks: allNetworks, refreshNetworks, domainStates } = useMultiDataStore()
   const connections = useConnectionManagerStore((s) => s.connections)
   const activeConnectionId = useConnectionManagerStore((s) => s.activeConnectionId)
   const setActiveConnection = useConnectionManagerStore((s) => s.setActiveConnection)
-  const { connectionId: pathConnectionId } = useParams<{ connectionId?: string }>()
+  const { connectionId: routeConnectionId } = useParams<{ connectionId?: string }>()
+  const pathConnectionId = hostConnectionId || routeConnectionId
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -97,10 +99,7 @@ export default function NetworksPage() {
       : ''
 
   // Filter by connectionId if specified in path
-  const networks = pathConnectionId ? allNetworks.filter((n) => n.connectionId === pathConnectionId) : allNetworks
-  const poolName = pathConnectionId
-    ? connections.find((c) => c.id === pathConnectionId)?.poolName || connections.find((c) => c.id === pathConnectionId)?.name
-    : null
+  const poolNetworks = pathConnectionId ? allNetworks.filter((n) => n.connectionId === pathConnectionId) : allNetworks
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
   const [renamingRef, setRenamingRef] = useState<string | null>(null)
@@ -113,13 +112,16 @@ export default function NetworksPage() {
   const [pifsLoading, setPifsLoading] = useState(false)
   const pifRequest = useRef(0)
   const actionInFlight = useRef(false)
-  const selectedNetwork = networks.find((network) => network.ref === searchParams.get('network') && network.connectionId === scopedConnectionId)
-  const deleteNetwork = networks.find((network) => resourceKey(network.connectionId, network.ref) === deleteConfirm)
+  const deleteNetwork = poolNetworks.find((network) => resourceKey(network.connectionId, network.ref) === deleteConfirm)
   const canDeleteNetwork = !!deleteNetwork && connectedConnections.some((connection) => connection.id === deleteNetwork.connectionId)
     && !domainStates[deleteNetwork.connectionId]?.networks?.error
     && deleteNetwork.allowedActions?.destroy !== false && !deleteNetwork.PIFs?.length && !deleteNetwork.VIFs?.length
 
   const selectNetwork = (network: ConnectedNetworkRecord) => {
+    if (hostRef) {
+      setSearchParams((previous) => { const next = new URLSearchParams(previous); next.set('network', network.ref); return next })
+      return
+    }
     navigate(`/pool/${encodeURIComponent(network.connectionId)}/networks?network=${encodeURIComponent(network.ref)}`)
   }
 
@@ -131,6 +133,15 @@ export default function NetworksPage() {
   const hostsReadAt = domainStates[advancedConnectionId]?.hosts?.lastSuccessAt
   const networksReadAt = domainStates[advancedConnectionId]?.networks?.lastSuccessAt
   const scopedPifs = pifsDataScope === pifScope ? pifs : []
+  const hostPifs = hostRef ? scopedPifs.filter((pif) => pif.host === hostRef) : scopedPifs
+  const networks = hostRef ? poolNetworks.map((network) => {
+    const interfaces = hostPifs.filter((pif) => pif.network === network.ref)
+    const linkStates = interfaces.map((pif) => pif.linkState || 'unknown')
+    const linkStatus = pifsDataScope !== pifScope || pifsError ? 'unknown' : !interfaces.length ? 'none' : linkStates.every((state) => state === 'connected') ? 'connected'
+      : linkStates.every((state) => state === 'disconnected') ? 'disconnected' : linkStates.includes('unknown') ? 'unknown' : 'partial'
+    return { ...network, linkStatus, device: interfaces.map((pif) => pif.device).join(', '), PIFs: interfaces.map((pif) => pif.ref) } as ConnectedNetworkRecord
+  }) : poolNetworks
+  const selectedNetwork = networks.find((network) => network.ref === searchParams.get('network') && network.connectionId === scopedConnectionId)
   const currentPifScope = useRef(pifScope)
   currentPifScope.current = pifScope
 
@@ -187,7 +198,7 @@ export default function NetworksPage() {
       onError: (error) => setDeleteError(error.message),
       onSuccess: async () => {
         setDeleteConfirm(null)
-        if (searchParams.get('network') === networkRef) setSearchParams({})
+        if (searchParams.get('network') === networkRef) closeNetwork()
         await refreshNetworkData()
       },
     })
@@ -221,6 +232,7 @@ export default function NetworksPage() {
   }
 
   const hasScopedConnection = !!scopedConnectionId
+  const closeNetwork = () => setSearchParams((previous) => { const next = new URLSearchParams(previous); next.delete('network'); return next })
   const linkTrackedCount = networks.filter((network) => network.linkStatus && network.linkStatus !== 'none').length
   const connectedLinkCount = networks.filter((network) => network.linkStatus === 'connected').length
   const vlanCount = networks.filter((network) => network.kind === 'vlan' || network.isVlan).length
@@ -230,19 +242,11 @@ export default function NetworksPage() {
 
   return (
     <div className="space-y-4">
-      <section className="overflow-hidden rounded-lg border border-border bg-background">
-        <div className="flex flex-col gap-3 border-b border-border px-4 py-3 md:flex-row md:items-center md:justify-between">
-          <div className="min-w-0">
-            <h1 className="truncate text-xl font-semibold text-foreground">{poolName ? `${poolName} · 网络` : '网络'}</h1>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-          <label className="flex min-w-0 items-center gap-2 text-xs text-muted-foreground">
-            资源池
-            <select aria-label="网络资源池" value={pathConnectionId || ''} onChange={(event) => navigate(event.target.value ? `/pool/${encodeURIComponent(event.target.value)}/networks` : '/networks')} className="h-9 max-w-56 rounded-lg border border-input bg-card px-2 text-sm text-foreground">
-              <option value="">全部资源池</option>
-              {connections.map((connection) => <option key={connection.id} value={connection.id}>{connection.poolName || connection.name}{connection.state !== 'connected' ? '（未连接）' : ''}</option>)}
-            </select>
-          </label>
+      <section className={hostRef ? '' : 'overflow-hidden rounded-lg border border-border bg-background'}>
+        <div className={hostRef ? 'flex items-center justify-between gap-3' : 'flex flex-col gap-3 border-b border-border px-4 py-3 md:flex-row md:items-center md:justify-between'}>
+          <h1 className="sr-only">网络</h1>
+          {hostRef && <span className="text-xs tabular-nums text-muted-foreground">{networks.length} 个</span>}
+          <div className="ml-auto flex flex-wrap items-center gap-2">
           <button
             onClick={() => setCreateDialogOpen(true)}
             disabled={!scopedConnectionId}
@@ -254,8 +258,7 @@ export default function NetworksPage() {
           </button>
           </div>
         </div>
-        {!scopedConnectionId && connectedConnections.length > 1 && <p className="border-b border-border px-4 py-2 text-xs text-muted-foreground">选择一个资源池后可创建网络、查看该池的网卡绑定和 VLAN。</p>}
-        <div className="grid grid-cols-2 divide-x divide-y divide-border md:grid-cols-5 md:divide-y-0">
+        {!hostRef && <div className="grid grid-cols-2 divide-x divide-y divide-border md:grid-cols-5 md:divide-y-0">
           <SummaryCell icon={Network} label="总网络" value={networks.length} />
           <SummaryCell
             icon={Activity}
@@ -272,16 +275,16 @@ export default function NetworksPage() {
           />
           <SummaryCell icon={Link2} label={NETWORK_TERMS.bond} value={bondCount} tone={bondCount ? 'text-info' : 'text-secondary-foreground'} />
           <SummaryCell icon={Server} label="VM 接入" value={vifCount} detail={NETWORK_TERMS.virtualNic} />
-        </div>
+        </div>}
       </section>
 
-      {selectedNetwork && <NetworkDetailsPanel key={resourceKey(selectedNetwork.connectionId, selectedNetwork.ref)} network={selectedNetwork} pifs={scopedPifs} pifsLoading={pifsLoading} pifsError={pifsError} onClose={() => setSearchParams({})} />}
+      {selectedNetwork && <NetworkDetailsPanel key={resourceKey(selectedNetwork.connectionId, selectedNetwork.ref)} network={selectedNetwork} pifs={hostPifs} pifsLoading={pifsLoading} pifsError={pifsError} onClose={closeNetwork} />}
       {searchParams.get('network') && scopedConnectionId && !selectedNetwork && <div role="status" className="rounded-lg border border-warning/30 bg-warning-soft p-3 text-sm text-warning">
         当前资源池的清单中尚未找到所选网络。请重新读取后核对，该网络也可能已被删除。
         <button type="button" onClick={() => void refreshNetworks()} className="ml-2 underline">重新读取网络清单</button>
       </div>}
 
-      <div className={`grid gap-4 ${hasScopedConnection ? 'min-[1600px]:grid-cols-[minmax(0,1fr)_360px]' : ''}`}>
+      <div className={`grid gap-4 ${hasScopedConnection && !hostRef ? 'min-[1600px]:grid-cols-[minmax(0,1fr)_360px]' : ''}`}>
         <section className="min-w-0 overflow-hidden rounded-lg border border-border bg-background">
           <h2 className="sr-only">网络清单</h2>
           <div className="overflow-x-auto">
@@ -295,7 +298,7 @@ export default function NetworksPage() {
                   <th className="px-3 py-2.5 text-right font-medium text-muted-foreground">MTU</th>
                   <th className="px-3 py-2.5 text-right font-medium text-muted-foreground">{NETWORK_TERMS.virtualNic}</th>
                   <th className="px-3 py-2.5 text-right font-medium text-muted-foreground">{NETWORK_TERMS.hostInterfaceCompact}</th>
-                  <th className="px-3 py-2.5 text-left font-medium text-muted-foreground">资源池</th>
+                  {!pathConnectionId && <th className="px-3 py-2.5 text-left font-medium text-muted-foreground">资源池</th>}
                   <th className="sticky right-0 z-10 bg-card px-4 py-2.5 text-right font-medium text-muted-foreground">操作</th>
                 </tr>
               </thead>
@@ -303,14 +306,15 @@ export default function NetworksPage() {
                 {networks.map((net) => {
                   const netKey = resourceKey(net.connectionId, net.ref)
                   const connected = connectedConnections.some((connection) => connection.id === net.connectionId)
-                  const fresh = !domainStates[net.connectionId]?.networks?.error
+                  const fresh = !domainStates[net.connectionId]?.networks?.error && !(hostRef && (pifsLoading || pifsError || pifsDataScope !== pifScope))
                   const canRename = connected && fresh && net.allowedActions?.rename !== false
-                  const canDestroy = connected && fresh && net.allowedActions?.destroy !== false && !net.VIFs?.length && !net.PIFs?.length
+                  const poolNetwork = poolNetworks.find((network) => network.ref === net.ref && network.connectionId === net.connectionId)!
+                  const canDestroy = connected && fresh && net.allowedActions?.destroy !== false && !poolNetwork.VIFs?.length && !poolNetwork.PIFs?.length
                   const displayName = formatNetworkName(net)
                   const NetIcon = networkIcon(net)
 
                   return (
-                    <tr key={netKey} className={`transition-colors hover:bg-card ${selectedNetwork === net ? 'bg-accent' : ''}`}>
+                    <tr key={netKey} className={`transition-colors hover:bg-card ${selectedNetwork?.connectionId === net.connectionId && selectedNetwork?.ref === net.ref ? 'bg-accent' : ''}`}>
                       <td className={`max-w-80 border-l-2 px-4 py-3 ${networkAccentClass(net)}`}>
                         {renamingRef === netKey ? (
                           <div className="flex items-center gap-1.5">
@@ -375,11 +379,11 @@ export default function NetworksPage() {
                       <td className="px-3 py-3 text-right tabular-nums text-muted-foreground">{net.MTU}</td>
                       <td className="px-3 py-3 text-right tabular-nums text-muted-foreground">{net.VIFs?.length || 0}</td>
                       <td className="px-3 py-3 text-right tabular-nums text-muted-foreground">{net.PIFs?.length || 0}</td>
-                      <td className="px-3 py-3">
+                      {!pathConnectionId && <td className="px-3 py-3">
                         <span className="inline-flex max-w-40 rounded-md bg-card px-2 py-0.5 text-xs text-muted-foreground">
                           <span className="truncate">{net.poolName}</span>
                         </span>
-                      </td>
+                      </td>}
                       <td className="sticky right-0 z-10 bg-card px-4 py-3 shadow-[-6px_0_8px_-8px_hsl(var(--foreground)/0.25)]">
                         <div className="flex h-8 items-center justify-end gap-1">
                           {actionLoading === netKey ? (
@@ -424,7 +428,7 @@ export default function NetworksPage() {
               </tbody>
             </table>
           </div>
-          {networks.length === 0 && (
+          {networks.length === 0 && (!hostRef || !pifsLoading && !pifsError) && (
             <div className="px-4 py-10 text-center">
               <Network className="mx-auto mb-3 h-8 w-8 text-subtle" />
               <p className="text-sm font-medium text-muted-foreground">没有找到网络</p>
@@ -440,8 +444,10 @@ export default function NetworksPage() {
               {pifs.length > 0 && <p className="mt-1 text-xs">当前显示上次成功读取的数据。</p>}
               <button type="button" disabled={pifsLoading} onClick={() => void loadPifs()} className="mt-2 rounded border border-current px-2 py-1 text-xs disabled:opacity-50">重新读取主机接口</button>
             </div>}
-            <BondList connectionId={advancedConnectionId} pifs={scopedPifs} networks={networks} onRefresh={() => refreshNetworkData()} />
-            <VlanList connectionId={advancedConnectionId} pifs={scopedPifs} networks={networks} onRefresh={() => refreshNetworkData()} />
+            {hostRef ? <>{(!pifsLoading && !pifsError || hostPifs.length > 0) && <PifList pifs={hostPifs} networks={networks} />}</> : <>
+              <BondList connectionId={advancedConnectionId} pifs={scopedPifs} networks={networks} onRefresh={() => refreshNetworkData()} />
+              <VlanList connectionId={advancedConnectionId} pifs={scopedPifs} networks={networks} onRefresh={() => refreshNetworkData()} />
+            </>}
           </aside>
         )}
       </div>
@@ -452,7 +458,7 @@ export default function NetworksPage() {
         onClose={() => setCreateDialogOpen(false)}
         connectionId={scopedConnectionId}
         onCreated={async (networkRef) => {
-          if (networkRef) setSearchParams({ network: networkRef })
+          if (networkRef) setSearchParams((previous) => { const next = new URLSearchParams(previous); next.set('network', networkRef); return next })
           await refreshNetworkData()
         }}
       />

@@ -194,7 +194,7 @@ it('rereads host interfaces on global refresh, explicit retry, reopen and reconn
   render(routed(<><TopBar /><HostsPage /></>))
   fireEvent.click(screen.getByRole('button', { name: '主机接口' }))
   expect(await screen.findByText('192.0.2.10')).toBeInTheDocument()
-  fireEvent.click(screen.getByRole('button', { name: '刷新' }))
+  fireEvent.click(screen.getByRole('button', { name: '刷新资源' }))
   expect(await screen.findByText('192.0.2.20')).toBeInTheDocument()
   fireEvent.click(screen.getByRole('button', { name: '重新读取主机接口' }))
   await waitFor(() => expect(window.xapi.network.listPifs).toHaveBeenCalledTimes(3))

@@ -10,6 +10,8 @@ import ConnectPage from '../../src/renderer/src/pages/ConnectPage'
 import { useConnectionStore } from '../../src/renderer/src/store/connection.store'
 import { useConnectionManagerStore } from '../../src/renderer/src/store/connectionManager.store'
 import { useMultiDataStore } from '../../src/renderer/src/store/multiData.store'
+import { useMetricsStore } from '../../src/renderer/src/store/metrics.store'
+import { useAlertStore } from '../../src/renderer/src/store/alert.store'
 import type { ConnectionInfo, ConnectionProfile } from '../../src/renderer/src/types/xapi'
 
 const routerFuture = {
@@ -32,13 +34,10 @@ vi.mock('../../src/renderer/src/components/layout/AppShell', () => ({
   default: ({ children }: { children: ReactNode }) => <div data-testid="app-shell">{children}</div>,
 }))
 
-vi.mock('../../src/renderer/src/pages/DashboardPage', () => ({
-  default: () => <div>Dashboard page<input aria-label="页面草稿" /></div>,
-}))
 
 vi.mock('../../src/renderer/src/pages/HostsPage', () => ({ default: () => null }))
 vi.mock('../../src/renderer/src/pages/HostDetailPage', () => ({ default: () => null }))
-vi.mock('../../src/renderer/src/pages/VmsPage', () => ({ default: () => null }))
+vi.mock('../../src/renderer/src/pages/VmsPage', () => ({ default: () => <div>VM page<input aria-label="页面草稿" /></div> }))
 vi.mock('../../src/renderer/src/pages/VmDetailPage', () => ({ default: () => null }))
 vi.mock('../../src/renderer/src/pages/StoragePage', () => ({ default: () => null }))
 vi.mock('../../src/renderer/src/pages/NetworksPage', () => ({ default: () => null }))
@@ -115,6 +114,9 @@ const mockXapi = {
   pool: {
     get: vi.fn(),
   },
+  metrics: { startCollection: vi.fn().mockResolvedValue(undefined), stopCollection: vi.fn().mockResolvedValue(undefined), getHistory: vi.fn().mockResolvedValue([]), getCollectionError: vi.fn().mockResolvedValue(null) },
+  alerts: { getAll: vi.fn().mockResolvedValue([]) },
+  onAlertTriggered: vi.fn().mockReturnValue(() => {}),
   onVmChanged: vi.fn(),
 }
 
@@ -268,7 +270,7 @@ describe('connection flow routing', () => {
 
   it('keeps the current workspace and local draft mounted while the last connection recovers', async () => {
     mockXapi.connection.list.mockResolvedValue([connection('conn-a')])
-    render(<MemoryRouter future={routerFuture} initialEntries={['/dashboard']}><App /></MemoryRouter>)
+    render(<MemoryRouter future={routerFuture} initialEntries={['/vms']}><App /></MemoryRouter>)
     const input = await screen.findByRole('textbox', { name: '页面草稿' })
     fireEvent.change(input, { target: { value: '保留的草稿' } })
     act(() => useConnectionManagerStore.setState({ connections: [{ ...connection('conn-a'), state: 'error', errorMessage: '网络中断' }] }))
@@ -277,7 +279,7 @@ describe('connection flow routing', () => {
     expect(screen.getByDisplayValue('保留的草稿')).toBe(input)
   })
 
-  it('redirects /connect to /dashboard when a connection is already connected', async () => {
+  it('redirects /connect to /vms when a connection is already connected', async () => {
     mockXapi.connection.list.mockResolvedValue([connection('conn-a')])
     useConnectionManagerStore.setState({
       connections: [connection('conn-a')],
@@ -290,7 +292,7 @@ describe('connection flow routing', () => {
       </MemoryRouter>,
     )
 
-    expect(await screen.findByText('Dashboard page')).toBeInTheDocument()
+    expect(await screen.findByText('VM page')).toBeInTheDocument()
   })
 
   it('restores an existing main-process connection when the renderer starts empty', async () => {
@@ -302,7 +304,7 @@ describe('connection flow routing', () => {
       </MemoryRouter>,
     )
 
-    expect(await screen.findByText('Dashboard page')).toBeInTheDocument()
+    expect(await screen.findByText('VM page')).toBeInTheDocument()
     expect(useConnectionManagerStore.getState().activeConnectionId).toBe('conn-a')
     expect(mockXapi.connection.connect).not.toHaveBeenCalled()
   })
@@ -311,7 +313,7 @@ describe('connection flow routing', () => {
     mockXapi.profiles.list.mockResolvedValue([{ ...profile(), autoConnect: true }])
     mockXapi.connection.list.mockResolvedValueOnce([]).mockResolvedValueOnce([]).mockResolvedValue([connection('conn-a')])
     const view = render(<StrictMode><MemoryRouter future={routerFuture}><App /></MemoryRouter></StrictMode>)
-    expect(await screen.findByText('Dashboard page')).toBeInTheDocument()
+    expect(await screen.findByText('VM page')).toBeInTheDocument()
     expect(mockXapi.profiles.connect).toHaveBeenCalledTimes(1)
     expect(syncManager.start).toHaveBeenCalledTimes(1)
     const stops = vi.mocked(syncManager.stop).mock.calls.length
@@ -319,7 +321,7 @@ describe('connection flow routing', () => {
     expect(syncManager.stop).toHaveBeenCalledTimes(stops + 1)
   })
 
-  it('connects from a saved server card, refreshes data, and navigates to /dashboard', async () => {
+  it('connects from a saved server card, refreshes data, and navigates to /vms', async () => {
     mockXapi.profiles.list.mockResolvedValue([profile()])
     mockXapi.profiles.hasPassword.mockResolvedValue(true)
     mockXapi.connection.list.mockResolvedValue([connection('conn-a')])
@@ -337,10 +339,10 @@ describe('connection flow routing', () => {
             }
           />
           <Route
-            path="/dashboard"
+            path="/vms"
             element={
               <>
-                <div>Dashboard route</div>
+                <div>VM route</div>
                 <LocationProbe />
               </>
             }
@@ -352,11 +354,34 @@ describe('connection flow routing', () => {
     expect(await screen.findByText('Pool A')).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: /^连接$/ }))
 
-    expect(await screen.findByText('Dashboard route')).toBeInTheDocument()
-    expect(screen.getByTestId('location')).toHaveTextContent('/dashboard')
+    expect(await screen.findByText('VM route')).toBeInTheDocument()
+    expect(screen.getByTestId('location')).toHaveTextContent('/vms')
     expect(mockXapi.profiles.connect).toHaveBeenCalledWith('profile-a', undefined)
     expect(mockXapi.connection.connect).not.toHaveBeenCalled()
     expect(mockXapi.vm.list).toHaveBeenCalledWith('conn-a')
+  })
+
+  it.each(['/dashboard', '/batch-tasks', '/rbac', '/pool-manager'])('keeps the legacy %s route reachable', async (path) => {
+    mockXapi.connection.list.mockResolvedValue([connection('conn-a')])
+    render(<MemoryRouter future={routerFuture} initialEntries={[path]}><App /><LocationProbe /></MemoryRouter>)
+    const expected = path === '/dashboard' ? '/vms' : path === '/batch-tasks' ? '/tasks' : '/pool/conn-a/settings'
+    await waitFor(() => expect(screen.getByTestId('location')).toHaveTextContent(expected))
+  })
+
+  it('collects metrics and listens for alerts directly from the VM entry, then stops on disconnect', async () => {
+    mockXapi.connection.list.mockResolvedValue([connection('conn-a')])
+    const view = render(<MemoryRouter future={routerFuture} initialEntries={['/vms']}><App /></MemoryRouter>)
+    await screen.findByText('VM page')
+    await waitFor(() => expect(mockXapi.metrics.startCollection).toHaveBeenCalledWith('conn-a', expect.any(Object)))
+    expect(mockXapi.onAlertTriggered).toHaveBeenCalledTimes(2)
+    const firstTimer = useMetricsStore.getState().collectionIntervalIds.get('conn-a')
+    act(() => useConnectionManagerStore.setState({ connections: [{ ...connection('conn-a'), epoch: 2 }] }))
+    expect(mockXapi.metrics.stopCollection).toHaveBeenCalledWith('conn-a')
+    expect(useMetricsStore.getState().collectionIntervalIds.get('conn-a')).not.toBe(firstTimer)
+    act(() => useConnectionManagerStore.setState({ connections: [{ ...connection('conn-a'), state: 'error' }] }))
+    expect(useMetricsStore.getState().collectionIntervalIds.size).toBe(0)
+    expect(useAlertStore.getState().pollingInterval).toBeNull()
+    view.unmount()
   })
 
   it('closes RememberedServerDialog after a manual add succeeds', async () => {

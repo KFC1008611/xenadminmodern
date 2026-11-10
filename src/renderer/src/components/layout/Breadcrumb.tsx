@@ -22,7 +22,6 @@ interface BreadcrumbItem {
  * Route label mapping for breadcrumb generation.
  */
 const ROUTE_LABELS: Record<string, string> = {
-  dashboard: '仪表盘',
   settings: '设置',
   hosts: '主机',
   vms: '虚拟机',
@@ -86,23 +85,6 @@ export default function Breadcrumb() {
     return null
   }
 
-  // On dashboard, show a simple "仪表盘" breadcrumb
-  if (pathname === '/dashboard') {
-    return (
-      <nav className="flex items-center gap-1.5 text-xs min-w-0 overflow-hidden" aria-label="面包屑导航">
-        <NavLink
-          to="/dashboard"
-          aria-label="仪表盘首页"
-          className="text-subtle hover:text-secondary-foreground transition-colors flex-shrink-0"
-        >
-          <Home className="w-3.5 h-3.5" />
-        </NavLink>
-        <ChevronRight className="w-3 h-3 text-subtle flex-shrink-0" />
-        <span className="text-secondary-foreground font-medium">仪表盘</span>
-      </nav>
-    )
-  }
-
   const segments = pathname.split('/').filter(Boolean)
   const items: BreadcrumbItem[] = []
 
@@ -117,8 +99,8 @@ export default function Breadcrumb() {
       if (connectionId) {
         currentPath += `/pool/${connectionId}`
         items.push({
-          label: resolvePoolName(connectionId, connections, pools),
-          path: `${currentPath}/hosts`,
+          label: resolvePoolName(decodeURIComponent(connectionId), connections, pools),
+          path: `${currentPath}/vms`,
         })
         i += 1
       }
@@ -128,7 +110,7 @@ export default function Breadcrumb() {
     currentPath += `/${segment}`
 
     // Check if this is a known route label
-    const label = ROUTE_LABELS[segment]
+    const label = segment === 'settings' && segments[0] === 'pool' ? '池设置' : ROUTE_LABELS[segment]
     if (label) {
       items.push({ label, path: currentPath })
     } else {
@@ -136,7 +118,7 @@ export default function Breadcrumb() {
       // Try to extract connectionId from the path (/pool/:connectionId/...)
       const poolIndex = segments.indexOf('pool')
       const pathConnectionId = poolIndex >= 0 && poolIndex + 1 < segments.length
-        ? segments[poolIndex + 1]
+        ? decodeURIComponent(segments[poolIndex + 1])
         : null
 
       const resolvedLabel = resolveRefLabel(segment, hosts, vms, pathConnectionId)
@@ -152,8 +134,8 @@ export default function Breadcrumb() {
   return (
     <nav className="flex items-center gap-1.5 text-xs min-w-0 overflow-hidden" aria-label="面包屑导航">
       <NavLink
-        to="/dashboard"
-        aria-label="仪表盘首页"
+        to="/vms"
+        aria-label="全部资源"
         className="text-subtle hover:text-secondary-foreground transition-colors flex-shrink-0"
       >
         <Home className="w-3.5 h-3.5" />

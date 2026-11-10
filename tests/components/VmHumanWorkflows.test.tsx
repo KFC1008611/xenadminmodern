@@ -172,7 +172,7 @@ describe('VM human workflows', () => {
       snapshot: vm, receivedAt: Date.now() }))
     expect(document.querySelectorAll('tbody tr')).toHaveLength(1)
     expect(screen.getByRole('button', { name: 'App VM' })).toBeInTheDocument()
-    expect(screen.getByText('1 台虚拟机')).toBeInTheDocument()
+    expect(screen.getByText('1 项')).toBeInTheDocument()
     expect(screen.queryByText(/个用户模板/)).not.toBeInTheDocument()
     await screen.findByText(/template refresh failed/)
     for (let i = 0; i < 3; i++) {

@@ -61,7 +61,7 @@ function formatStatValue(value: number, metricType: string): string {
 
 /** Stats summary strip for a single metric. */
 function StatsStrip({ label, stats, metricType, color }: { label: string; stats: MetricStats | null; metricType: string; color: string }) {
-  if (!stats) return null
+  if (!stats || stats.sampleCount === 0) return null
   return (
     <div className="flex items-center gap-4 text-xs">
       <span className="text-subtle font-medium">{label}</span>
@@ -75,6 +75,8 @@ function StatsStrip({ label, stats, metricType, color }: { label: string; stats:
 export function HostMonitorTab({ connectionId, hostRef }: HostMonitorTabProps) {
   const host = useMultiDataStore((state) => state.hosts.find((record) => record.connectionId === connectionId && record.ref === hostRef))
   const {
+    collectionErrors,
+    startCollection,
     timeRange,
     setTimeRange,
     fetchRangeData,
@@ -84,8 +86,9 @@ export function HostMonitorTab({ connectionId, hostRef }: HostMonitorTabProps) {
   } = useMetricsStore()
 
   const [autoRefresh, setAutoRefresh] = useState(true)
-  const [collectionError, setCollectionError] = useState<string | null>(null)
+  const [readCollectionError, setCollectionError] = useState<string | null>(null)
 
+  const collectionError = collectionErrors?.[connectionId] || readCollectionError
   const rangeData = getRangeData(connectionId, hostRef)
   const cpuStats = getHostStats(connectionId, hostRef, 'cpu')
   const memStats = getHostStats(connectionId, hostRef, 'memory')
@@ -219,11 +222,12 @@ export function HostMonitorTab({ connectionId, hostRef }: HostMonitorTabProps) {
 
       {/* Collection error */}
       {collectionError && (
-        <div className="bg-danger-soft border border-danger/30 rounded-xl p-4 flex items-start gap-3">
+        <div role="alert" className="bg-danger-soft border border-danger/30 rounded-xl p-4 flex items-start gap-3">
           <AlertTriangle className="w-5 h-5 text-danger shrink-0 mt-0.5" />
           <div>
             <p className="text-sm text-danger font-medium">监控数据采集失败</p>
             <p className="text-xs text-danger mt-1">{collectionError}</p>
+            <button type="button" onClick={() => { startCollection(connectionId); loadData() }} className="mt-2 rounded border border-danger/30 px-2 py-1 text-xs text-danger">重新读取监控</button>
           </div>
         </div>
       )}

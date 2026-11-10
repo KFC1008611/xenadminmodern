@@ -42,7 +42,7 @@ export default function ConnectPage() {
   const refreshAll = useMultiDataStore((s) => s.refreshAll)
 
   const goToConnectedWorkspace = useCallback(() => {
-    navigate('/dashboard', { replace: true })
+    navigate('/vms', { replace: true })
   }, [navigate])
 
   // Check local encrypted entries without unlocking the system credential store.

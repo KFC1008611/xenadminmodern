@@ -12,22 +12,43 @@ import { formatBytes, cn } from '../lib/utils'
 import CreateSrWizard from '../components/sr/CreateSrWizard'
 import SrDetailPanel from '../components/sr/SrDetailPanel'
 import SrActions from '../components/sr/SrActions'
+import type { ConnectedPbdRecord } from '../types/xapi'
 
 function resourceKey(connectionId: string, ref: string): string {
   return `${connectionId}:${ref}`
 }
 
-export default function StoragePage() {
-  const { srs: allSrs, hosts: allHosts, refreshSrs, refreshHosts, pools: allPools } = useMultiDataStore()
+export default function StoragePage({ hostRef, connectionId: hostConnectionId }: { hostRef?: string; connectionId?: string } = {}) {
+  const { srs: allSrs, hosts: allHosts, refreshSrs, refreshHosts, pools: allPools, domainStates } = useMultiDataStore()
   const connections = useConnectionManagerStore((s) => s.connections)
-  const { connectionId: pathConnectionId } = useParams<{ connectionId?: string }>()
+  const { connectionId: routeConnectionId } = useParams<{ connectionId?: string }>()
+  const pathConnectionId = hostConnectionId || routeConnectionId
+  const connection = connections.find((item) => item.id === pathConnectionId)
+  const pbdScope = JSON.stringify([pathConnectionId, hostRef, connection?.state, connection?.epoch, connection?.connectedAt, connection?.poolUuid])
+  const [pbds, setPbds] = useState<{ scope: string; records: ConnectedPbdRecord[] } | null>(null)
+  const [pbdError, setPbdError] = useState<string | null>(null)
+  const [pbdLoading, setPbdLoading] = useState(false)
+  const [pbdRevision, setPbdRevision] = useState(0)
+  const storageReadAt = domainStates[pathConnectionId || '']?.srs?.lastSuccessAt
+
+  useEffect(() => {
+    let cancelled = false
+    if (!hostRef || !pathConnectionId || connection?.state !== 'connected') return
+    setPbdLoading(true)
+    setPbdError(null)
+    window.xapi.pbd.list(pathConnectionId).then((records) => {
+      if (!cancelled) setPbds({ scope: pbdScope, records })
+    }).catch((error) => {
+      if (!cancelled) setPbdError(error instanceof Error ? error.message : String(error))
+    }).finally(() => { if (!cancelled) setPbdLoading(false) })
+    return () => { cancelled = true }
+  }, [pbdScope, pathConnectionId, hostRef, connection?.state, storageReadAt, pbdRevision])
 
   // Filter by connectionId if specified in path
-  const srs = pathConnectionId ? allSrs.filter((sr) => sr.connectionId === pathConnectionId) : allSrs
+  const currentPbds = pbds?.scope === pbdScope ? pbds.records.filter((pbd) => pbd.host === hostRef) : []
+  const srs = allSrs.filter((sr) => (!pathConnectionId || sr.connectionId === pathConnectionId) && (!hostRef || currentPbds.some((pbd) => pbd.SR === sr.ref)))
   const pools = pathConnectionId ? allPools.filter((p) => p.connectionId === pathConnectionId) : allPools
-  const poolName = pathConnectionId
-    ? connections.find((c) => c.id === pathConnectionId)?.poolName || connections.find((c) => c.id === pathConnectionId)?.name
-    : null
+
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
   const requestedSrRef = searchParams.get('sr')
@@ -35,7 +56,6 @@ export default function StoragePage() {
   const selectedSr = srs.find((sr) => resourceKey(sr.connectionId, sr.ref) === selectedKey) ?? null
   const selectedConnection = connections.find((connection) => connection.id === selectedSr?.connectionId)
   const [wizardOpen, setWizardOpen] = useState(false)
-  const [createConnectionId, setCreateConnectionId] = useState('')
   const detailContainer = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -52,10 +72,9 @@ export default function StoragePage() {
   const connectedConnections = connections.filter((c) => c.state === 'connected')
   const scopedConnection = pathConnectionId
     ? connectedConnections.find((c) => c.id === pathConnectionId)
-    : connectedConnections.find((connection) => connection.id === createConnectionId)
-      ?? (connectedConnections.length === 1 ? connectedConnections[0] : null)
+    : connectedConnections.length === 1 ? connectedConnections[0] : null
   const wizardConnectionId = scopedConnection?.id ?? ''
-  const wizardHostRef = allHosts.find((h) => h.connectionId === wizardConnectionId)?.ref ?? ''
+  const wizardHostRef = hostRef || allHosts.find((h) => h.connectionId === wizardConnectionId)?.ref || ''
   const wizardTitle = wizardConnectionId
     ? `目标资源池：${scopedConnection?.poolName || scopedConnection?.name || wizardConnectionId}`
     : '请先选择单个资源池'
@@ -89,31 +108,21 @@ export default function StoragePage() {
 
   return (
     <div className="space-y-4">
+      {hostRef && pbdLoading && <p role="status" className="text-sm text-muted-foreground">正在读取主机存储连接…</p>}
+      {hostRef && pbdError && <div role="alert" className="break-words text-sm text-warning">主机存储连接读取失败。{pbdError}
+        <button type="button" onClick={() => setPbdRevision((value) => value + 1)} className="ml-2 underline">重新读取存储连接</button>
+      </div>}
       {/* Header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="min-w-0">
-          <h1 className="text-xl font-semibold text-foreground">{poolName ? `${poolName} · 存储` : '存储'}</h1>
-          <p className="text-muted-foreground text-sm mt-0.5">
-            {srs.length} 个存储仓库
-          </p>
-        </div>
+        <h1 className="sr-only">存储</h1>
+        <span className="text-xs tabular-nums text-muted-foreground">{srs.length} 个</span>
         <div className="flex flex-wrap items-end gap-2">
-          {!pathConnectionId && connectedConnections.length > 1 && (
-            <label className="min-w-0 text-xs text-muted-foreground">
-              新建存储的目标资源池
-              <select aria-label="新建存储的目标资源池" value={wizardConnectionId} onChange={(event) => setCreateConnectionId(event.target.value)}
-                className="mt-1 block max-w-[260px] rounded-lg border border-input bg-muted px-2 py-1.5 text-sm text-foreground">
-                <option value="">请选择资源池</option>
-                {connectedConnections.map((connection) => <option key={connection.id} value={connection.id}>{connection.poolName || connection.name}</option>)}
-              </select>
-            </label>
-          )}
         <button
           onClick={() => {
             setWizardTarget({ connectionId: wizardConnectionId, hostRef: wizardHostRef })
             setWizardOpen(true)
           }}
-          disabled={!wizardConnectionId || !wizardHostRef}
+          disabled={!wizardConnectionId || !wizardHostRef || !!(hostRef && (pbdLoading || pbdError))}
           title={wizardTitle}
           className="flex items-center justify-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-sm text-primary-foreground transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:bg-secondary disabled:text-subtle sm:justify-start"
         >
@@ -157,6 +166,7 @@ export default function StoragePage() {
                       <h3 className="truncate font-medium text-foreground">{sr.name_label}</h3>
                       <p className="text-subtle text-sm">
                         {sr.type} · {sr.shared ? '共享' : '本地'}
+                        {hostRef && currentPbds.some((pbd) => pbd.SR === sr.ref && !pbd.currently_attached) && <span className="ml-2 text-warning">未连接</span>}
                       </p>
                       {!pathConnectionId && <p className="truncate text-xs text-subtle">{sr.poolName || sr.connectionId}</p>}
                     </div>
@@ -179,7 +189,7 @@ export default function StoragePage() {
                     />
                   </div>
                   <div className="text-xs text-subtle mt-1">
-                    {usedPercent === null ? '容量未知' : `已用 ${usedPercent}%`} · {sr.VDIs?.length || 0} 个{sr.type === 'iso' ? ' ISO 镜像' : '虚拟磁盘'} · {isSelected ? '收起详情' : '查看详情与设备'}
+                    {usedPercent === null ? '容量未知' : `已用 ${usedPercent}%`} · {sr.VDIs?.length || 0} 个{sr.type === 'iso' ? ' ISO 镜像' : '虚拟磁盘'}
                   </div>
                 </button>
 
@@ -190,7 +200,7 @@ export default function StoragePage() {
                     connectionId={sr.connectionId}
                     poolRef={poolRef}
                     isDefault={pools.some((pool) => pool.connectionId === sr.connectionId && pool.default_SR === sr.ref)}
-                    disabled={connections.find((connection) => connection.id === sr.connectionId)?.state !== 'connected'}
+                    disabled={connections.find((connection) => connection.id === sr.connectionId)?.state !== 'connected' || !!(hostRef && (pbdLoading || pbdError))}
                     onActionComplete={async () => {
                       await useMultiDataStore.getState().refreshConnection(sr.connectionId, { afterMutation: true })
                       setDetailRevision((revision) => revision + 1)
@@ -204,7 +214,7 @@ export default function StoragePage() {
             )
           })}
 
-          {srs.length === 0 && (
+          {srs.length === 0 && (!hostRef || !pbdLoading && !pbdError) && (
             <div className="bg-card border border-border rounded-xl p-8 text-center">
               <HardDrive className="w-10 h-10 text-subtle mx-auto mb-3" />
               <p className="text-muted-foreground font-medium">未找到存储仓库</p>

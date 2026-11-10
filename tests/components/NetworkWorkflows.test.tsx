@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import Sidebar from '../../src/renderer/src/components/layout/Sidebar'
 import NetworksPage from '../../src/renderer/src/pages/NetworksPage'
 import { useConnectionManagerStore } from '../../src/renderer/src/store/connectionManager.store'
 import { useMultiDataStore } from '../../src/renderer/src/store/multiData.store'
@@ -17,14 +18,14 @@ const network = {
 
 function renderPage(path = '/pool/conn-a/networks') {
   return render(<ToastProvider><MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[path]}>
-    <Routes><Route path="/pool/:connectionId/networks" element={<NetworksPage />} /><Route path="/networks" element={<NetworksPage />} /></Routes>
+    <Sidebar /><Routes><Route path="/pool/:connectionId/networks" element={<NetworksPage />} /><Route path="/networks" element={<NetworksPage />} /></Routes>
   </MemoryRouter></ToastProvider>)
 }
 
 beforeEach(() => {
   vi.clearAllMocks()
   useConnectionManagerStore.setState({
-    connections: [{ id: 'conn-a', name: 'Pool A', poolName: 'Pool A', state: 'connected', connectedAt: 1, epoch: 1 } as any],
+    connections: [{ id: 'conn-a', host: 'a.invalid', name: 'Pool A', poolName: 'Pool A', state: 'connected', connectedAt: 1, epoch: 1 } as any],
     activeConnectionId: 'conn-a',
   })
   useMultiDataStore.setState({ networks: [network], hosts: [], vms: [], domainStates: {}, refreshNetworks: vi.fn().mockResolvedValue(undefined), refreshHosts: vi.fn().mockResolvedValue(undefined), refreshVms: vi.fn().mockResolvedValue(undefined) } as any)
@@ -38,11 +39,11 @@ describe('normal network workflows', () => {
   it('lets a user choose a creation pool from the global page and explains the new network scope', async () => {
     useConnectionManagerStore.setState({ connections: [
       ...useConnectionManagerStore.getState().connections,
-      { id: 'conn-b', name: 'Pool B', poolName: 'Pool B', state: 'connected', connectedAt: 2 } as any,
+      { id: 'conn-b', host: 'b.invalid', name: 'Pool B', poolName: 'Pool B', state: 'connected', connectedAt: 2 } as any,
     ] })
     renderPage('/networks')
     expect(screen.getByRole('button', { name: '创建网络' })).toBeDisabled()
-    fireEvent.change(screen.getByRole('combobox', { name: '网络资源池' }), { target: { value: 'conn-b' } })
+    fireEvent.click(screen.getByRole('link', { name: '资源池 Pool B' }))
     fireEvent.click(screen.getByRole('button', { name: '创建网络' }))
     expect(within(screen.getByRole('dialog')).getByText('目标资源池：Pool B')).toBeInTheDocument()
     fireEvent.change(screen.getByLabelText(/名称/), { target: { value: 'Isolated lab' } })
@@ -194,7 +195,7 @@ describe('normal network workflows', () => {
     fireEvent.click(screen.getByRole('button', { name: '创建网络' }))
     expect(screen.getByRole('dialog')).toBeInTheDocument()
     await act(async () => {
-      useConnectionManagerStore.setState({ connections: [{ id: 'conn-a', name: 'Pool A', poolName: 'Pool A', state: 'disconnected' } as any] })
+      useConnectionManagerStore.setState({ connections: [{ id: 'conn-a', host: 'a.invalid', name: 'Pool A', poolName: 'Pool A', state: 'disconnected' } as any] })
     })
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(screen.getByText('Internal network')).toBeInTheDocument()

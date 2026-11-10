@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 1,
+  "kind": "xenadmin-test-gate",
+  "ok": true,
+  "toolchain": {
+    "nodeVersion": "24.22.0",
+    "npmVersion": "11.19.1",
+    "lockfileVersion": 3
+  },
+  "collection": {
+    "mode": "full",
+    "manifestChecked": true,
+    "fileCount": 209,
+    "testCount": 2438,
+    "expectedFileCount": 209,
+    "expectedTestCount": 2438,
+    "drift": {
+      "missing": [],
+      "unexpected": [],
+      "countMismatches": []
+    }
+  },
+  "tests": {
+    "passed": 2438,
+    "failed": 0,
+    "skipped": 0,
+    "todo": 0,
+    "onlyDetected": false
+  },
+  "diagnostics": {
+    "warningCount": 0,
+    "stderr": {
+      "bytes": 0,
+      "lineCount": 0
+    }
+  },
+  "errors": [],
+  "coverage": {
+    "schemaVersion": 1,
+    "kind": "xenadmin-coverage-evidence",
+    "ok": true,
+    "source": {
+      "include": [
+        "src/**/*.{ts,tsx}"
+      ],
+      "exclude": [
+        "src/**/*.d.ts",
+        "src/shared/types/**",
+        "src/renderer/src/types/**"
+      ]
+    },
+    "layers": [
+      {
+        "id": "safety",
+        "label": "Safety",
+        "fileCount": 4,
+        "totals": {
+          "lines": {
+            "covered": 802,
+            "total": 812
+          },
+          "functions": {
+            "covered": 12,
+            "total": 12
+          },
+          "branches": {
+            "covered": 33,
+            "total": 38
+          },
+          "statements": {
+            "covered": 802,
+            "total": 812
+          }
+        },
+        "actual": {
+          "lines": 98.76,
+          "functions": 100,
+          "branches": 86.84,
+          "statements": 98.76
+        },
+        "thresholds": {
+          "lines": 90,
+          "functions": 85,
+          "branches": 80,
+          "statements": 90
+        },
+        "errors": []
+      },
+      {
+        "id": "protocol",
+        "label": "Protocol",
+        "fileCount": 77,
+        "totals": {
+          "lines": {
+            "covered": 17677,
+            "total": 19025
+          },
+          "functions": {
+            "covered": 786,
+            "total": 820
+          },
+          "branches": {
+            "covered": 4956,
+            "total": 6092
+          },
+          "statements": {
+            "covered": 17677,
+            "total": 19025
+          }
+        },
+        "actual": {
+          "lines": 92.91,
+          "functions": 95.85,
+          "branches": 81.35,
+          "statements": 92.91
+        },
+        "thresholds": {
+          "lines": 75,
+          "functions": 80,
+          "branches": 70,
+          "statements": 75
+        },
+        "errors": []
+      },
+      {
+        "id": "rendererUi",
+        "label": "Renderer UI",
+        "fileCount": 162,
+        "totals": {
+          "lines": {
+            "covered": 23755,
+            "total": 28798
+          },
+          "functions": {
+            "covered": 896,
+            "total": 1422
+          },
+          "branches": {
+            "covered": 6047,
+            "total": 7248
+          },
+          "statements": {
+            "covered": 23755,
+            "total": 28798
+          }
+        },
+        "actual": {
+          "lines": 82.48,
+          "functions": 63,
+          "branches": 83.42,
+          "statements": 82.48
+        },
+        "thresholds": {
+          "lines": 45,
+          "functions": 30,
+          "branches": 60,
+          "statements": 45
+        },
+        "errors": []
+      },
+      {
+        "id": "other",
+        "label": "Other",
+        "fileCount": 39,
+        "totals": {
+          "lines": {
+            "covered": 9874,
+            "total": 10245
+          },
+          "functions": {
+            "covered": 563,
+            "total": 580
+          },
+          "branches": {
+            "covered": 1908,
+            "total": 2142
+          },
+          "statements": {
+            "covered": 9874,
+            "total": 10245
+          }
+        },
+        "actual": {
+          "lines": 96.37,
+          "functions": 97.06,
+          "branches": 89.07,
+          "statements": 96.37
+        },
+        "thresholds": {
+          "lines": 45,
+          "functions": 40,
+          "branches": 60,
+          "statements": 45
+        },
+        "errors": []
+      }
+    ],
+    "errors": [],
+    "unverifiedBoundaries": [
+      "覆盖率不替代 Published XML-RPC 或 HTTP 协议契约证据",
+      "覆盖率不替代真实 Electron 与打包应用运行证据",
+      "覆盖率不替代参考服务器或实机 mutation 验证"
+    ]
+  }
+}

@@ -6,6 +6,7 @@ import NetworksPage from '../../src/renderer/src/pages/NetworksPage'
 import StoragePage from '../../src/renderer/src/pages/StoragePage'
 import VmDetailPage from '../../src/renderer/src/pages/VmDetailPage'
 import HostDetailPage from '../../src/renderer/src/pages/HostDetailPage'
+import Sidebar from '../../src/renderer/src/components/layout/Sidebar'
 import Breadcrumb from '../../src/renderer/src/components/layout/Breadcrumb'
 import { useConnectionManagerStore } from '../../src/renderer/src/store/connectionManager.store'
 import { useMultiDataStore } from '../../src/renderer/src/store/multiData.store'
@@ -17,8 +18,8 @@ const routerFuture = {
 } as const
 
 vi.mock('../../src/renderer/src/components/wizard/CreateVmWizard', () => ({
-  CreateVmWizard: ({ connectionId }: { connectionId: string }) => (
-    <div data-testid="create-vm-connection">{connectionId}</div>
+  CreateVmWizard: ({ connectionId, initialHostRef }: { connectionId: string; initialHostRef?: string }) => (
+    <div data-testid="create-vm-connection" data-host={initialHostRef}>{connectionId}</div>
   ),
 }))
 
@@ -141,7 +142,7 @@ function SwitchVmPool() {
 
 function LocationProbe() {
   const location = useLocation()
-  return <div data-testid="location">{location.pathname}</div>
+  return <div data-testid="location">{location.pathname + location.search}</div>
 }
 
 function userTemplate(
@@ -345,20 +346,14 @@ describe('pool-scoped pages', () => {
     expect(screen.getByTestId('import-vm-connection')).toHaveTextContent('')
   })
 
-  it('uses the selected connection filter for global VM create and import actions', () => {
+  it('uses the sidebar scope for VM create and import actions', () => {
     keepUnrelatedTemplateLoadingPending()
-    render(
-      <MemoryRouter future={routerFuture} initialEntries={['/vms']}>
-        <Routes>
-          <Route path="/vms" element={<VmsPage />} />
-        </Routes>
-      </MemoryRouter>,
-    )
-
-    fireEvent.change(screen.getByDisplayValue('全部资源池'), { target: { value: 'conn-b' } })
-
-    expect(screen.getByRole('button', { name: 'Create new virtual machine' })).not.toBeDisabled()
-    expect(screen.getByRole('button', { name: 'Import virtual machine' })).not.toBeDisabled()
+    render(<MemoryRouter future={routerFuture} initialEntries={['/vms']}>
+      <Sidebar /><Routes><Route path="/vms" element={<VmsPage />} /><Route path="/pool/:connectionId/vms" element={<VmsPage />} /></Routes>
+    </MemoryRouter>)
+    fireEvent.click(screen.getByRole('link', { name: '资源池 Pool B' }))
+    expect(screen.getByRole('button', { name: 'Create new virtual machine' })).toBeEnabled()
+    expect(screen.getByRole('button', { name: 'Import virtual machine' })).toBeEnabled()
     expect(screen.getByTestId('create-vm-connection')).toHaveTextContent('conn-b')
     expect(screen.getByTestId('import-vm-connection')).toHaveTextContent('conn-b')
   })
@@ -922,12 +917,93 @@ describe('pool-scoped pages', () => {
     fireEvent.mouseDown(screen.getByRole('tab', { name: '补丁' }), { button: 0 })
     expect(await screen.findByTestId('host-patches-connection')).toHaveTextContent('conn-b')
 
-    fireEvent.mouseDown(screen.getByRole('tab', { name: '高可用' }), { button: 0 })
-    expect(await screen.findByTestId('ha-settings-connection')).toHaveTextContent('conn-b')
+    expect(screen.queryByRole('tab', { name: '高可用' })).not.toBeInTheDocument()
 
     fireEvent.click(screen.getByTitle('返回主机列表'))
 
     expect(screen.getByTestId('location')).toHaveTextContent('/pool/conn-b/hosts')
+  })
+
+  it('redirects the legacy host HA link to the same pool settings', async () => {
+    render(<MemoryRouter future={routerFuture} initialEntries={['/pool/conn-b/hosts/OpaqueRef%3Ahost?tab=ha']}><LocationProbe /><Routes>
+      <Route path="/pool/:connectionId/hosts/:ref" element={<HostDetailPage />} /><Route path="/pool/:connectionId/settings" element={<div>池设置目的地</div>} />
+    </Routes></MemoryRouter>)
+    expect(await screen.findByText('池设置目的地')).toBeInTheDocument()
+    expect(screen.getByTestId('location')).toHaveTextContent('/pool/conn-b/settings?tab=ha')
+  })
+
+  it('opens the host information directly and retains resource tabs in its URL', async () => {
+    render(<MemoryRouter future={routerFuture} initialEntries={['/pool/conn-b/hosts/OpaqueRef%3Ahost']}><LocationProbe /><Routes>
+      <Route path="/pool/:connectionId/hosts/:ref" element={<HostDetailPage />} />
+    </Routes></MemoryRouter>)
+    expect(await screen.findByText('Host B')).toBeInTheDocument()
+    expect(screen.getByText('b.example')).toBeInTheDocument()
+    for (const name of ['概览', '虚拟机', '网络', '存储', '监控', '补丁']) expect(screen.getByRole('tab', { name })).toBeInTheDocument()
+    await act(async () => fireEvent.mouseDown(screen.getByRole('tab', { name: '虚拟机' }), { button: 0 }))
+    expect(screen.getByTestId('location')).toHaveTextContent('?tab=vms')
+    expect(screen.getByTestId('create-vm-connection')).toHaveAttribute('data-host', 'OpaqueRef:host')
+  })
+
+  it('returns from VM details to the original host VM tab with its search state', async () => {
+    const vmListPath = '/pool/conn-b/hosts/OpaqueRef%3Ahost?tab=vms&search=VM'
+    render(<MemoryRouter future={routerFuture} initialEntries={[{ pathname: '/pool/conn-b/vms/OpaqueRef%3Avm', state: { vmListPath } }]}><LocationProbe /><Routes>
+      <Route path="/pool/:connectionId/vms/:ref" element={<VmDetailPage />} />
+      <Route path="/pool/:connectionId/hosts/:ref" element={<div>主机虚拟机清单</div>} />
+    </Routes></MemoryRouter>)
+    expect(await screen.findByText('VM B')).toBeInTheDocument()
+    fireEvent.click(screen.getByTitle('返回 VM 列表'))
+    expect(screen.getByTestId('location')).toHaveTextContent(vmListPath)
+  })
+
+  it('shows host storage through PBD relations and keeps its detail selection in the host tab', async () => {
+    window.xapi.pbd = { ...window.xapi.pbd, list: vi.fn().mockResolvedValue([
+      { host: 'OpaqueRef:host', SR: 'OpaqueRef:same-sr', currently_attached: false },
+      { host: 'different-host', SR: 'other-sr', currently_attached: true },
+    ]) }
+    useMultiDataStore.setState((state) => ({ srs: [...state.srs, { ...state.srs.find((sr) => sr.connectionId === 'conn-b')!, ref: 'other-sr', name_label: 'Other host storage' }] }))
+    render(<MemoryRouter future={routerFuture} initialEntries={['/pool/conn-b/hosts/OpaqueRef%3Ahost?tab=storage']}><LocationProbe /><Routes>
+      <Route path="/pool/:connectionId/hosts/:ref" element={<HostDetailPage />} />
+    </Routes></MemoryRouter>)
+    expect(await screen.findByRole('button', { name: '查看存储仓库 SR B' })).toBeInTheDocument()
+    expect(screen.queryByText('Other host storage')).not.toBeInTheDocument()
+    expect(screen.getByText('未连接')).toBeInTheDocument()
+    expect(screen.getByTestId('create-sr-target')).toHaveTextContent('conn-b:OpaqueRef:host')
+    fireEvent.click(screen.getByRole('button', { name: '查看存储仓库 SR B' }))
+    expect(screen.getByTestId('location')).toHaveTextContent('tab=storage&sr=OpaqueRef%3Asame-sr')
+  })
+
+  it('shows storage relation failures and retries without reporting an empty inventory', async () => {
+    window.xapi.pbd = { ...window.xapi.pbd, list: vi.fn().mockRejectedValueOnce(new Error('PBD denied')).mockResolvedValue([]) }
+    render(<MemoryRouter future={routerFuture} initialEntries={['/pool/conn-b/hosts/OpaqueRef%3Ahost?tab=storage']}><Routes>
+      <Route path="/pool/:connectionId/hosts/:ref" element={<HostDetailPage />} />
+    </Routes></MemoryRouter>)
+    expect(await screen.findByRole('alert')).toHaveTextContent('PBD denied')
+    expect(screen.queryByText('未找到存储仓库')).not.toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: '重新读取存储连接' }))
+    expect(await screen.findByText('未找到存储仓库')).toBeInTheDocument()
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  })
+
+  it('uses the selected host PIF for network link state and retains pool-wide deletion guards', async () => {
+    const pifs = [{ ref: 'pif-b', host: 'OpaqueRef:host', network: 'net-b', device: 'eth9', linkState: 'disconnected', IP: 'b.example' }]
+    window.xapi.network.listPifs = vi.fn().mockResolvedValue(pifs)
+    useMultiDataStore.setState({ networks: [
+      { ref: 'net-b', name_label: 'Host B network', connectionId: 'conn-b', PIFs: ['pif-b'], VIFs: [], linkStatus: 'connected', MTU: 1500 },
+      { ref: 'net-other', name_label: 'Other host network', connectionId: 'conn-b', PIFs: ['pif-other'], VIFs: [], linkStatus: 'connected', MTU: 1500 },
+      { ref: 'internal', name_label: 'Internal', connectionId: 'conn-b', PIFs: [], VIFs: [], MTU: 1500 },
+    ] as any })
+    render(<MemoryRouter future={routerFuture} initialEntries={['/pool/conn-b/hosts/OpaqueRef%3Ahost?tab=networks']}><LocationProbe /><Routes>
+      <Route path="/pool/:connectionId/hosts/:ref" element={<HostDetailPage />} />
+    </Routes></MemoryRouter>)
+    const name = await screen.findByRole('button', { name: '查看网络 Host B network' })
+    await waitFor(() => expect(name.closest('tr')).toHaveTextContent('eth9'))
+    expect(name.closest('tr')).toHaveTextContent('断开')
+    const other = screen.getByRole('button', { name: '查看网络 Other host network' }).closest('tr')!
+    expect(within(other).getByText('无主机接口')).toBeInTheDocument()
+    expect(within(other).getByRole('button', { name: '删除网络 Other host network' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: '查看网络 Internal' })).toBeInTheDocument()
+    fireEvent.click(name)
+    expect(screen.getByTestId('location')).toHaveTextContent('tab=networks&network=net-b')
   })
 
   it('does not silently pick the first connection for ambiguous legacy VM detail URLs', async () => {
@@ -944,15 +1020,31 @@ describe('pool-scoped pages', () => {
     expect(window.xapi.vm.getRecord).not.toHaveBeenCalled()
   })
 
-  it('keeps the pool selector aligned with the route and navigates when its scope changes', async () => {
+  it('keeps the sidebar scope aligned with the route and navigates when its scope changes', async () => {
     render(<MemoryRouter future={routerFuture} initialEntries={['/pool/conn-b/vms']}>
-      <LocationProbe />
+      <LocationProbe /><Sidebar />
       <Routes><Route path="/pool/:connectionId/vms" element={<VmsPage />} /></Routes>
     </MemoryRouter>)
-    await waitFor(() => expect(screen.getByRole('combobox', { name: '资源池筛选' })).toHaveValue('conn-b'))
-    fireEvent.change(screen.getByRole('combobox', { name: '资源池筛选' }), { target: { value: 'conn-a' } })
+    await waitFor(() => expect(screen.getByRole('link', { name: '资源池 Pool B' })).toHaveAttribute('aria-current', 'page'))
+    fireEvent.click(screen.getByRole('link', { name: '资源池 Pool A' }))
     expect(screen.getByTestId('location')).toHaveTextContent('/pool/conn-a/vms')
     expect(screen.getByTestId('create-vm-connection')).toHaveTextContent('conn-a')
+  })
+
+  it('restores search, resource types and sorting when returning from VM details', async () => {
+    const vm = { ref: 'OpaqueRef:vm', uuid: 'vm-b', name_label: 'VM B', power_state: 'Halted', connectionId: 'conn-b', poolName: 'Pool B', is_a_template: false, is_a_snapshot: false, is_control_domain: false, allowed_operations: [], current_operations: {}, VBDs: [], VIFs: [] }
+    useMultiDataStore.setState({ vms: [vm] as any })
+    vi.mocked(window.xapi.vm.getRecord).mockResolvedValue(vm as any)
+    const path = '/pool/conn-b/vms?search=VM+B&sort=name_label.desc&types=vm'
+    render(<MemoryRouter future={routerFuture} initialEntries={[path]}><LocationProbe /><Routes>
+      <Route path="/pool/:connectionId/vms" element={<VmsPage />} /><Route path="/pool/:connectionId/vms/:ref" element={<VmDetailPage />} />
+    </Routes></MemoryRouter>)
+    fireEvent.click(await screen.findByRole('button', { name: 'VM B' }))
+    const back = await screen.findByTitle('返回 VM 列表')
+    await act(async () => { fireEvent.click(back) })
+    expect(screen.getByTestId('location')).toHaveTextContent(path)
+    expect(screen.getByRole('textbox', { name: 'Filter items' })).toHaveValue('VM B')
+    expect(screen.getByRole('columnheader', { name: /名称/ })).toHaveAttribute('aria-sort', 'descending')
   })
 
   it('shows the pool name and scoped links in breadcrumbs', () => {
@@ -962,7 +1054,7 @@ describe('pool-scoped pages', () => {
       </MemoryRouter>,
     )
 
-    expect(screen.getByRole('link', { name: 'Pool B' })).toHaveAttribute('href', '/pool/conn-b/hosts')
+    expect(screen.getByRole('link', { name: 'Pool B' })).toHaveAttribute('href', '/pool/conn-b/vms')
     expect(screen.getByRole('link', { name: '虚拟机' })).toHaveAttribute('href', '/pool/conn-b/vms')
   })
 })

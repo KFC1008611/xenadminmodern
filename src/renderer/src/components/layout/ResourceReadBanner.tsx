@@ -4,16 +4,17 @@ import { useConnectionManagerStore } from '../../store/connectionManager.store'
 import { ReconnectConnection } from '../connection/ReconnectConnection'
 
 const labels: Record<ResourceDomain, string> = { vms: '虚拟机', hosts: '主机', srs: '存储仓库', networks: '网络', tasks: '资源池任务', pools: '资源池' }
-const routeDomains: Record<string, ResourceDomain[]> = { vms: ['vms'], hosts: ['hosts'], storage: ['srs'], networks: ['networks'], tasks: ['tasks'], dashboard: ['vms', 'hosts', 'srs', 'networks', 'tasks', 'pools'], 'pool-manager': ['hosts', 'pools'] }
+const routeDomains: Record<string, ResourceDomain[]> = { vms: ['vms'], hosts: ['hosts'], storage: ['srs'], networks: ['networks'], tasks: ['tasks'], settings: ['hosts', 'pools'] }
 
 export function ResourceReadBanner() {
-  const { pathname } = useLocation()
+  const { pathname, search } = useLocation()
   const states = useMultiDataStore((state) => state.domainStates)
   const refreshConnection = useMultiDataStore((state) => state.refreshConnection)
   const connections = useConnectionManagerStore((state) => state.connections)
   const segments = pathname.split('/').filter(Boolean)
   const poolId = segments[0] === 'pool' ? decodeURIComponent(segments[1] || '') : null
-  const domains = routeDomains[poolId ? segments[2] : segments[0]] || []
+  const hostTab = poolId && segments[2] === 'hosts' && segments[3] ? new URLSearchParams(search).get('tab') : null
+  const domains = !poolId && segments[0] === 'settings' ? [] : routeDomains[hostTab || (poolId ? segments[2] : segments[0])] || []
   const selected = poolId ? connections.filter((item) => item.id === poolId) : connections
   const issues = selected.flatMap((connection) => {
     const name = connection.poolName || connection.name || connection.host

@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { AppearanceMenu } from '../../src/renderer/src/components/layout/AppearanceMenu'
+import SettingsPage from '../../src/renderer/src/pages/SettingsPage'
 import TopBar from '../../src/renderer/src/components/layout/TopBar'
 import ConnectPage from '../../src/renderer/src/pages/ConnectPage'
 import { initializeTheme, THEME_STORAGE_KEY, useThemeStore } from '../../src/renderer/src/store/theme.store'
@@ -99,14 +100,14 @@ describe('appearance preference and top menu', () => {
     expect(trigger).toHaveFocus()
   })
 
-  it('provides appearance in the connected top bar while preserving refresh and disconnect actions', () => {
+  it('keeps refresh in the top bar and saves appearance from settings', () => {
     useConnectionManagerStore.setState({ connections: [], activeConnectionId: null })
     useMultiDataStore.setState({ hosts: [], vms: [], pools: [] })
-    render(<MemoryRouter future={future}><TopBar /></MemoryRouter>)
-    const header = screen.getByRole('banner')
-    expect(within(header).getByRole('button', { name: '外观' })).toBeInTheDocument()
-    expect(within(header).getByRole('button', { name: '刷新' })).toBeDisabled()
-    expect(within(header).getByRole('button', { name: /断开资源池/ })).toBeDisabled()
+    render(<MemoryRouter future={future}><TopBar /><SettingsPage /></MemoryRouter>)
+    expect(within(screen.getByRole('banner')).getByRole('button', { name: '刷新资源' })).toBeDisabled()
+    fireEvent.click(screen.getByRole('button', { name: '深色' }))
+    expect(window.localStorage.getItem(THEME_STORAGE_KEY)).toBe('dark')
+    expect(screen.getByRole('button', { name: '深色' })).toHaveAttribute('aria-pressed', 'true')
   })
 
   it('provides the same top menu before connecting to any server', async () => {

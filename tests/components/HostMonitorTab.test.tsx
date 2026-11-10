@@ -3,7 +3,7 @@
  * Tests rendering of metric sections, time range selector, auto-refresh, stats display.
  */
 import React from 'react'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { act, render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest'
 import { HostMonitorTab } from '../../src/renderer/src/components/host/HostMonitorTab'
 
@@ -16,6 +16,8 @@ const mockGetHostStats = vi.fn().mockReturnValue(null)
 
 vi.mock('../../src/renderer/src/store/metrics.store', () => ({
   useMetricsStore: () => ({
+    collectionErrors: {},
+    startCollection: vi.fn(),
     timeRange: '1h',
     setTimeRange: mockSetTimeRange,
     fetchRangeData: mockFetchRangeData,
@@ -122,6 +124,23 @@ describe('HostMonitorTab', () => {
     mockGetRangeData.mockReturnValue([])
     await renderTab()
     expect(screen.getByText('暂无监控数据')).toBeTruthy()
+  })
+
+  it('keeps collection failures visible and offers an explicit reread', async () => {
+    mockGetCollectionError.mockResolvedValue('RRD authentication failed')
+    await renderTab()
+    expect(await screen.findByRole('alert')).toHaveTextContent('RRD authentication failed')
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: '重新读取监控' })) })
+    expect(mockGetCollectionError).toHaveBeenCalledTimes(2)
+  })
+
+  it('hides empty statistics while preserving an observed zero', async () => {
+    mockGetHostStats.mockReturnValue({ sampleCount: 0, current: 0, max: 0, min: 0, avg: 0 })
+    const view = await renderTab()
+    expect(screen.queryByText(/当前 0.0%/)).not.toBeInTheDocument()
+    mockGetHostStats.mockReturnValue({ sampleCount: 1, current: 0, max: 0, min: 0, avg: 0 })
+    view.rerender(<HostMonitorTab {...defaultProps} />)
+    expect(screen.getAllByText(/当前 0.0%/).length).toBeGreaterThan(0)
   })
 
   it('renders refresh button', async () => {

@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { MemoryRouter, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import Sidebar from '../../src/renderer/src/components/layout/Sidebar'
 import StoragePage from '../../src/renderer/src/pages/StoragePage'
 import { ToastContext } from '../../src/renderer/src/components/toast/ToastProvider'
 import { useMultiDataStore } from '../../src/renderer/src/store/multiData.store'
@@ -31,7 +32,7 @@ function Destination() { const location = useLocation(); return <p data-testid="
 function show(path = '/pool/a/storage') {
   return render(<ToastContext.Provider value={{ addToast: vi.fn() }}><MemoryRouter initialEntries={[path]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
     <HistoryControls />
-    <Routes>
+    <Sidebar /><Routes>
       <Route path="/storage" element={<StoragePage />} />
       <Route path="/pool/:connectionId/storage" element={<StoragePage />} />
       <Route path="/pool/:connectionId/vms/:ref" element={<Destination />} />
@@ -63,7 +64,7 @@ beforeEach(() => {
   pbdList.mockResolvedValue([])
   setDefault.mockResolvedValue(undefined)
   window.xapi = { storage: { listVdis, listSrs, setVdiNameLabel: rename }, sr: { create, scan, probeNfs, setDefault, updateIdentity }, pbd: { list: pbdList }, iso: { list: isoList } } as any
-  useConnectionManagerStore.setState({ connections: ['a', 'b'].map((id) => ({ id, state: 'connected', poolName: `Pool ${id.toUpperCase()}`, name: `Endpoint ${id}` })) as any })
+  useConnectionManagerStore.setState({ connections: ['a', 'b'].map((id) => ({ id, host: `${id}.invalid`, state: 'connected', poolName: `Pool ${id.toUpperCase()}`, name: `Endpoint ${id}` })) as any })
   useMultiDataStore.setState({ srs: [repository(), repository('b')] as any, domainStates: {},
     hosts: ['a', 'b'].map((id) => ({ connectionId: id, ref: `OpaqueRef:host-${id}`, name_label: `Host ${id.toUpperCase()}` })) as any,
     pools: [{ connectionId: 'a', ref: 'OpaqueRef:pool', default_SR: 'OpaqueRef:other' }] as any,
@@ -83,7 +84,7 @@ describe('human storage tasks', () => {
     })
     show('/storage')
     expect(screen.getByRole('button', { name: '新建存储' })).toBeDisabled()
-    fireEvent.change(screen.getByRole('combobox', { name: '新建存储的目标资源池' }), { target: { value: 'b' } })
+    fireEvent.click(screen.getByRole('link', { name: '资源池 Pool B' }))
     startNfs()
     next()
     fireEvent.click(screen.getByRole('button', { name: '扫描存储目标' }))
@@ -284,7 +285,7 @@ describe('storage identity and reading recovery tasks', () => {
 
 describe('SR edit connection lifetime', () => {
   const reconnect = () => {
-    useConnectionManagerStore.setState({ connections: [{ id: 'a', state: 'connected', poolName: 'Reconnected pool', epoch: 2 }] as any })
+    useConnectionManagerStore.setState({ connections: [{ id: 'a', host: 'a.invalid', state: 'connected', poolName: 'Reconnected pool', epoch: 2 }] as any })
     useMultiDataStore.setState({ srs: [{ ...repository(), name_label: 'Current lifetime SR', name_description: 'Current description' }] as any })
   }
   it('ignores a save reply from an editor unmounted by reconnect', async () => {

@@ -1,0 +1,3221 @@
+{
+  "matrix": [
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0?tab=vms",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "虚拟机与模板"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0?tab=networks",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "网络"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0?tab=storage",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "存储"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0?tab=monitor",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0?tab=patches",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/alerts?tab=rules",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/alerts?tab=history",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/alerts?tab=notify",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/vms/vm-0?tab=memory",
+      "overflow": false,
+      "headings": [
+        "ubuntu-web-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/vms/vm-0?tab=monitor",
+      "overflow": false,
+      "headings": [
+        "ubuntu-web-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/vms",
+      "overflow": false,
+      "headings": [
+        "虚拟机与模板"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/vms",
+      "overflow": false,
+      "headings": [
+        "虚拟机与模板"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/hosts",
+      "overflow": false,
+      "headings": [
+        "主机"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts",
+      "overflow": false,
+      "headings": [
+        "主机"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/storage",
+      "overflow": false,
+      "headings": [
+        "存储"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/networks",
+      "overflow": false,
+      "headings": [
+        "网络"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/settings",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/settings?tab=access",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/settings?tab=ha",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/tasks",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/tasks?tab=server",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/tasks?tab=batch",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/alerts",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/settings",
+      "overflow": false,
+      "headings": [
+        "设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/vms/vm-0",
+      "overflow": false,
+      "headings": [
+        "ubuntu-web-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/hosts/host-prod-0?tab=vms",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "虚拟机与模板"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/hosts/host-prod-0?tab=networks",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "网络"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/hosts/host-prod-0?tab=storage",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "存储"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/hosts/host-prod-0?tab=monitor",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/hosts/host-prod-0?tab=patches",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/alerts?tab=rules",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/alerts?tab=history",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/alerts?tab=notify",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/vms/vm-0?tab=memory",
+      "overflow": false,
+      "headings": [
+        "ubuntu-web-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/vms/vm-0?tab=monitor",
+      "overflow": false,
+      "headings": [
+        "ubuntu-web-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/vms",
+      "overflow": false,
+      "headings": [
+        "虚拟机与模板"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/vms",
+      "overflow": false,
+      "headings": [
+        "虚拟机与模板"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/hosts",
+      "overflow": false,
+      "headings": [
+        "主机"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/hosts",
+      "overflow": false,
+      "headings": [
+        "主机"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/storage",
+      "overflow": false,
+      "headings": [
+        "存储"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/networks",
+      "overflow": false,
+      "headings": [
+        "网络"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/settings",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/settings?tab=access",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/settings?tab=ha",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/tasks",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/tasks?tab=server",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/tasks?tab=batch",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/alerts",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/settings",
+      "overflow": false,
+      "headings": [
+        "设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/vms/vm-0",
+      "overflow": false,
+      "headings": [
+        "ubuntu-web-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/hosts/host-prod-0",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/hosts/host-prod-0?tab=vms",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "虚拟机与模板"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/hosts/host-prod-0?tab=networks",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "网络"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/hosts/host-prod-0?tab=storage",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "存储"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/hosts/host-prod-0?tab=monitor",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/hosts/host-prod-0?tab=patches",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/alerts?tab=rules",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/alerts?tab=history",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/alerts?tab=notify",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/vms/vm-0?tab=memory",
+      "overflow": false,
+      "headings": [
+        "ubuntu-web-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/vms/vm-0?tab=monitor",
+      "overflow": false,
+      "headings": [
+        "ubuntu-web-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/vms",
+      "overflow": false,
+      "headings": [
+        "虚拟机与模板"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/vms",
+      "overflow": false,
+      "headings": [
+        "虚拟机与模板"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/hosts",
+      "overflow": false,
+      "headings": [
+        "主机"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/hosts",
+      "overflow": false,
+      "headings": [
+        "主机"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/storage",
+      "overflow": false,
+      "headings": [
+        "存储"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/networks",
+      "overflow": false,
+      "headings": [
+        "网络"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/settings",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/settings?tab=access",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/settings?tab=ha",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/tasks",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/tasks?tab=server",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/tasks?tab=batch",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/alerts",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/settings",
+      "overflow": false,
+      "headings": [
+        "设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/vms/vm-0",
+      "overflow": false,
+      "headings": [
+        "ubuntu-web-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/hosts/host-prod-0",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/hosts/host-prod-0?tab=vms",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "虚拟机与模板"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/hosts/host-prod-0?tab=networks",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "网络"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/hosts/host-prod-0?tab=storage",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "存储"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/hosts/host-prod-0?tab=monitor",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/hosts/host-prod-0?tab=patches",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/alerts?tab=rules",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/alerts?tab=history",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/alerts?tab=notify",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/vms/vm-0?tab=memory",
+      "overflow": false,
+      "headings": [
+        "ubuntu-web-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/vms/vm-0?tab=monitor",
+      "overflow": false,
+      "headings": [
+        "ubuntu-web-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/vms",
+      "overflow": false,
+      "headings": [
+        "虚拟机与模板"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/vms",
+      "overflow": false,
+      "headings": [
+        "虚拟机与模板"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/hosts",
+      "overflow": false,
+      "headings": [
+        "主机"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/hosts",
+      "overflow": false,
+      "headings": [
+        "主机"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/storage",
+      "overflow": false,
+      "headings": [
+        "存储"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/networks",
+      "overflow": false,
+      "headings": [
+        "网络"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/settings",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/settings?tab=access",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/settings?tab=ha",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/tasks",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/tasks?tab=server",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/tasks?tab=batch",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/alerts",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/settings",
+      "overflow": false,
+      "headings": [
+        "设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/vms/vm-0",
+      "overflow": false,
+      "headings": [
+        "ubuntu-web-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/hosts/host-prod-0",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0?tab=vms",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "虚拟机与模板"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0?tab=networks",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "网络"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0?tab=storage",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "存储"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0?tab=monitor",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0?tab=patches",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/alerts?tab=rules",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/alerts?tab=history",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/alerts?tab=notify",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/vms/vm-0?tab=memory",
+      "overflow": false,
+      "headings": [
+        "ubuntu-web-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/vms/vm-0?tab=monitor",
+      "overflow": false,
+      "headings": [
+        "ubuntu-web-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/vms",
+      "overflow": false,
+      "headings": [
+        "虚拟机与模板"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/vms",
+      "overflow": false,
+      "headings": [
+        "虚拟机与模板"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/hosts",
+      "overflow": false,
+      "headings": [
+        "主机"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts",
+      "overflow": false,
+      "headings": [
+        "主机"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/storage",
+      "overflow": false,
+      "headings": [
+        "存储"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/networks",
+      "overflow": false,
+      "headings": [
+        "网络"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/settings",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/settings?tab=access",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/settings?tab=ha",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/tasks",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/tasks?tab=server",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/tasks?tab=batch",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/alerts",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/settings",
+      "overflow": false,
+      "headings": [
+        "设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/vms/vm-0",
+      "overflow": false,
+      "headings": [
+        "ubuntu-web-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/hosts/host-prod-0?tab=vms",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "虚拟机与模板"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/hosts/host-prod-0?tab=networks",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "网络"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/hosts/host-prod-0?tab=storage",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "存储"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/hosts/host-prod-0?tab=monitor",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/hosts/host-prod-0?tab=patches",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/alerts?tab=rules",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/alerts?tab=history",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/alerts?tab=notify",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/vms/vm-0?tab=memory",
+      "overflow": false,
+      "headings": [
+        "ubuntu-web-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/vms/vm-0?tab=monitor",
+      "overflow": false,
+      "headings": [
+        "ubuntu-web-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/vms",
+      "overflow": false,
+      "headings": [
+        "虚拟机与模板"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/vms",
+      "overflow": false,
+      "headings": [
+        "虚拟机与模板"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/hosts",
+      "overflow": false,
+      "headings": [
+        "主机"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/hosts",
+      "overflow": false,
+      "headings": [
+        "主机"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/storage",
+      "overflow": false,
+      "headings": [
+        "存储"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/networks",
+      "overflow": false,
+      "headings": [
+        "网络"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/settings",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/settings?tab=access",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/settings?tab=ha",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/tasks",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/tasks?tab=server",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/tasks?tab=batch",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/alerts",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/settings",
+      "overflow": false,
+      "headings": [
+        "设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/vms/vm-0",
+      "overflow": false,
+      "headings": [
+        "ubuntu-web-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 800,
+      "route": "/pool/prod/hosts/host-prod-0",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/hosts/host-prod-0?tab=vms",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "虚拟机与模板"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/hosts/host-prod-0?tab=networks",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "网络"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/hosts/host-prod-0?tab=storage",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "存储"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/hosts/host-prod-0?tab=monitor",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/hosts/host-prod-0?tab=patches",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/alerts?tab=rules",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/alerts?tab=history",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/alerts?tab=notify",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/vms/vm-0?tab=memory",
+      "overflow": false,
+      "headings": [
+        "ubuntu-web-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/vms/vm-0?tab=monitor",
+      "overflow": false,
+      "headings": [
+        "ubuntu-web-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/vms",
+      "overflow": false,
+      "headings": [
+        "虚拟机与模板"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/vms",
+      "overflow": false,
+      "headings": [
+        "虚拟机与模板"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/hosts",
+      "overflow": false,
+      "headings": [
+        "主机"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/hosts",
+      "overflow": false,
+      "headings": [
+        "主机"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/storage",
+      "overflow": false,
+      "headings": [
+        "存储"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/networks",
+      "overflow": false,
+      "headings": [
+        "网络"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/settings",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/settings?tab=access",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/settings?tab=ha",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/tasks",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/tasks?tab=server",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/tasks?tab=batch",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/alerts",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/settings",
+      "overflow": false,
+      "headings": [
+        "设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/vms/vm-0",
+      "overflow": false,
+      "headings": [
+        "ubuntu-web-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "route": "/pool/prod/hosts/host-prod-0",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/hosts/host-prod-0?tab=vms",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "虚拟机与模板"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/hosts/host-prod-0?tab=networks",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "网络"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/hosts/host-prod-0?tab=storage",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "存储"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/hosts/host-prod-0?tab=monitor",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/hosts/host-prod-0?tab=patches",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/alerts?tab=rules",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/alerts?tab=history",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/alerts?tab=notify",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/vms/vm-0?tab=memory",
+      "overflow": false,
+      "headings": [
+        "ubuntu-web-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/vms/vm-0?tab=monitor",
+      "overflow": false,
+      "headings": [
+        "ubuntu-web-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/vms",
+      "overflow": false,
+      "headings": [
+        "虚拟机与模板"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/vms",
+      "overflow": false,
+      "headings": [
+        "虚拟机与模板"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/hosts",
+      "overflow": false,
+      "headings": [
+        "主机"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/hosts",
+      "overflow": false,
+      "headings": [
+        "主机"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/storage",
+      "overflow": false,
+      "headings": [
+        "存储"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/networks",
+      "overflow": false,
+      "headings": [
+        "网络"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/settings",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/settings?tab=access",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/settings?tab=ha",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/tasks",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/tasks?tab=server",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/tasks?tab=batch",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/alerts",
+      "overflow": false,
+      "headings": [
+        "告警中心"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/settings",
+      "overflow": false,
+      "headings": [
+        "设置"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/vms/vm-0",
+      "overflow": false,
+      "headings": [
+        "ubuntu-web-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "route": "/pool/prod/hosts/host-prod-0",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01"
+      ],
+      "alert": [],
+      "main": true,
+      "loading": false
+    },
+    {
+      "query": "long-names",
+      "width": 1024,
+      "height": 768,
+      "route": "/vms",
+      "overflow": false,
+      "headings": [
+        "虚拟机与模板"
+      ]
+    },
+    {
+      "query": "long-names",
+      "width": 1024,
+      "height": 768,
+      "route": "/hosts",
+      "overflow": false,
+      "headings": [
+        "主机"
+      ]
+    },
+    {
+      "query": "long-names",
+      "width": 1024,
+      "height": 768,
+      "route": "/storage",
+      "overflow": false,
+      "headings": [
+        "存储"
+      ]
+    },
+    {
+      "query": "long-names",
+      "width": 1024,
+      "height": 768,
+      "route": "/networks",
+      "overflow": false,
+      "headings": [
+        "网络"
+      ]
+    },
+    {
+      "query": "long-names",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/settings?tab=access",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ]
+    },
+    {
+      "query": "long-names",
+      "width": 1024,
+      "height": 768,
+      "route": "/tasks?tab=server",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ]
+    },
+    {
+      "query": "long-names",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-"
+      ]
+    },
+    {
+      "query": "long-names",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0?tab=vms",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-",
+        "虚拟机与模板"
+      ]
+    },
+    {
+      "query": "long-names",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0?tab=networks",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-",
+        "网络"
+      ]
+    },
+    {
+      "query": "long-names",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0?tab=storage",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-resource-name-",
+        "存储"
+      ]
+    },
+    {
+      "query": "empty",
+      "width": 1024,
+      "height": 768,
+      "route": "/vms",
+      "overflow": false,
+      "headings": [
+        "虚拟机与模板"
+      ]
+    },
+    {
+      "query": "empty",
+      "width": 1024,
+      "height": 768,
+      "route": "/hosts",
+      "overflow": false,
+      "headings": [
+        "主机"
+      ]
+    },
+    {
+      "query": "empty",
+      "width": 1024,
+      "height": 768,
+      "route": "/storage",
+      "overflow": false,
+      "headings": [
+        "存储"
+      ]
+    },
+    {
+      "query": "empty",
+      "width": 1024,
+      "height": 768,
+      "route": "/networks",
+      "overflow": false,
+      "headings": [
+        "网络"
+      ]
+    },
+    {
+      "query": "empty",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/settings?tab=access",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ]
+    },
+    {
+      "query": "empty",
+      "width": 1024,
+      "height": 768,
+      "route": "/tasks?tab=server",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ]
+    },
+    {
+      "query": "empty",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0",
+      "overflow": false,
+      "headings": [
+        "主机"
+      ]
+    },
+    {
+      "query": "empty",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0?tab=vms",
+      "overflow": false,
+      "headings": [
+        "主机"
+      ]
+    },
+    {
+      "query": "empty",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0?tab=networks",
+      "overflow": false,
+      "headings": [
+        "主机"
+      ]
+    },
+    {
+      "query": "empty",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0?tab=storage",
+      "overflow": false,
+      "headings": [
+        "主机"
+      ]
+    },
+    {
+      "query": "read-error",
+      "width": 1024,
+      "height": 768,
+      "route": "/vms",
+      "overflow": false,
+      "headings": [
+        "虚拟机与模板"
+      ]
+    },
+    {
+      "query": "read-error",
+      "width": 1024,
+      "height": 768,
+      "route": "/hosts",
+      "overflow": false,
+      "headings": [
+        "主机"
+      ]
+    },
+    {
+      "query": "read-error",
+      "width": 1024,
+      "height": 768,
+      "route": "/storage",
+      "overflow": false,
+      "headings": [
+        "存储"
+      ]
+    },
+    {
+      "query": "read-error",
+      "width": 1024,
+      "height": 768,
+      "route": "/networks",
+      "overflow": false,
+      "headings": [
+        "网络"
+      ]
+    },
+    {
+      "query": "read-error",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/settings?tab=access",
+      "overflow": false,
+      "headings": [
+        "池设置"
+      ]
+    },
+    {
+      "query": "read-error",
+      "width": 1024,
+      "height": 768,
+      "route": "/tasks?tab=server",
+      "overflow": false,
+      "headings": [
+        "任务"
+      ]
+    },
+    {
+      "query": "read-error",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01"
+      ]
+    },
+    {
+      "query": "read-error",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0?tab=vms",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "虚拟机与模板"
+      ]
+    },
+    {
+      "query": "read-error",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0?tab=networks",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "网络"
+      ]
+    },
+    {
+      "query": "read-error",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0?tab=storage",
+      "overflow": false,
+      "headings": [
+        "prod-xcp-01",
+        "存储"
+      ]
+    },
+    {
+      "query": "disconnected",
+      "width": 1024,
+      "height": 768,
+      "route": "/vms",
+      "overflow": false,
+      "headings": [
+        "XCP-ng Center"
+      ]
+    },
+    {
+      "query": "disconnected",
+      "width": 1024,
+      "height": 768,
+      "route": "/hosts",
+      "overflow": false,
+      "headings": [
+        "XCP-ng Center"
+      ]
+    },
+    {
+      "query": "disconnected",
+      "width": 1024,
+      "height": 768,
+      "route": "/storage",
+      "overflow": false,
+      "headings": [
+        "XCP-ng Center"
+      ]
+    },
+    {
+      "query": "disconnected",
+      "width": 1024,
+      "height": 768,
+      "route": "/networks",
+      "overflow": false,
+      "headings": [
+        "XCP-ng Center"
+      ]
+    },
+    {
+      "query": "disconnected",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/settings?tab=access",
+      "overflow": false,
+      "headings": [
+        "XCP-ng Center"
+      ]
+    },
+    {
+      "query": "disconnected",
+      "width": 1024,
+      "height": 768,
+      "route": "/tasks?tab=server",
+      "overflow": false,
+      "headings": [
+        "XCP-ng Center"
+      ]
+    },
+    {
+      "query": "disconnected",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0",
+      "overflow": false,
+      "headings": [
+        "XCP-ng Center"
+      ]
+    },
+    {
+      "query": "disconnected",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0?tab=vms",
+      "overflow": false,
+      "headings": [
+        "XCP-ng Center"
+      ]
+    },
+    {
+      "query": "disconnected",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0?tab=networks",
+      "overflow": false,
+      "headings": [
+        "XCP-ng Center"
+      ]
+    },
+    {
+      "query": "disconnected",
+      "width": 1024,
+      "height": 768,
+      "route": "/pool/prod/hosts/host-prod-0?tab=storage",
+      "overflow": false,
+      "headings": [
+        "XCP-ng Center"
+      ]
+    }
+  ],
+  "interactions": [
+    {
+      "name": "collapsed rail retains named pool and settings links",
+      "passed": true
+    },
+    {
+      "name": "scope switch preserves VM resource type",
+      "passed": true
+    },
+    {
+      "name": "resource navigation stays in selected pool",
+      "passed": true
+    },
+    {
+      "name": "host tree opens selected host overview",
+      "passed": true
+    },
+    {
+      "name": "host VM tab lists only its related VMs",
+      "passed": true
+    },
+    {
+      "name": "switching host keeps resource tab and removes unrelated VMs",
+      "passed": true
+    },
+    {
+      "name": "host network tab shows its physical interfaces",
+      "passed": true
+    },
+    {
+      "name": "host storage does not include another hosts local SR",
+      "passed": true
+    },
+    {
+      "name": "PBD relation selects local storage on its host",
+      "passed": true
+    },
+    {
+      "name": "pool disclosure hides host children",
+      "passed": true
+    },
+    {
+      "name": "pool disclosure restores host children",
+      "passed": true
+    },
+    {
+      "name": "disconnect menu stays in viewport",
+      "passed": true
+    },
+    {
+      "name": "Escape returns menu focus",
+      "passed": true
+    },
+    {
+      "name": "task panel stays in viewport and receives focus",
+      "passed": true
+    },
+    {
+      "name": "full task history opens from notification",
+      "passed": true
+    },
+    {
+      "name": "settings applies and persists dark appearance",
+      "passed": true
+    },
+    {
+      "name": "theme survives reload",
+      "passed": true
+    },
+    {
+      "name": "create dialog is bounded and names current pool",
+      "passed": true
+    },
+    {
+      "name": "Escape closes the create dialog",
+      "passed": true
+    },
+    {
+      "name": "long-name resources remain inside desktop viewport",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

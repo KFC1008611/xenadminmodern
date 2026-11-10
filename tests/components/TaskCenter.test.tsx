@@ -1,6 +1,8 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
+import { AppearanceMenu } from '../../src/renderer/src/components/layout/AppearanceMenu'
+import TaskHistoryPage from '../../src/renderer/src/pages/TaskHistoryPage'
 import TopBar from '../../src/renderer/src/components/layout/TopBar'
 import TasksPage, { useTaskCancellationStore } from '../../src/renderer/src/pages/TasksPage'
 import { useFeedbackStore } from '../../src/renderer/src/store/feedback.store'
@@ -80,7 +82,7 @@ it('shows every progress category in one top-right panel without nested floating
   for (const label of ['普通操作', '批量任务', '导入任务 (1)', '导出任务 (1)', '复制任务 (1)', '服务器任务']) {
     expect(within(panel).getByRole('heading', { name: label })).toBeVisible()
   }
-  expect(panel.className).toContain('right-4')
+  expect(panel).toHaveClass('absolute', 'right-0', 'top-full')
   expect(panel.className).toContain('top-')
   expect(panel.querySelector('.fixed')).toBeNull()
   expect(within(panel).getByRole('button', { name: '停止后续操作' })).toBeEnabled()
@@ -95,13 +97,16 @@ it('keeps import and copy cancellation single-submit and preserves an already co
   vi.mocked(window.xapi.vm.cancelCopy).mockReturnValue(cancelCopy.promise)
   useImportWizardStore.setState({ history: [{ connectionId: 'pool', name: 'Import VM', isTemplate: false, operation: imported }] })
   vi.mocked(window.xapi.vm.copyOperations).mockResolvedValue([{ ...copyOperation, status: 'pending', cancellable: true }])
-  renderCenter()
+  renderCenter(<TaskHistoryPage />)
   await act(async () => { await Promise.resolve() })
+  expect(window.xapi.vm.copyOperations).toHaveBeenCalledTimes(2)
+  expect(window.xapi.vm.importProgress).toHaveBeenCalledOnce()
   const panel = open()
   for (const name of ['取消导入', '请求取消']) {
     const button = within(panel).getByRole('button', { name })
     fireEvent.click(button); fireEvent.click(button)
     expect(button).toBeDisabled()
+    expect(screen.getAllByRole('button', { name: '正在请求取消…' }).every((item) => item.hasAttribute('disabled'))).toBe(true)
   }
   expect(window.xapi.vm.cancelImport).toHaveBeenCalledOnce()
   expect(window.xapi.vm.cancelCopy).toHaveBeenCalledOnce()
@@ -175,7 +180,7 @@ it('never deletes live operations and re-shows a retried batch even after its ol
 })
 
 it('closes with Escape and outside clicks, returns focus, and keeps appearance controls usable', async () => {
-  renderCenter()
+  renderCenter(<AppearanceMenu />)
   await act(async () => { await Promise.resolve() })
   const panel = open()
   expect(panel).toHaveFocus()
@@ -188,4 +193,17 @@ it('closes with Escape and outside clicks, returns focus, and keeps appearance c
   fireEvent.click(screen.getByRole('button', { name: '外观' }))
   fireEvent.click(screen.getByRole('menuitemradio', { name: '深色' }))
   expect(document.documentElement).toHaveAttribute('data-theme', 'dark')
+})
+
+
+it('shows the empty operation history and uses the URL for task categories', async () => {
+  renderCenter(<TaskHistoryPage />)
+  await act(async () => { await Promise.resolve() })
+  expect(screen.getByText('暂无操作记录')).toBeVisible()
+  fireEvent.click(screen.getByRole('button', { name: '服务器任务' }))
+  expect(screen.getByRole('button', { name: '服务器任务' })).toHaveAttribute('aria-pressed', 'true')
+  fireEvent.click(screen.getByRole('button', { name: '批量任务' }))
+  expect(screen.getByText('没有批量任务历史')).toBeVisible()
+  expect(useBatchStore.getState().refreshTasks).toHaveBeenCalledOnce()
+  expect(useMultiDataStore.getState().refreshTasks).toHaveBeenCalledOnce()
 })

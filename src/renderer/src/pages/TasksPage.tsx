@@ -41,7 +41,7 @@ export const useTaskCancellationStore = create<{
   update: (fn: (previous: Record<string, Cancellation>) => Record<string, Cancellation>) => void
 }>((set) => ({ cancellations: {}, update: (fn) => set((state) => ({ cancellations: fn(state.cancellations) })) }))
 
-export default function TasksPage({ compact = false, observe = true }: { compact?: boolean; observe?: boolean }) {
+export default function TasksPage({ compact = false, observe = true, embedded = false }: { compact?: boolean; observe?: boolean; embedded?: boolean }) {
   const allTasks = useMultiDataStore((s) => s.tasks)
   const { deletedRecords, deleteRecord } = useTaskHistoryStore()
   const tasks = allTasks.filter((task) => !['success', 'failure', 'cancelled'].includes(task.status) || !deletedRecords.includes(serverTaskRecordKey(task)))
@@ -133,10 +133,10 @@ export default function TasksPage({ compact = false, observe = true }: { compact
 
   return (
     <div className="space-y-4">
-      <div>
+      {!embedded && <div>
         <h1 className="text-xl font-semibold text-foreground">任务</h1>
         <p className="text-muted-foreground text-sm mt-0.5">{tasks.length} 个任务</p>
-      </div>
+      </div>}
 
       {Object.entries(cancellations).filter(([, entry]) => !deletedRecords.includes(entry.recordKey)).map(([key, entry]) => (
         <div key={key} role="status" className="flex flex-wrap items-center gap-2 rounded-lg border border-input bg-card px-4 py-3 text-sm text-secondary-foreground">

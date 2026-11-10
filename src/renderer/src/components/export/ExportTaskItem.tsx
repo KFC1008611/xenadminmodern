@@ -36,7 +36,8 @@ export function ExportTaskItem({ task }: ExportTaskItemProps) {
   const { updateTask, removeTask } = useExportPanelStore()
 
   const handleCancel = async () => {
-    if (cancelling.current) return
+    const current = useExportPanelStore.getState().tasks.find((item) => item.exportId === task.exportId)
+    if (cancelling.current || !current || current.recordMissing || !['running', 'pending', 'unknown'].includes(current.status)) return
     cancelling.current = true
     setCancelError('')
     updateTask(task.exportId, { status: 'cancelling', message: '正在等待资源池任务确认取消' })

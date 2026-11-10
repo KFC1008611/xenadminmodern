@@ -78,6 +78,19 @@ describe('export cancellation intent', () => {
     expect(screen.queryByTitle('移除')).toBeNull()
   })
 
+  it('merges cancellation across two simultaneously rendered records', async () => {
+    let finish!: () => void
+    vi.mocked(window.xapi.vm.cancelExport).mockReturnValue(new Promise(resolve => { finish = resolve }))
+    useExportPanelStore.setState({ tasks: [runningTask] })
+    render(<><ExportTaskItem task={runningTask} /><ExportTaskItem task={runningTask} /></>)
+    const controls = screen.getAllByTitle('取消导出')
+    fireEvent.click(controls[0])
+    fireEvent.click(controls[1])
+    expect(window.xapi.vm.cancelExport).toHaveBeenCalledOnce()
+    await act(async () => { finish() })
+    expect(useExportPanelStore.getState().tasks[0].status).toBe('cancelling')
+  })
+
   it('shows an export checkpoint cleanup warning after the file is complete', () => {
     render(<ExportTaskItem task={{
       ...runningTask,

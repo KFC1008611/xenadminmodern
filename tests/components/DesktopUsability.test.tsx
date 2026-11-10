@@ -1,12 +1,10 @@
 import { useState } from 'react'
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
-import DashboardPage from '../../src/renderer/src/pages/DashboardPage'
-import { useMetricsStore } from '../../src/renderer/src/store/metrics.store'
-import { syncManager } from '../../src/renderer/src/store/syncManager.store'
 import HostsPage from '../../src/renderer/src/pages/HostsPage'
 import HostDetailPage from '../../src/renderer/src/pages/HostDetailPage'
-import { MemoryRouter, Routes, Route } from 'react-router-dom'
+import { Link, MemoryRouter, Routes, Route } from 'react-router-dom'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import Sidebar from '../../src/renderer/src/components/layout/Sidebar'
 import TopBar from '../../src/renderer/src/components/layout/TopBar'
 import Breadcrumb from '../../src/renderer/src/components/layout/Breadcrumb'
 import { DesktopDialog } from '../../src/renderer/src/components/layout/DesktopDialog'
@@ -18,7 +16,6 @@ import { useMultiDataStore } from '../../src/renderer/src/store/multiData.store'
 import { useBatchStore } from '../../src/renderer/src/store/batch.store'
 import { useExportPanelStore } from '../../src/renderer/src/store/exportPanel.store'
 
-vi.mock('../../src/renderer/src/components/dashboard/DashboardMetricsPanel', () => ({ DashboardMetricsPanel: () => null }))
 vi.mock('../../src/renderer/src/components/toast/useToast', () => ({ useToast: () => ({ error: vi.fn(), info: vi.fn() }) }))
 const future = { v7_startTransition: true, v7_relativeSplatPath: true } as const
 const wrapper = ({ children }: { children: React.ReactNode }) => <MemoryRouter initialEntries={['/pool/A/vms']} future={future}>{children}</MemoryRouter>
@@ -34,22 +31,10 @@ describe('desktop workflow usability', () => {
     useBatchStore.setState({ selectedVms: [], activeTask: null, activeTasks: [], pendingTaskIds: [], isSubmitting: false, error: null, submitTask })
   })
 
-  it('shows an empty pool host read as unknown while retaining the actual health of populated pools', () => {
-    const refresh = vi.spyOn(syncManager, 'refreshNow').mockImplementation(() => {})
-    useMetricsStore.setState({ startCollection: vi.fn(), stopCollection: vi.fn(), collectionIntervalIds: new Map() })
-    useMultiDataStore.setState({ hosts: [{ connectionId: 'B', ref: 'OpaqueRef:b', name_label: 'Host B', enabled: false, memory_total: 0, memory_free: 0 } as any], srs: [], tasks: [], loading: false, domainStates: { A: { hosts: { loading: false, error: null, lastSuccessAt: 1 } }, B: { hosts: { loading: false, error: null, lastSuccessAt: 1 } } } })
-    render(<DashboardPage />, { wrapper })
-    const poolA = screen.getByRole('heading', { name: 'Pool A' }).closest('.group')!
-    const poolB = screen.getByRole('heading', { name: 'Pool B' }).closest('.group')!
-    expect(within(poolA as HTMLElement).getByText('暂无主机数据')).toBeInTheDocument()
-    expect(within(poolA as HTMLElement).queryByText(/健康|台主机异常/)).not.toBeInTheDocument()
-    expect(within(poolB as HTMLElement).getByText('1 台主机异常')).toBeInTheDocument()
-    refresh.mockRestore()
-  })
-
   it('disconnects the resource pool visible in the route even when the active pool differs', async () => {
-    render(<TopBar />, { wrapper })
-    fireEvent.click(screen.getByRole('button', { name: '断开资源池 Pool A' }))
+    render(<Sidebar />, { wrapper })
+    fireEvent.click(screen.getByRole('button', { name: 'Pool A 的更多操作' }))
+    fireEvent.click(screen.getByRole('menuitem', { name: '断开连接' }))
     await waitFor(() => expect(disconnect).toHaveBeenCalledWith('A'))
     expect(disconnect).not.toHaveBeenCalledWith('B')
   })
@@ -61,9 +46,24 @@ describe('desktop workflow usability', () => {
     expect(screen.getByRole('complementary', { name: '任务通知' })).toBeVisible()
   })
 
+  it('uses one compact navigation row on lists and preserves object paths on details', () => {
+    useMultiDataStore.setState({ vms: [{ ref: 'vm', connectionId: 'A', name_label: 'VM A' }] as any })
+    render(<><TopBar /><Link to="/pool/A/vms/vm">打开 VM</Link></>, { wrapper })
+    const header = screen.getByRole('banner')
+    expect(header).toHaveClass('h-11')
+    expect(within(header).getByRole('navigation', { name: '资源类型' })).toBeInTheDocument()
+    expect(within(header).getByRole('link', { name: '主机' })).toHaveAttribute('href', '/pool/A/hosts')
+    expect(within(header).queryByRole('navigation', { name: '面包屑导航' })).not.toBeInTheDocument()
+    fireEvent.click(screen.getByRole('link', { name: '打开 VM' }))
+    expect(within(header).queryByRole('navigation', { name: '资源类型' })).not.toBeInTheDocument()
+    const path = within(header).getByRole('navigation', { name: '面包屑导航' })
+    expect(path).toHaveTextContent('VM A')
+    expect(within(path).getByRole('link', { name: '虚拟机' })).toHaveAttribute('href', '/pool/A/vms')
+  })
+
   it('links the pool breadcrumb to a supported resource route', () => {
     render(<Breadcrumb />, { wrapper })
-    expect(screen.getByRole('link', { name: 'Pool A' })).toHaveAttribute('href', '/pool/A/hosts')
+    expect(screen.getByRole('link', { name: 'Pool A' })).toHaveAttribute('href', '/pool/A/vms')
   })
 
   it('requires reviewing targets hidden by the current resource view before submission', async () => {
@@ -125,7 +125,7 @@ describe('desktop workflow usability', () => {
     useMultiDataStore.setState({ hosts: [{ connectionId: 'A', ref: 'OpaqueRef:host', name_label: 'Host A', enabled: true } as any], networks: [], refreshHosts: vi.fn(), refreshNetworks: vi.fn() })
     render(<Routes><Route path="/pool/:connectionId/vms" element={<HostsPage />} /></Routes>, { wrapper })
     await waitFor(() => expect(getMaintenanceStatus).toHaveBeenCalledTimes(1))
-    expect(screen.getByRole('heading', { name: 'Host A' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Host A' })).toBeInTheDocument()
     expect(getMaintenanceStatus).toHaveBeenCalledTimes(1)
   })
 

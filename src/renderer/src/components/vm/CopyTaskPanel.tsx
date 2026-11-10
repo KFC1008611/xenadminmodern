@@ -1,5 +1,5 @@
 import { TaskRecords } from '../feedback/TaskRecords'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Copy } from 'lucide-react'
 import { useCopyStore } from '../../store/copy.store'
@@ -14,23 +14,19 @@ function targetConnection(op: VmCopyOperation) {
   const matches = useConnectionManagerStore.getState().connections.filter((c) => c.state === 'connected' && c.poolUuid === op.targetPoolUuid)
   return (matches.find((c) => c.id === op.targetConnectionId) ?? matches[0])?.id
 }
-export function CopyTaskPanel() {
-  const { operations } = useCopyStore()
+export function CopyTaskPanel({ observe = true }: { observe?: boolean } = {}) {
+  const { operations, pendingCancels, readError } = useCopyStore()
   const { deletedRecords, deleteRecord } = useTaskHistoryStore()
-  const cancelling = useRef(new Set<string>())
-  const [pendingCancels, setPendingCancels] = useState<string[]>([])
   const cancel = async (id: string) => {
-    if (cancelling.current.has(id)) return
-    cancelling.current.add(id); setPendingCancels([...cancelling.current])
-    try { useCopyStore.getState().accept(await window.xapi.vm.cancelCopy(id)) }
+    try { await useCopyStore.getState().cancel(id) }
     catch (error: any) { feedback.error(error.message) }
-    finally { cancelling.current.delete(id); setPendingCancels([...cancelling.current]) }
   }
   const connections = useConnectionManagerStore((s) => s.connections)
-  const [readError, setReadError] = useState('')
   const navigate = useNavigate()
   const active = operations.filter((o) => !copyTerminal(o.status)).length
+  const trackingActive = active > 0
   useEffect(() => {
+    if (!observe) return
     let disposed = false
     let timer: ReturnType<typeof setTimeout> | undefined
     const poll = async () => {
@@ -53,13 +49,13 @@ export function CopyTaskPanel() {
           const old = state.operations.find((record) => record.id === op.id)
           return old && copyTerminal(old.status) && old.status !== op.status ? old : op
         }) }))
-        setReadError('')
-      } catch (error: any) { if (!disposed) setReadError(`复制任务读取失败：${error.message}`) }
+        useCopyStore.setState({ readError: '' })
+      } catch (error: any) { if (!disposed) useCopyStore.setState({ readError: `复制任务读取失败：${error.message}` }) }
       if (!disposed) timer = setTimeout(poll, useCopyStore.getState().operations.some((o) => ['pending', 'preparing', 'cancelling'].includes(o.status)) ? 1500 : 10000)
     }
     void poll()
     return () => { disposed = true; if (timer) clearTimeout(timer) }
-  }, [active, connections])
+  }, [trackingActive, connections, observe])
   const records = operations.filter((op) => !copyTerminal(op.status) || !deletedRecords.includes(`copy:${op.id}`))
   if (!records.length && !readError) return null
   return <section aria-label="复制任务" className="space-y-2">

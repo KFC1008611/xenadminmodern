@@ -2,7 +2,7 @@
  * AppShell — the two-column authenticated application layout (sidebar + content).
  *
  * UX Architecture Redesign:
- * - Added Breadcrumb component between TopBar and content area
+ * - Scope navigation and resource navigation share the current route
  * - Added FeedbackOverlay for unified toast/progress/confirm system
  */
 import { ReactNode, useState } from 'react'
@@ -53,7 +53,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
       />
       <div className="relative flex min-w-0 flex-1 flex-col overflow-hidden">
         <TopBar onOpenSidebar={() => setSidebarOpen(true)} />
-        <main className="min-w-0 flex-1 overflow-auto p-3 sm:p-4 lg:p-6">
+        <main className="min-w-0 flex-1 overflow-auto px-4 py-3 lg:px-6">
           <div className="mx-auto max-w-[1600px] min-w-0">
             <ResourceReadBanner />
             {children}

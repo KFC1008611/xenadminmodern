@@ -64,7 +64,10 @@ const pifs = hosts.flatMap((host) => [0, 1].map((index) => ({
   ref: `pif-${host.ref}-${index}`, uuid: `pif-uuid-${host.ref}-${index}`, host: host.ref, device: `eth${index}`, network: `network-${host.connectionId}-${index}`,
   MAC: `02:00:00:00:00:0${index}`, MTU: 1500, VLAN: -1, management: index === 0, currently_attached: true,
   IP: host.address, netmask: '255.255.255.0', gateway: '192.0.2.1', DNS: '192.0.2.1', ip_configuration_mode: 'Static',
-  physical: true, bond_master_of: [], bond_slave_of: 'OpaqueRef:NULL', connectionId: host.connectionId, other_config: {},
+  physical: true, linkState: 'connected', bond_master_of: [], bond_slave_of: 'OpaqueRef:NULL', connectionId: host.connectionId, other_config: {},
+})))
+const pbds = hosts.flatMap((host) => srs.filter((sr) => sr.connectionId === host.connectionId && (sr.shared || host.ref.endsWith('-0'))).map((sr) => ({
+  ref: `pbd-${host.ref}-${sr.ref}`, host: host.ref, SR: sr.ref, currently_attached: true, connectionId: host.connectionId,
 })))
 const tasks = [{ ref: 'task-1', uuid: 'task-uuid-1', name_label: '导出 windows-build', name_description: '', connectionId: 'prod', poolName: '生产资源池', status: 'pending', progress: 0.68, created: new Date(now - 300000).toISOString(), finished: '', allowed_operations: ['cancel'], error_info: [] },
   { ref: 'task-2', uuid: 'task-uuid-2', name_label: '创建快照 · postgres-primary', name_description: '', connectionId: 'prod', poolName: '生产资源池', status: 'success', progress: 1, created: new Date(now - 600000).toISOString(), finished: new Date(now - 500000).toISOString(), allowed_operations: [], error_info: [] }]
@@ -89,6 +92,7 @@ const userTemplates = [
 
 // Only these explicit reads are supported. No network transport or IPC bridge is installed.
 window.xapi = {
+  updates: { getState: async () => ({ currentVersion: '1.2.3', status: 'idle', enabled: true, supported: true, version: null, progress: 0, message: '', checkedAt: null }) },
   connection: { list: async () => disconnected ? [] : connections },
   profiles: { list: async () => connections.map((connection) => ({ id: connection.id, host: connection.host, name: connection.poolName, port: 443, scheme: 'https:', username: 'root', lastConnected: now })), hasPassword: async () => false },
   vm: {
@@ -108,12 +112,12 @@ window.xapi = {
   host: { list: scoped(hosts), getMaintenanceStatus: async () => ({ state: 'enabled', runningVms: [] }) },
   storage: { listSrs: scoped(srs), listVdis: empty, listAttachableVdis: empty, listPbds: empty, getSr: async (_id: string, ref: string) => srs.find((sr) => sr.ref === ref) },
   network: { list: scoped(networks), listPifs: scoped(pifs) },
-  bond: { list: empty }, vlan: { list: empty }, tunnel: { list: empty }, pbd: { list: empty },
+  bond: { list: empty }, vlan: { list: empty }, tunnel: { list: empty }, pbd: { list: scoped(pbds) },
   sr: { getThinStats: async () => ({ physicalSize: 4 * 1024 * GIB, physicalUtilisation: 1.6 * 1024 * GIB, virtualAllocation: 2.1 * 1024 * GIB, overprovisionRatio: 0.525, freePhysical: 2.4 * 1024 * GIB }) },
   patch: { list: empty, getHostStatus: empty },
   pool: { get: async (id: string) => pools.find((pool) => pool.connectionId === id) },
   tasks: { list: scoped(tasks) },
-  metrics: { getRange: async () => samples, getStats: async () => ({ current: 42, avg: 36, min: 20, max: 68, sampleCount: 60 }), getVmHistory: async () => samples, getHistory: async () => [], getCollectionError: async () => null, startCollection: noop },
+  metrics: { getRange: async () => samples, getStats: async () => ({ current: 42, avg: 36, min: 20, max: 68, sampleCount: 60 }), getVmHistory: async () => samples, getHistory: async () => [], getCollectionError: async () => null, startCollection: noop, stopCollection: noop },
   batch: { list: empty },
   rbac: { subjectWithRoles: empty, subjectList: empty, roleList: empty, extAuthConfig: async () => ({ configured: false, consistent: true, type: '', service_name: '', hosts: [] }) },
   alertNotify: { getConfig: async () => { if (notifyError) throw new Error('测试：通知配置读取失败'); return { enabled: true, email: { enabled: false, host: '', port: 587, secure: false, auth: { user: '', pass: '' }, from: '', to: '' }, webhook: { enabled: false, url: '', method: 'POST' }, filterSeverities: ['error', 'warning'] } } },
@@ -121,7 +125,7 @@ window.xapi = {
   onVmChanged: unsubscribe, onAlertTriggered: unsubscribe, onBatchProgress: unsubscribe,
 } as unknown as Window['xapi']
 
-useMetricsStore.setState({ collecting: true, startCollection: () => {}, stopCollection: () => {}, history: new Map(hosts.map((host) => [`${host.connectionId}:${host.ref}`, samples])) })
+useMetricsStore.setState({ collecting: false, history: new Map(hosts.map((host) => [`${host.connectionId}:${host.ref}`, samples])) })
 useExportPanelStore.setState({ tasks: disconnected ? [] : [{ exportId: 'visual-export', vmName: 'windows-build', connectionId: 'prod', status: 'running', progress: 68, bytesTransferred: 6.8 * GIB, bytesTotal: 10 * GIB, message: '正在传输', filePath: '/tmp/windows-build.xva', startedAt: now - 300000 }], })
 initializeTheme()
 document.documentElement.classList.toggle('platform-macos', /Mac/i.test(navigator.platform))

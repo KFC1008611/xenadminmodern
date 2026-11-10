@@ -88,17 +88,15 @@ export function RbacUserManager({ connectionId, onAddUser }: RbacUserManagerProp
                 <th className="text-left px-4 py-3 text-muted-foreground font-medium">用户/组</th>
                 <th className="text-left px-4 py-3 text-muted-foreground font-medium">类型</th>
                 <th className="text-left px-4 py-3 text-muted-foreground font-medium">角色</th>
-                <th className="text-left px-4 py-3 text-muted-foreground font-medium">权限数</th>
                 <th className="text-right px-4 py-3 text-muted-foreground font-medium">操作</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {subjectsWithRoles.map(({ subject, roleNames, allPermissions }) => (
+              {subjectsWithRoles.map(({ subject, roleNames }) => (
                 <tr key={subject.ref} className="hover:bg-muted transition-colors">
                   <td className="px-4 py-3">
                     <div>
                       <p className="text-foreground font-medium">{subject.subject_identifier}</p>
-                      <p className="text-xs text-subtle">{subject.uuid?.substring(0, 8)}</p>
                     </div>
                   </td>
                   <td className="px-4 py-3">
@@ -118,9 +116,6 @@ export function RbacUserManager({ connectionId, onAddUser }: RbacUserManagerProp
                         <span className="text-xs text-subtle">无角色</span>
                       )}
                     </div>
-                  </td>
-                  <td className="px-4 py-3 text-secondary-foreground">
-                    {allPermissions.length}
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex justify-end gap-2">

@@ -2,6 +2,7 @@ import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { NotificationConfigPanel } from '../../src/renderer/src/components/alerts/NotificationConfigPanel'
+import { ResourceNavigation } from '../../src/renderer/src/components/layout/ResourceNavigation'
 import Sidebar from '../../src/renderer/src/components/layout/Sidebar'
 import AlertsPage from '../../src/renderer/src/pages/AlertsPage'
 import PoolManagerPage from '../../src/renderer/src/pages/PoolManagerPage'
@@ -59,8 +60,8 @@ describe('page audit regressions', () => {
   })
 
   it.each([false, true])('keeps all unified resource routes reachable with the sidebar collapsed=%s', (collapsed) => {
-    render(<MemoryRouter future={future}><Sidebar collapsed={collapsed} /></MemoryRouter>)
-    for (const [name, route] of [['全部主机', 'hosts'], ['全部虚拟机与模板', 'vms'], ['全部存储', 'storage'], ['全部网络', 'networks']]) {
+    render(<MemoryRouter future={future} initialEntries={['/vms']}><Sidebar collapsed={collapsed} /><ResourceNavigation /></MemoryRouter>)
+    for (const [name, route] of [['主机', 'hosts'], ['虚拟机', 'vms'], ['存储', 'storage'], ['网络', 'networks']]) {
       expect(screen.getByRole('link', { name, exact: true })).toHaveAttribute('href', `/${route}`)
     }
   })

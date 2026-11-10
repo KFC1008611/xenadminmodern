@@ -6,6 +6,7 @@ import '@testing-library/jest-dom/vitest'
 // Mock window.xapi (IPC bridge)
 const mockXapi = {
   metrics: {
+    stopCollection: vi.fn().mockResolvedValue(undefined),
     getRange: vi.fn().mockResolvedValue([]),
     getStats: vi.fn().mockResolvedValue({ current: 0, max: 0, avg: 0, min: 0 }),
     getVmHistory: vi.fn().mockResolvedValue([]),

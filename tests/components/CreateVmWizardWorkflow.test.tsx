@@ -68,6 +68,16 @@ beforeEach(() => {
 })
 
 describe('VM creation through actual wizard steps', () => {
+  it('keeps the selected host as the initial placement after choosing a template', async () => {
+    render(<ToastProvider><CreateVmWizard open onClose={vi.fn()} onCreated={vi.fn()} connectionId="pool-b" initialHostRef="host-a" /></ToastProvider>)
+    const option = await screen.findByText('Linux installer')
+    await act(async () => fireEvent.click(option))
+    next()
+    next()
+    change('ISO 镜像', 'iso-a')
+    next()
+    expect(screen.getByLabelText('目标主机')).toHaveValue('host-a')
+  })
   it('returns from review to edit the name, preserves devices, and submits to the displayed pool', async () => {
     await reachReview()
     expect(screen.getByText('Production Pool')).toBeInTheDocument()

@@ -4,7 +4,7 @@
  */
 import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from 'react'
 import { createPortal } from 'react-dom'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams, useLocation } from 'react-router-dom'
 import { useShallow } from 'zustand/react/shallow'
 import { getConnectionReadIdentity, useMultiDataStore } from '../store/multiData.store'
 import { useConnectionManagerStore } from '../store/connectionManager.store'
@@ -37,6 +37,7 @@ import { VmRelocateDialog } from '../components/vm/VmRelocateDialog'
 import type { VmRecord } from '../types/xapi'
 import { ResourceActionMenu, type ResourceAction } from '../components/layout/ResourceActionMenu'
 import { templateQuickCreateGuard } from '../../../shared/template-quick-create'
+import { useHostVmScope } from '../lib/useHostVmScope'
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 type ItemType = 'vm' | 'user-template' | 'system-template'
@@ -88,6 +89,7 @@ interface ListItem {
   // VM specific
   power_state?: VmRecord['power_state']
   resident_on?: string
+  affinity?: string
   VCPUs_max?: string | number
   memory_static_max?: string | number
   is_a_template?: boolean
@@ -144,7 +146,7 @@ function getTemplateMenuPosition(rect: DOMRect): DropdownPosition {
   return { top, left }
 }
 
-export default function VmsPage() {
+export default function VmsPage({ hostRef, connectionId: hostConnectionId }: { hostRef?: string; connectionId?: string } = {}) {
   const { vms: allVms, hosts: allHosts, refreshVms, templateRevision } = useMultiDataStore(useShallow(
     ({ vms, hosts, refreshVms, templateRevision }) => ({ vms, hosts, refreshVms, templateRevision }),
   ))
@@ -153,9 +155,12 @@ export default function VmsPage() {
   )))
   const connections = useConnectionManagerStore((s) => s.connections)
   const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const location = useLocation()
   const copySearch = searchParams.get('search') || ''
-  const { connectionId: pathConnectionId } = useParams<{ connectionId?: string }>()
+  const { connectionId: routeConnectionId } = useParams<{ connectionId?: string }>()
+  const pathConnectionId = hostConnectionId || routeConnectionId
+  const hostScope = useHostVmScope(pathConnectionId, hostRef)
 
   const connectedConnections = connections.filter((c) => c.state === 'connected')
   const connectedConnectionKey = useMemo(
@@ -171,27 +176,28 @@ export default function VmsPage() {
     : null
 
   // Filter by connectionId if specified in path
-  const vms = pathConnectionId ? allVms.filter((v) => v.connectionId === pathConnectionId) : allVms
+  const vms = allVms.filter((vm) => (!pathConnectionId || vm.connectionId === pathConnectionId) && (!hostRef || hostScope.refs.has(vm.ref)))
   const hosts = pathConnectionId ? allHosts.filter((h) => h.connectionId === pathConnectionId) : allHosts
-  const poolName = pathConnectionId
-    ? connections.find((c) => c.id === pathConnectionId)?.poolName || connections.find((c) => c.id === pathConnectionId)?.name
-    : null
 
   const [actionLoading, setActionLoading] = useState<string | null>(null)
-  const [filter, setFilter] = useState(copySearch)
-  const [sort, setSort] = useState<Array<{ key: SortKey; ascending: boolean }>>([{ key: 'name_label', ascending: true }])
-  useEffect(() => { setFilter(copySearch) }, [copySearch])
-  const [poolFilter, setPoolFilter] = useState<string>('all')
-  useEffect(() => {
-    if (poolFilter !== 'all' && !connections.some((connection) => connection.id === poolFilter && connection.state === 'connected')) {
-      setPoolFilter('all')
-    }
-  }, [connections, poolFilter])
-  const [selectedTypes, setSelectedTypes] = useState<Record<ItemType, boolean>>({
-    vm: true,
-    'user-template': true,
-    'system-template': false,
-  })
+  const filter = copySearch
+  const sort = searchParams.get('sort')?.split(',').flatMap((value) => {
+    const [key, direction] = value.split('.')
+    return sortColumns.some((column) => column.key === key) && ['asc', 'desc'].includes(direction)
+      ? [{ key: key as SortKey, ascending: direction === 'asc' }] : []
+  }) || []
+  if (!sort.length) sort.push({ key: 'name_label', ascending: true })
+  const setSort = (update: (previous: typeof sort) => typeof sort) => {
+    setSearchParams((previous) => {
+      const next = new URLSearchParams(previous)
+      next.set('sort', update(sort).map((entry) => `${entry.key}.${entry.ascending ? 'asc' : 'desc'}`).join(','))
+      return next
+    }, { replace: true })
+  }
+  const typeFilter = searchParams.get('types')
+  const selectedTypes: Record<ItemType, boolean> = typeFilter === null
+    ? { vm: true, 'user-template': true, 'system-template': false }
+    : { vm: typeFilter.split(',').includes('vm'), 'user-template': typeFilter.split(',').includes('user-template'), 'system-template': typeFilter.split(',').includes('system-template') }
   const [isWizardOpen, setIsWizardOpen] = useState(false)
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateSelection | null>(null)
   const [exportTarget, setExportTarget] = useState<{
@@ -217,7 +223,7 @@ export default function VmsPage() {
     const read = templateReads[connection.id]
     return read && read.identity === getConnectionReadIdentity(connection.id) ? [{ connection, read }] : []
   })
-  const scopedTemplateReads = currentTemplateReads.filter(({ connection }) => pathConnectionId ? connection.id === pathConnectionId : poolFilter === 'all' || connection.id === poolFilter)
+  const scopedTemplateReads = currentTemplateReads.filter(({ connection }) => !pathConnectionId || connection.id === pathConnectionId)
   const userTemplates = currentTemplateReads.flatMap(({ read }) => read.user)
   const systemTemplates = currentTemplateReads.flatMap(({ read }) => read.system)
   const [cloneTarget, setCloneTarget] = useState<any | null>(null)
@@ -243,13 +249,10 @@ export default function VmsPage() {
   const selectedKeys = useMemo(() => new Set(selectedVms.map((vm) => resourceKey(vm.connectionId, vm.vmRef))), [selectedVms])
   const isSelected = (connectionId: string, ref: string) => selectedKeys.has(resourceKey(connectionId, ref))
 
-  const filterConnectionId = !pathConnectionId && poolFilter !== 'all'
-    ? connectedConnections.find((conn) => conn.id === poolFilter)?.id || ''
-    : ''
   const singleConnectionId = connectedConnections.length === 1 ? connectedConnections[0].id : ''
   const scopedConnectionId = pathConnectionId
     ? pathConnection?.id || ''
-    : filterConnectionId || singleConnectionId
+    : singleConnectionId
   const scopedConnectionName = connectedConnections.find((conn) => conn.id === scopedConnectionId)
   const hasScopedConnection = !!scopedConnectionId
   const scopedActionTitle = hasScopedConnection
@@ -405,8 +408,8 @@ export default function VmsPage() {
   const seenItems = new Set<string>()
   const allItems: ListItem[] = [
     ...vms.map(vm => ({ ...vm, itemType: 'vm' as const })),
-    ...visibleUserTemplates.map(t => ({ ...t, itemType: 'user-template' as const })),
-    ...visibleSystemTemplates.map(t => ({ ...t, itemType: 'system-template' as const })),
+    ...(!hostRef ? visibleUserTemplates.map(t => ({ ...t, itemType: 'user-template' as const })) : []),
+    ...(!hostRef ? visibleSystemTemplates.map(t => ({ ...t, itemType: 'system-template' as const })) : []),
   ].filter((item) => {
     // VM reads supersede an older template cache for the same XAPI object.
     const key = resourceKey(item.connectionId, item.ref)
@@ -414,21 +417,13 @@ export default function VmsPage() {
     seenItems.add(key)
     return true
   })
-  const itemCounts = { vm: 0, 'user-template': 0, 'system-template': 0 }
-  for (const item of allItems) itemCounts[item.itemType]++
-
-  const poolOptions = connectedConnections.map((conn) => ({
-    id: conn.id,
-    label: conn.poolName || conn.name || conn.id,
-  }))
 
   // Unified filter
   const filtered = allItems.filter((item) => {
     const nameMatch = item.name_label.toLowerCase().includes(filter.toLowerCase()) ||
       (item.itemType === 'vm' && getGuestIpAddresses(item.networks ?? {}).some(({ address }) => address.toLowerCase().includes(filter.toLowerCase())))
-    const poolMatch = !!pathConnectionId || poolFilter === 'all' || item.connectionId === poolFilter
-    const typeMatch = selectedTypes[item.itemType]
-    return nameMatch && poolMatch && typeMatch
+    const typeMatch = !!hostRef || selectedTypes[item.itemType]
+    return nameMatch && typeMatch
   })
 
   const isDefaultTypeSelection =
@@ -445,7 +440,11 @@ export default function VmsPage() {
         .join('、')
 
   const toggleType = (type: ItemType) => {
-    setSelectedTypes((current) => ({ ...current, [type]: !current[type] }))
+    setSearchParams((previous) => {
+      const next = new URLSearchParams(previous)
+      next.set('types', typeOptions.filter((option) => option.value === type ? !selectedTypes[type] : selectedTypes[option.value]).map((option) => option.value).join(','))
+      return next
+    }, { replace: true })
   }
 
   // Only VMs for select-all logic
@@ -577,7 +576,11 @@ export default function VmsPage() {
 
   return (
     <div className="space-y-4">
-      {currentTemplateReads.filter(({ connection, read }) => read.error && (!pathConnectionId || connection.id === pathConnectionId) && (poolFilter === 'all' || !!pathConnectionId || connection.id === poolFilter)).map(({ connection, read }) => (
+      {hostRef && hostScope.loading && <p role="status" className="text-sm text-muted-foreground">正在读取虚拟机归属…</p>}
+      {hostRef && hostScope.error && <div role="alert" className="text-sm text-warning">虚拟机存储归属读取失败。{hostScope.error}
+        <button type="button" onClick={hostScope.retry} className="ml-2 underline">重新读取虚拟机归属</button>
+      </div>}
+      {currentTemplateReads.filter(({ connection, read }) => read.error && (!pathConnectionId || connection.id === pathConnectionId)).map(({ connection, read }) => (
         <div key={connection.id} role="alert" className="flex flex-wrap items-center gap-3 rounded-lg border border-warning/30 bg-warning-soft p-3 text-sm text-warning">
           <span className="min-w-0 flex-1 break-words">{connection.poolName || connection.name} 的模板读取失败：{read.error}。{read.lastSuccessAt ? '保留上次模板数据，请重新读取后操作。' : '尚未取得模板清单，请重新读取。'}</span>
           <button type="button" disabled={read.loading} onClick={() => void loadTemplates(connection.id)} className="rounded border border-warning/30 px-3 py-1 disabled:opacity-40">重新读取模板</button>
@@ -593,20 +596,14 @@ export default function VmsPage() {
       <BatchToolbar visibleVms={filteredVms} />
 
       {/* ── Header ─────────────────────────────────────────────────────────── */}
-      <div className="flex flex-col gap-4">
-        <div className="min-w-0">
-          <h1 className="text-xl font-semibold text-foreground">
-            {poolName ? `${poolName} · 虚拟机与模板` : '虚拟机与模板'}
-          </h1>
-          <p className="text-muted-foreground text-sm mt-0.5">
-            {itemCounts.vm} 台虚拟机{itemCounts['user-template'] > 0 && ` · ${itemCounts['user-template']} 个用户模板`}{itemCounts['system-template'] > 0 && ` · ${itemCounts['system-template']} 个系统模板`}
-          </p>
-        </div>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h1 className="sr-only">虚拟机与模板</h1>
+        <span className="text-xs tabular-nums text-muted-foreground">{filtered.length} 项</span>
 
         {/* ── Toolbar ──────────────────────────────────────────────────────── */}
-        <div className="flex min-w-0 flex-wrap items-center gap-2 sm:gap-3 xl:justify-end">
+        <div className="flex min-w-0 flex-wrap items-center gap-2">
           {/* Type filters */}
-          <div className="relative">
+          {!hostRef && <div className="relative">
             <button
               type="button"
               onClick={() => setIsTypeDropdownOpen((open) => !open)}
@@ -632,7 +629,6 @@ export default function VmsPage() {
                 <div className="absolute left-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-lg border border-input bg-card shadow-xl shadow-black/30">
                   <div className="border-b border-border px-3 py-2">
                     <div className="text-xs font-medium text-secondary-foreground">显示类型</div>
-                    <div className="mt-0.5 text-[11px] text-subtle">选择要显示的对象类型</div>
                   </div>
                   <div className="p-1.5">
                     {typeOptions.map((option) => {
@@ -667,37 +663,22 @@ export default function VmsPage() {
                 </div>
               </>
             )}
-          </div>
+          </div>}
 
           {/* Search */}
           <input
             type="text"
             placeholder="搜索名称或 IP…"
             value={filter}
-            onChange={(e) => setFilter(e.target.value)}
+            onChange={(event) => setSearchParams((previous) => {
+              const next = new URLSearchParams(previous)
+              if (event.target.value) next.set('search', event.target.value)
+              else next.delete('search')
+              return next
+            }, { replace: true })}
             className="w-full rounded-lg border border-border bg-card px-3 py-1.5 text-sm text-foreground placeholder-subtle focus:outline-none focus:ring-1 focus:ring-primary sm:w-48"
             aria-label="Filter items"
           />
-
-          {/* Pool filter */}
-          <select
-            aria-label="资源池筛选"
-            value={pathConnectionId || poolFilter}
-            onChange={(e) => {
-              const next = e.target.value
-              setPoolFilter(next)
-              if (pathConnectionId) {
-                if (next !== 'all') useConnectionManagerStore.getState().setActiveConnection(next)
-                navigate(next === 'all' ? '/vms' : `/pool/${encodeURIComponent(next)}/vms`)
-              }
-            }}
-            className="min-w-0 w-full rounded-lg border border-border bg-card px-3 py-1.5 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary sm:w-48"
-          >
-            <option value="all">全部资源池</option>
-            {poolOptions.map((pool) => (
-              <option key={pool.id} value={pool.id}>{pool.label}</option>
-            ))}
-          </select>
 
           {/* Import button */}
           <button
@@ -727,7 +708,6 @@ export default function VmsPage() {
 
       {/* ── Unified Table ────────────────────────────────────────────────────── */}
       <div className="overflow-hidden rounded-xl border border-border bg-card">
-        <p className="border-b border-border px-4 py-2 text-xs text-muted-foreground">Shift + 点击表头添加排序；数字表示优先级</p>
         <div className="overflow-x-auto">
         <table className="min-w-[940px] w-full whitespace-nowrap text-[13px]">
           <thead>
@@ -744,11 +724,11 @@ export default function VmsPage() {
                   aria-label="Select all VMs"
                 />
               </th>
-              {sortColumns.map(({ key, label }) => {
+              {sortColumns.filter((column) => !pathConnectionId || column.key !== 'poolName').map(({ key, label }) => {
                 const index = sort.findIndex((entry) => entry.key === key)
                 const current = sort[index]
                 const SortIcon = current ? current.ascending ? ArrowUp : ArrowDown : ArrowUpDown
-                return <th key={key} scope="col" aria-sort={index === 0 ? current.ascending ? 'ascending' : 'descending' : undefined}
+                return <th key={key} scope="col" title="点击排序，Shift + 点击添加排序列" aria-sort={index === 0 ? current.ascending ? 'ascending' : 'descending' : undefined}
                   className={`text-left py-3 text-muted-foreground font-medium ${key === 'itemType' ? 'px-2' : 'px-4'}`}>
                   <button type="button" title={current ? `第 ${index + 1} 排序：${current.ascending ? '升序' : '降序'}；Shift + 点击保留其他排序` : '点击排序；Shift + 点击添加排序'}
                     aria-description={current ? `第 ${index + 1} 排序，${current.ascending ? '升序' : '降序'}` : undefined}
@@ -880,7 +860,7 @@ export default function VmsPage() {
                       <button
                         data-vm-name
                         className="text-left group/name"
-                        onClick={() => navigate(`/pool/${encodeURIComponent(item.connectionId)}/vms/${encodeURIComponent(item.ref)}`)}
+                        onClick={() => navigate(`/pool/${encodeURIComponent(item.connectionId)}/vms/${encodeURIComponent(item.ref)}`, { state: { vmListPath: location.pathname + location.search } })}
                       >
                         <div className="text-foreground font-medium group-hover/name:text-accent-foreground transition-colors flex items-center gap-1">
                           {item.name_label}
@@ -920,7 +900,7 @@ export default function VmsPage() {
                   </td>
 
                   {/* Pool */}
-                  <td className="px-4 py-3 text-muted-foreground">{item.poolName}</td>
+                  {!pathConnectionId && <td className="px-4 py-3 text-muted-foreground">{item.poolName}</td>}
 
                   {/* Host */}
                   <td className="px-4 py-3 text-muted-foreground">
@@ -1066,11 +1046,11 @@ export default function VmsPage() {
         </div>
 
         {/* Empty state */}
-        {filtered.length === 0 && (
+        {filtered.length === 0 && (!hostRef || !hostScope.loading && !hostScope.error) && (
           <div className="text-center py-12">
             <Monitor className="w-10 h-10 text-subtle mx-auto mb-3" />
             <p className="text-muted-foreground font-medium">
-              {scopedTemplateReads.some(({ read }) => read.loading) ? '正在读取虚拟机与模板…' : scopedTemplateReads.some(({ read }) => read.error) ? '模板清单读取失败，请重新读取' : filter || !isDefaultTypeSelection ? '没有匹配筛选条件的项目' : '没有找到虚拟机或模板'}
+              {hostRef ? '没有找到此主机的虚拟机' : scopedTemplateReads.some(({ read }) => read.loading) ? '正在读取虚拟机与模板…' : scopedTemplateReads.some(({ read }) => read.error) ? '模板清单读取失败，请重新读取' : filter || !isDefaultTypeSelection ? '没有匹配筛选条件的项目' : '没有找到虚拟机或模板'}
             </p>
           </div>
         )}
@@ -1086,6 +1066,7 @@ export default function VmsPage() {
         onCreated={handleVmCreated}
         connectionId={selectedTemplate?.connectionId || scopedConnectionId}
         initialTemplate={selectedTemplate}
+        initialHostRef={hostRef}
       />
 
       {exportTarget && (

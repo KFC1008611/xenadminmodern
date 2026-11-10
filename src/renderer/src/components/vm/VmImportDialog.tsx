@@ -133,7 +133,7 @@ export function VmImportDialog({ open, onClose, connectionId, onImported, onView
   const handleCancel = async () => {
     if (!store.operationId) return
     try {
-      await window.xapi.vm.cancelImport(effectiveConnectionId, store.operationId)
+      await store.cancel(effectiveConnectionId, store.operationId)
     } catch (error: any) {
       useImportWizardStore.setState({ importError: error?.message || '取消导入失败' })
     }
@@ -195,7 +195,7 @@ export function VmImportDialog({ open, onClose, connectionId, onImported, onView
           {store.importError && <div className="text-danger space-y-1"><div className="flex gap-2"><AlertTriangle className="w-5 h-5" />{store.importError}</div>{store.vmRef && <p className="text-xs">已导入 VM：{store.vmRef}，可手动恢复配置。</p>}</div>}
           {canEditDraft && selectedSr && (store.preview?.originalSize ?? 0) > selectedSr.freeBytes && <p className="text-xs text-warning">归档虚拟容量大于剩余空间；稀疏磁盘实际分配由存储后端决定，请确认容量足够。</p>}
           {canEditDraft && <button disabled={store.importing || !validTargets} onClick={() => store.startImport(connectionId)} className="px-4 py-2 bg-primary text-primary-foreground rounded-lg">开始导入</button>}
-          {store.operationId && !store.operationRecordMissing && (activeStatuses.includes(store.operationStatus ?? '') || store.operationStatus === 'unknown' && !store.vmRef) && <button onClick={handleCancel} className="px-4 py-2 bg-danger-solid text-on-solid rounded-lg">取消导入</button>}
+          {store.operationId && !store.operationRecordMissing && (activeStatuses.includes(store.operationStatus ?? '') || store.operationStatus === 'unknown' && !store.vmRef) && <button disabled={store.pendingCancels.includes(store.operationId)} onClick={handleCancel} className="px-4 py-2 bg-danger-solid text-on-solid rounded-lg disabled:opacity-50">{store.pendingCancels.includes(store.operationId) ? '正在请求取消…' : '取消导入'}</button>}
           {store.operationStatus === 'configuring' && <p className="text-xs text-subtle">正在应用配置，此阶段不能取消。</p>}
         </div>}
 

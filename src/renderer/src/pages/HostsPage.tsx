@@ -1,15 +1,14 @@
 /**
- * HostsPage — card list of all pool hosts with maintenance controls, PIF viewer.
+ * HostsPage — scoped host table with maintenance controls and interface details.
  * v5: Switched to useMultiDataStore, added maintenance workflow and PIF list.
  */
-import { useEffect, useMemo, useState } from 'react'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getConnectionReadIdentity, useMultiDataStore } from '../store/multiData.store'
-import { useConnectionManagerStore } from '../store/connectionManager.store'
-import { RotateCcw, Wrench, Power, Network, ChevronDown, ChevronUp, Loader2, Server } from 'lucide-react'
+import { RotateCcw, Wrench, Power, Network, Loader2, Server } from 'lucide-react'
 import { HostStatusBadge } from '../components/host/HostStatusBadge'
 import { HostMemorySummary } from '../components/host/HostMemorySummary'
-import { MaintenanceDialog } from '../components/host/MaintenanceDialog'
+import { ResourceActionMenu } from '../components/layout/ResourceActionMenu'
 import { PifList } from '../components/network/PifList'
 import type { NetworkRecord, PifRecord, MaintenanceStatus } from '../types/xapi'
 import { getAuditedFeatureBlockReason } from '../../../shared/audited-features'
@@ -59,24 +58,13 @@ function HostInterfacesPanel({ connectionId, hostRef, networks }: { connectionId
 }
 
 export default function HostsPage() {
-  const { hosts: allHosts, vms: allVms, networks: allNetworks, refreshHosts, refreshNetworks, refreshVms } = useMultiDataStore()
+  const { hosts: allHosts, vms: allVms, networks: allNetworks, refreshHosts, refreshNetworks } = useMultiDataStore()
   const { connectionId: pathConnectionId } = useParams<{ connectionId?: string }>()
 
   // Filter by connectionId if specified in path
   const hosts = useMemo(() => pathConnectionId ? allHosts.filter((h) => h.connectionId === pathConnectionId) : allHosts, [allHosts, pathConnectionId])
   const vms = useMemo(() => pathConnectionId ? allVms.filter((v) => v.connectionId === pathConnectionId) : allVms, [allVms, pathConnectionId])
-  const connections = useConnectionManagerStore((s) => s.connections)
   const lifecycleGuardReason = getAuditedFeatureBlockReason('host.maintenance')
-  const poolName = pathConnectionId
-    ? connections.find((c) => c.id === pathConnectionId)?.poolName || connections.find((c) => c.id === pathConnectionId)?.name
-    : null
-  const [actionLoading] = useState<string | null>(null)
-  const [maintenanceDialog, setMaintenanceDialog] = useState<{
-    open: boolean
-    connectionId: string
-    hostRef: string
-    vmNames: string[]
-  }>({ open: false, connectionId: '', hostRef: '', vmNames: [] })
   const [expandedPifs, setExpandedPifs] = useState<string | null>(null)
   const [maintenanceStates, setMaintenanceStates] = useState<Record<string, MaintenanceStatus>>({})
 
@@ -116,125 +104,49 @@ export default function HostsPage() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="text-xl font-semibold text-foreground">
-          {poolName ? `${poolName} · 主机` : '主机'}
-        </h1>
-        <p className="text-muted-foreground text-sm mt-0.5">
-          {hosts.length} 台主机
-        </p>
+      <div className="flex items-baseline gap-3">
+        <h1 className="sr-only">主机</h1>
+        <span className="text-xs tabular-nums text-muted-foreground">{hosts.length} 台</span>
       </div>
-
-      <div className="grid gap-4">
-        {hosts.map((host) => {
-          const hostKey = resourceKey(host.connectionId, host.ref)
-          const ms = maintenanceStates[hostKey]
-          const isInMaintenance = ms?.state === 'maintenance' || ms?.state === 'disabled' || !host.enabled
-
-          return (
-            <div key={hostKey} className="min-w-0 bg-card border border-border rounded-xl p-4">
-              <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
-                <div className="flex min-w-0 items-center gap-3">
-                  <HostStatusBadge enabled={host.enabled} maintenanceState={ms?.state} />
-                  <div className="min-w-0">
-                    <div className="flex min-w-0 flex-wrap items-center gap-2">
-                      <h3 className="min-w-0 truncate font-medium text-foreground">
-                        <Link to={`/pool/${encodeURIComponent(host.connectionId)}/hosts/${encodeURIComponent(host.ref)}`} title={host.name_label}
-                          className="rounded transition-colors hover:text-accent-foreground">{host.name_label}</Link>
-                      </h3>
-                      <span className="rounded-md bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                        {host.poolName}
-                      </span>
-                    </div>
-                    <p className="truncate text-sm text-subtle">{host.address} &middot; {host.hostname}</p>
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-1 lg:justify-end">
-                  {actionLoading === hostKey ? (
-                    <span className="flex items-center gap-1.5 text-xs text-subtle px-2">
-                      <Loader2 className="w-3 h-3 animate-spin" />
-                      处理中...
-                    </span>
-                  ) : (
-                    <>
-                      {isInMaintenance ? (
-                        <button
-                          disabled
-                          title={lifecycleGuardReason}
-                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-success opacity-50 cursor-not-allowed rounded-lg transition-colors"
-                        >
-                          <Power className="w-3 h-3" />
-                          退出维护
-                        </button>
-                      ) : (
-                        <button
-                          disabled
-                          title={lifecycleGuardReason}
-                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-warning opacity-50 cursor-not-allowed rounded-lg transition-colors"
-                        >
-                          <Wrench className="w-3 h-3" />
-                          进入维护
-                        </button>
-                      )}
-                      <button
-                        disabled
-                        title={lifecycleGuardReason}
-                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-accent-foreground opacity-50 cursor-not-allowed rounded-lg transition-colors"
-                      >
-                        <RotateCcw className="w-3 h-3" />
-                        重启
-                      </button>
-                      <button
-                        onClick={() => handleViewPifs(host.connectionId, host.ref)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted rounded-lg transition-colors"
-                      >
-                        <Network className="w-3 h-3" />
-                        主机接口
-                        {expandedPifs === hostKey ? (
-                          <ChevronUp className="w-3 h-3" />
-                        ) : (
-                          <ChevronDown className="w-3 h-3" />
-                        )}
-                      </button>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4 lg:gap-4">
-                <div className="bg-muted rounded-lg p-3">
-                  <div className="text-xs text-muted-foreground mb-1">CPU</div>
-                  <div className="text-foreground font-medium">
-                    {host.cpu_info?.cpu_count || '—'} 逻辑处理器
-                  </div>
-                  <p title={host.cpu_info?.modelname || host.cpu_info?.model} className="mt-1 truncate text-xs text-muted-foreground">{host.cpu_info?.modelname || host.cpu_info?.model || '型号暂不可用'}</p>
-                  {host.cpu_info?.socket_count && <p className="mt-1 text-xs text-muted-foreground">{host.cpu_info.socket_count} 插槽</p>}
-                </div>
-                <div className="min-w-0 bg-muted rounded-lg p-3">
-                  <div className="text-xs text-muted-foreground mb-1">内存容量</div>
-                  <HostMemorySummary host={host} />
-                </div>
-                <div className="bg-muted rounded-lg p-3">
-                  <div className="text-xs text-muted-foreground mb-1">运行中 VM</div>
-                  <div className="text-foreground font-medium">{getVmCount(host.ref, host.connectionId)}</div>
-                </div>
-                <div className="bg-muted rounded-lg p-3">
-                  <div className="text-xs text-muted-foreground mb-1">XCP-ng 版本</div>
-                  <div className="text-foreground font-medium text-xs">
-                    {host.software_version?.product_version || '—'}
-                  </div>
-                </div>
-              </div>
-
-              {/* PIF expansion panel */}
-              {expandedPifs === hostKey && (
-                <HostInterfacesPanel key={`${hostKey}:${getConnectionReadIdentity(host.connectionId)}`}
-                  connectionId={host.connectionId} hostRef={host.ref} networks={allNetworks.filter((network) => network.connectionId === host.connectionId)} />
-              )}
-            </div>
-          )
-        })}
+      <div className="overflow-hidden rounded-lg border border-border bg-card">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[860px] text-sm">
+            <thead><tr className="border-b border-border text-left text-muted-foreground">
+              {['名称', '状态', ...(!pathConnectionId ? ['资源池'] : []), 'CPU', '内存容量', '运行中 VM', '版本', '操作'].map((label) => <th key={label} className="px-4 py-3 font-medium">{label}</th>)}
+            </tr></thead>
+            <tbody className="divide-y divide-border">{hosts.map((host) => {
+              const hostKey = resourceKey(host.connectionId, host.ref)
+              const status = maintenanceStates[hostKey]
+              const inMaintenance = status?.state === 'maintenance' || status?.state === 'disabled' || !host.enabled
+              return <Fragment key={hostKey}>
+                <tr className="hover:bg-muted">
+                  <td className="max-w-64 px-4 py-3">
+                    <Link to={`/pool/${encodeURIComponent(host.connectionId)}/hosts/${encodeURIComponent(host.ref)}`} title={host.name_label} className="block truncate font-medium text-foreground hover:text-accent-foreground">{host.name_label}</Link>
+                    <p className="mt-1 text-xs text-muted-foreground">{host.address}</p>
+                  </td>
+                  <td className="px-4 py-3"><HostStatusBadge enabled={host.enabled} maintenanceState={status?.state} /></td>
+                  {!pathConnectionId && <td className="max-w-48 px-4 py-3"><span className="block truncate" title={host.poolName}>{host.poolName}</span></td>}
+                  <td className="max-w-64 px-4 py-3">
+                    <span className="whitespace-nowrap">{host.cpu_info?.cpu_count || '—'} 逻辑处理器</span>
+                    <p title={host.cpu_info?.modelname || host.cpu_info?.model} className="mt-1 truncate text-xs text-muted-foreground">{host.cpu_info?.modelname || host.cpu_info?.model || '型号暂不可用'}</p>
+                    {host.cpu_info?.socket_count && <p className="mt-1 text-xs text-muted-foreground">{host.cpu_info.socket_count} 插槽</p>}
+                  </td>
+                  <td className="min-w-48 px-4 py-3"><HostMemorySummary host={host} /></td>
+                  <td className="px-4 py-3 tabular-nums">{getVmCount(host.ref, host.connectionId)}</td>
+                  <td className="px-4 py-3">{host.software_version?.product_version || '—'}</td>
+                  <td className="px-4 py-3"><div className="flex items-center justify-end gap-1">
+                    <button type="button" aria-label="主机接口" title="主机接口" aria-expanded={expandedPifs === hostKey} onClick={() => handleViewPifs(host.connectionId, host.ref)} className="rounded-md p-2 text-muted-foreground hover:bg-muted"><Network className="h-4 w-4" /></button>
+                    <ResourceActionMenu name={host.name_label} actions={[
+                      { label: inMaintenance ? '退出维护' : '进入维护', icon: inMaintenance ? Power : Wrench, disabled: true, reason: lifecycleGuardReason, onSelect: () => {} },
+                      { label: '重启', icon: RotateCcw, disabled: true, reason: lifecycleGuardReason, onSelect: () => {} },
+                    ]} />
+                  </div></td>
+                </tr>
+                {expandedPifs === hostKey && <tr><td colSpan={pathConnectionId ? 7 : 8} className="px-4 pb-4"><HostInterfacesPanel key={`${hostKey}:${getConnectionReadIdentity(host.connectionId)}`} connectionId={host.connectionId} hostRef={host.ref} networks={allNetworks.filter((network) => network.connectionId === host.connectionId)} /></td></tr>}
+              </Fragment>
+            })}</tbody>
+          </table>
+        </div>
       </div>
 
       {hosts.length === 0 && (
@@ -244,17 +156,7 @@ export default function HostsPage() {
         </div>
       )}
 
-      <MaintenanceDialog
-        open={maintenanceDialog.open}
-        onClose={() => setMaintenanceDialog((prev) => ({ ...prev, open: false }))}
-        connectionId={maintenanceDialog.connectionId}
-        hostRef={maintenanceDialog.hostRef}
-        vmNames={maintenanceDialog.vmNames}
-        onComplete={() => {
-          refreshHosts({ afterMutation: true, connectionId: maintenanceDialog.connectionId })
-          refreshVms({ afterMutation: true, connectionId: maintenanceDialog.connectionId })
-        }}
-      />
+
     </div>
   )
 }

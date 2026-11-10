@@ -14,6 +14,8 @@ export interface ImportHistoryItem {
 }
 
 export interface ImportWizardState {
+  pendingCancels: string[]
+  cancel: (connectionId: string, operationId: string) => Promise<void>
   history: ImportHistoryItem[]
   dialogOpen: boolean
   draftScope: string | null
@@ -77,6 +79,17 @@ let previewRequest = 0
 
 export const useImportWizardStore = create<ImportWizardState>()(persist((set, get) => ({
   ...initialState,
+  pendingCancels: [],
+  cancel: async (connectionId, operationId) => {
+    const state = get()
+    const item = state.history.find((entry) => entry.operation.operationId === operationId)
+    if (!item || item.connectionId !== connectionId || item.recordMissing || state.pendingCancels.includes(operationId)
+      || isTransferTerminal(item.operation.status) || ['configuring', 'cancelling'].includes(item.operation.status)
+      || item.operation.status === 'unknown' && item.operation.vmRef) return
+    set({ pendingCancels: [...state.pendingCancels, operationId] })
+    try { await window.xapi.vm.cancelImport(connectionId, operationId) }
+    finally { set({ pendingCancels: get().pendingCancels.filter((pending) => pending !== operationId) }) }
+  },
   newDraft: () => {
     const state = get()
     if (state.importing && !state.operationId) return
@@ -197,7 +210,7 @@ export const useImportWizardStore = create<ImportWizardState>()(persist((set, ge
   reset: () => { previewRequest++; set(initialState) },
 }), {
   name: 'xenadmin-import-operation',
-  partialize: (state) => Object.fromEntries(Object.entries(state).filter(([key, value]) => typeof value !== 'function' && !['dialogOpen', 'importing'].includes(key))),
+  partialize: (state) => Object.fromEntries(Object.entries(state).filter(([key, value]) => typeof value !== 'function' && !['dialogOpen', 'importing', 'pendingCancels'].includes(key))),
   merge: (persisted, current) => {
     const saved = persisted as Partial<ImportWizardState>
     if (saved.operationId && !saved.history?.some((item) => item.operation.operationId === saved.operationId)) saved.history = [...(saved.history ?? []), { connectionId: saved.operationConnectionId ?? '', poolUuid: saved.operationPoolUuid, filePath: saved.filePath, recordMissing: saved.operationRecordMissing, name: saved.preview?.vmName ?? 'XVA 导入', isTemplate: saved.preview?.isTemplate ?? false, operation: { operationId: saved.operationId, taskRef: null, status: saved.operationStatus ?? 'unknown', message: saved.operationMessage ?? '', progress: saved.progress ?? 0, vmRef: saved.vmRef, warnings: saved.warnings, lastUpdatedAt: Date.now() } }]

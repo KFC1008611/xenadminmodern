@@ -7,19 +7,19 @@ import { batchRetryBlockReason, batchTargetIdentityReason, isBatchRunning, type 
 import type { BatchOperationTask } from '../types/batch'
 import type { BatchRetryConfirmation } from '../../../shared/types/xapi'
 
-export default function BatchHistoryPage() {
+export default function BatchHistoryPage({ embedded = false, observe = true }: { embedded?: boolean; observe?: boolean } = {}) {
   const { activeTasks, taskHistory, refreshTasks, retryTask, cancelTask, loadTaskDetails, pendingTaskIds, error } = useBatchStore()
   const { deletedRecords, deleteRecord } = useTaskHistoryStore()
   const [expanded, setExpanded] = useState<string | null>(null)
   const [readingRetry, setReadingRetry] = useState<string | null>(null)
   const reading = useRef(false)
   const [review, setReview] = useState<{ task: BatchOperationTask; confirmation: BatchRetryConfirmation } | null>(null)
-  useEffect(() => { void refreshTasks() }, [refreshTasks])
+  useEffect(() => { if (observe) void refreshTasks() }, [refreshTasks, observe])
   useEffect(() => {
-    if (!activeTasks.length) return
+    if (!observe || !activeTasks.length) return
     const timer = setInterval(() => { void refreshTasks() }, 2000)
     return () => clearInterval(timer)
-  }, [activeTasks.length, refreshTasks])
+  }, [activeTasks.length, refreshTasks, observe])
   const history = taskHistory.filter((task) => !deletedRecords.includes(`batch:${task.id}`))
   const tasks = [...activeTasks, ...history]
   const prepareRetry = async (taskId: string) => {
@@ -36,7 +36,7 @@ export default function BatchHistoryPage() {
   }
   return <div className="space-y-4">
     <div className="flex flex-wrap items-center justify-between gap-4">
-      <div><h1 className="text-xl font-semibold text-foreground">批量任务</h1><p className="mt-1 text-sm text-muted-foreground">{activeTasks.length} 个进行中 · {history.length} 条历史记录</p></div>
+      <div>{!embedded && <h1 className="text-xl font-semibold text-foreground">批量任务</h1>}<p className="mt-1 text-sm text-muted-foreground">{activeTasks.length} 个进行中 · {history.length} 条历史记录</p></div>
       <button onClick={() => { void refreshTasks() }} className="rounded-lg border border-input px-3 py-2 text-sm text-secondary-foreground">刷新</button>
     </div>
     {error && <p role="alert" className="rounded-lg border border-danger/30 bg-danger-soft p-3 text-sm text-danger">{error}</p>}

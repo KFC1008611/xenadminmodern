@@ -1,40 +1,51 @@
 /**
  * HostDetailPage — detailed view for a single host, accessed via /hosts/:ref.
- * Uses Radix Tabs to switch between Overview, Monitor, Patches, and HA panels.
- * v7: New page — integrates HostMonitorTab for metrics monitoring.
- * v9: Added Patches tab and HA tab.
+ * Uses the selected host as the scope for information and resource tabs.
+ * Pool-wide HA settings are reached through the pool settings route.
  */
 import { useEffect, useState } from 'react'
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
+import { useParams, useNavigate, useSearchParams, Navigate } from 'react-router-dom'
 import * as Tabs from '@radix-ui/react-tabs'
-import { ArrowLeft, RefreshCw, AlertCircle, Loader2 } from 'lucide-react'
+import { ArrowLeft, AlertCircle, Loader2 } from 'lucide-react'
 import { useMultiDataStore } from '../store/multiData.store'
 import { useConnectionManagerStore } from '../store/connectionManager.store'
 import { feedback } from '../store/feedback.store'
 import { HostMonitorTab } from '../components/host/HostMonitorTab'
 import { HostMemorySummary } from '../components/host/HostMemorySummary'
 import { HostPatchesTab } from '../components/patch/HostPatchesTab'
-import { HaSettingsTab } from '../components/ha/HaSettingsTab'
 import type { ConnectedHostRecord } from '../types/xapi'
+import VmsPage from './VmsPage'
+import StoragePage from './StoragePage'
+import NetworksPage from './NetworksPage'
+
+const hostTabs = [
+  { value: 'overview', label: '概览' },
+  { value: 'vms', label: '虚拟机' },
+  { value: 'networks', label: '网络' },
+  { value: 'storage', label: '存储' },
+  { value: 'monitor', label: '监控' },
+  { value: 'patches', label: '补丁' },
+]
 
 export default function HostDetailPage() {
   const { ref: encodedRef, connectionId: pathConnectionId } = useParams<{ ref: string; connectionId: string }>()
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   // feedback used directly
 
   const hosts = useMultiDataStore((s) => s.hosts)
   const refreshHosts = useMultiDataStore((s) => s.refreshHosts)
   const connections = useConnectionManagerStore((s) => s.connections)
+  const vms = useMultiDataStore((s) => s.vms)
+  const activeTab = hostTabs.some((tab) => tab.value === searchParams.get('tab')) ? searchParams.get('tab')! : 'overview'
 
-  const [activeTab, setActiveTab] = useState('overview')
-
-  const hostRef = encodedRef ? decodeURIComponent(encodedRef) : ''
+  const hostRef = encodedRef || ''
 
   const connectedConnections = connections.filter((c) => c.state === 'connected')
   const searchConnectionId = searchParams.get('connectionId') || ''
   const legacyFallbackConnectionId = connectedConnections.length === 1 ? connectedConnections[0].id : ''
   const connectionId = pathConnectionId || searchConnectionId || legacyFallbackConnectionId
+  const vmRead = useMultiDataStore((s) => s.domainStates[connectionId]?.vms)
   const connectionResolutionError =
     !pathConnectionId && !searchConnectionId && connectedConnections.length > 1
       ? '旧链接缺少资源池连接，请从左侧资源池或主机列表重新进入'
@@ -45,6 +56,8 @@ export default function HostDetailPage() {
   const host: ConnectedHostRecord | undefined = hosts.find(
     (h) => h.ref === hostRef && h.connectionId === connectionId,
   )
+  const connection = connections.find((item) => item.id === connectionId)
+  const scopeKey = JSON.stringify([connectionId, hostRef, connection?.state, connection?.epoch, connection?.connectedAt, connection?.poolUuid])
 
   const [loading, setLoading] = useState(true)
 
@@ -54,7 +67,7 @@ export default function HostDetailPage() {
       return
     }
     setLoading(true)
-    refreshHosts()
+    refreshHosts({ connectionId })
       .then(() => {
         // After refresh, check if host exists
         // loading will be set to false in the effect below
@@ -72,6 +85,8 @@ export default function HostDetailPage() {
     }
   }, [hosts])
 
+  if (searchParams.get('tab') === 'ha' && connectionId) return <Navigate to={`/pool/${encodeURIComponent(connectionId)}/settings?tab=ha`} replace />
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -86,6 +101,7 @@ export default function HostDetailPage() {
   if (!host) {
     return (
       <div className="flex items-center justify-center h-64">
+        <h1 className="sr-only">主机</h1>
         <div className="flex flex-col items-center gap-4 text-muted-foreground max-w-sm text-center">
           <AlertCircle className="w-10 h-10 text-danger" />
           <div>
@@ -114,56 +130,21 @@ export default function HostDetailPage() {
   }
 
   return (
-    <div className="space-y-5">
-      {/* Top toolbar */}
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex items-center gap-3 min-w-0">
+    <div key={scopeKey}>
+      <h1 className="sr-only">{host.name_label}</h1>
+      <Tabs.Root value={activeTab} onValueChange={(tab) => setSearchParams(tab === 'overview' ? {} : { tab })}>
+        <div className="mb-3 flex min-w-0 items-center gap-2 border-b border-border">
           <button
             onClick={() => navigate(backPath)}
-            className="flex-shrink-0 p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
+            className="shrink-0 rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
             title="返回主机列表"
+            aria-label="返回主机列表"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="h-4 w-4" />
           </button>
-          <div className="min-w-0">
-            <div className="flex items-center gap-3 flex-wrap">
-              <h1 className="text-xl font-semibold text-foreground truncate">
-                {host.name_label}
-              </h1>
-              <span className="text-xs px-2 py-0.5 bg-muted text-muted-foreground rounded-md">
-                {host.poolName}
-              </span>
-              {!host.enabled && (
-                <span className="text-xs px-2 py-0.5 bg-warning-soft text-warning border border-warning/30 rounded-md">
-                  已禁用
-                </span>
-              )}
-            </div>
-            <p className="text-sm text-muted-foreground mt-0.5 truncate">
-              {host.address} &middot; {host.hostname}
-            </p>
-          </div>
-        </div>
-        <button
-          onClick={() => refreshHosts()}
-          className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground bg-card hover:bg-muted border border-border rounded-lg transition-colors"
-          title="刷新"
-        >
-          <RefreshCw className="w-4 h-4" />
-          刷新
-        </button>
-      </div>
-
-      {/* Tabs */}
-      <Tabs.Root value={activeTab} onValueChange={setActiveTab}>
-        <div className="mb-6 overflow-x-auto border-b border-border">
-          <Tabs.List className="flex min-w-max gap-1">
-            {[
-              { value: 'overview', label: '概览' },
-              { value: 'monitor', label: '监控' },
-              { value: 'patches', label: '补丁' },
-              { value: 'ha', label: '高可用' },
-            ].map((tab) => (
+          <div className="min-w-0 overflow-x-auto">
+          <Tabs.List aria-label="主机" className="flex min-w-max gap-1">
+            {hostTabs.map((tab) => (
               <Tabs.Trigger
                 key={tab.value}
                 value={tab.value}
@@ -181,6 +162,8 @@ export default function HostDetailPage() {
               </Tabs.Trigger>
             ))}
           </Tabs.List>
+          </div>
+          {!host.enabled && <span className="ml-auto shrink-0 text-xs text-warning">已禁用</span>}
         </div>
 
         <Tabs.Content value="overview" className="outline-none">
@@ -200,8 +183,8 @@ export default function HostDetailPage() {
               <HostMemorySummary host={host} />
             </div>
             <div className="bg-card border border-border rounded-xl p-4">
-              <div className="text-xs text-muted-foreground mb-1">VM 数量</div>
-              <div className="text-foreground font-medium">{host.resident_VMs?.length || 0}</div>
+              <div className="text-xs text-muted-foreground mb-1">运行中 VM</div>
+              <div className="text-foreground font-medium">{vmRead?.lastSuccessAt && !vmRead.error ? vms.filter((vm) => vm.connectionId === connectionId && vm.resident_on === hostRef && vm.power_state === 'Running').length : '—'}</div>
             </div>
             <div className="bg-card border border-border rounded-xl p-4">
               <div className="text-xs text-muted-foreground mb-1">XCP-ng 版本</div>
@@ -219,6 +202,10 @@ export default function HostDetailPage() {
           </dl>
         </Tabs.Content>
 
+        <Tabs.Content value="vms" className="outline-none"><VmsPage connectionId={connectionId} hostRef={hostRef} /></Tabs.Content>
+        <Tabs.Content value="networks" className="outline-none"><NetworksPage connectionId={connectionId} hostRef={hostRef} /></Tabs.Content>
+        <Tabs.Content value="storage" className="outline-none"><StoragePage connectionId={connectionId} hostRef={hostRef} /></Tabs.Content>
+
         <Tabs.Content value="monitor" className="outline-none">
           <HostMonitorTab connectionId={connectionId} hostRef={hostRef} />
         </Tabs.Content>
@@ -227,9 +214,6 @@ export default function HostDetailPage() {
           <HostPatchesTab connectionId={connectionId} hostRef={hostRef} hostName={host.name_label} />
         </Tabs.Content>
 
-        <Tabs.Content value="ha" className="outline-none">
-          <HaSettingsTab connectionId={connectionId} />
-        </Tabs.Content>
       </Tabs.Root>
     </div>
   )

@@ -1,9 +1,10 @@
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
-import { MemoryRouter, Route, Routes, useNavigate } from 'react-router-dom'
+import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import NetworksPage from '../../src/renderer/src/pages/NetworksPage'
 import VmsPage from '../../src/renderer/src/pages/VmsPage'
 import VmDetailPage from '../../src/renderer/src/pages/VmDetailPage'
+import Sidebar from '../../src/renderer/src/components/layout/Sidebar'
 import TopBar from '../../src/renderer/src/components/layout/TopBar'
 import { VmStorageTab } from '../../src/renderer/src/components/vm/VmStorageTab'
 import { ToastProvider } from '../../src/renderer/src/components/toast/ToastProvider'
@@ -30,14 +31,10 @@ const disk = { ref: 'vdi', uuid: 'vdi', name_label: 'Data disk', SR: 'sr', virtu
 const vbd = { ref: 'vbd', VDI: 'vdi', srRef: 'sr', type: 'Disk', userdevice: '0', mode: 'RW',
   currently_attached: true, unpluggable: true, allowed_operations: ['unplug'] }
 const connections = [
-  { id: 'conn-a', name: 'Pool A', poolName: 'Pool A', state: 'connected', connectedAt: 1, epoch: 1, poolUuid: 'pool-a' },
-  { id: 'conn-b', name: 'Pool B', poolName: 'Pool B', state: 'connected', connectedAt: 1, epoch: 1, poolUuid: 'pool-b' },
+  { id: 'conn-a', host: 'a.invalid', name: 'Pool A', poolName: 'Pool A', state: 'connected', connectedAt: 1, epoch: 1, poolUuid: 'pool-a' },
+  { id: 'conn-b', host: 'b.invalid', name: 'Pool B', poolName: 'Pool B', state: 'connected', connectedAt: 1, epoch: 1, poolUuid: 'pool-b' },
 ]
 const future = { v7_startTransition: true, v7_relativeSplatPath: true }
-function Navigation() {
-  const navigate = useNavigate()
-  return <><button onClick={() => navigate('/vms')}>Go global</button><button onClick={() => navigate('/pool/conn-b/vms')}>Go B</button></>
-}
 function renderDetail(tab: string) {
   return render(<ToastProvider><MemoryRouter initialEntries={['/pool/conn-a/vms/OpaqueRef%3Avm?tab=' + tab]} future={future}>
     <TopBar /><Routes><Route path="/pool/:connectionId/vms/:ref" element={<VmDetailPage />} /></Routes><FeedbackOverlay />
@@ -76,9 +73,9 @@ describe('resource refresh and selection consistency', () => {
     render(page())
     expect(await screen.findByText(/192\.0\.2\.10/)).toBeInTheDocument()
     vi.mocked(window.xapi.network.listPifs).mockResolvedValue([{ ref: 'pif-a', host: 'host-a', network: network.ref, device: 'eth0', IP: '192.0.2.20', linkState: 'disconnected', isPhysicalNic: true } as any])
-    fireEvent.click(within(document.querySelector('header')!).getByRole('button', { name: '刷新', exact: true }))
+    fireEvent.click(within(document.querySelector('header')!).getByRole('button', { name: '刷新资源', exact: true }))
     await waitFor(() => expect(useMultiDataStore.getState().domainStates['conn-a']?.networks?.lastSuccessAt).toBeTypeOf('number'))
-    await waitFor(() => expect(within(document.querySelector('header')!).getByRole('button', { name: '刷新', exact: true })).toBeEnabled())
+    await waitFor(() => expect(within(document.querySelector('header')!).getByRole('button', { name: '刷新资源', exact: true })).toBeEnabled())
     expect(window.xapi.network.list).toHaveBeenCalled()
     expect(await screen.findByText(/192\.0\.2\.20/)).toBeInTheDocument()
   })
@@ -115,7 +112,7 @@ describe('resource refresh and selection consistency', () => {
     renderDetail(tab)
     const read = tab === 'storage' ? window.xapi.vm.getVBDs : window.xapi.vm.getSnapshots
     await waitFor(() => expect(read).toHaveBeenCalledTimes(1))
-    fireEvent.click(within(document.querySelector('header')!).getByRole('button', { name: '刷新', exact: true }))
+    fireEvent.click(within(document.querySelector('header')!).getByRole('button', { name: '刷新资源', exact: true }))
     await waitFor(() => expect(read).toHaveBeenCalledTimes(2))
   })
 
@@ -203,36 +200,31 @@ describe('resource refresh and selection consistency', () => {
     expect(screen.getByRole('alert')).toHaveTextContent('已移除 1 台失效选择')
   })
 
-  it('checks whether global VM pool filtering survives scoped sidebar navigation', async () => {
+  it('returns to the complete list after scoped sidebar navigation', async () => {
     useMultiDataStore.setState({ vms: [vm, { ...vm, connectionId: 'conn-b', name_label: 'B VM' }] } as any)
-    render(<ToastProvider><MemoryRouter initialEntries={['/vms']} future={future}><Navigation /><Routes>
+    render(<ToastProvider><MemoryRouter initialEntries={['/pool/conn-a/vms']} future={future}><Sidebar /><Routes>
       <Route path="/vms" element={<VmsPage />} /><Route path="/pool/:connectionId/vms" element={<VmsPage />} />
     </Routes></MemoryRouter></ToastProvider>)
     await screen.findByRole('button', { name: 'App VM' })
-    fireEvent.change(screen.getByRole('combobox', { name: '资源池筛选' }), { target: { value: 'conn-a' } })
     expect(screen.queryByRole('button', { name: 'B VM' })).not.toBeInTheDocument()
-    fireEvent.click(screen.getByRole('button', { name: 'Go B' }))
+    fireEvent.click(screen.getByRole('link', { name: '资源池 Pool B' }))
     await screen.findByRole('button', { name: 'B VM' })
-    fireEvent.click(screen.getByRole('button', { name: 'Go global' }))
-    expect(screen.getByRole('combobox', { name: '资源池筛选' })).toHaveValue('conn-a')
-    expect(screen.queryByRole('button', { name: 'B VM' })).not.toBeInTheDocument()
+    fireEvent.click(screen.getByRole('link', { name: '全部资源' }))
+    expect(screen.getByRole('button', { name: 'App VM' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'B VM' })).toBeInTheDocument()
   })
 
-  it('falls back to the complete list when the filtered pool disconnects', async () => {
+  it('retains the explicit scope and disables writes when that pool disconnects', async () => {
     useMultiDataStore.setState({ vms: [vm, { ...vm, connectionId: 'conn-b', name_label: 'B VM' }] } as any)
-    render(<ToastProvider><MemoryRouter initialEntries={['/vms']} future={future}><Routes>
-      <Route path="/vms" element={<VmsPage />} />
+    render(<ToastProvider><MemoryRouter initialEntries={['/pool/conn-a/vms']} future={future}><Routes>
+      <Route path="/pool/:connectionId/vms" element={<VmsPage />} />
     </Routes></MemoryRouter></ToastProvider>)
     await screen.findByRole('button', { name: 'App VM' })
-    fireEvent.change(screen.getByRole('combobox', { name: '资源池筛选' }), { target: { value: 'conn-a' } })
     await act(async () => {
       useConnectionManagerStore.setState({ connections: connections.map((item) => ({ ...item, state: item.id === 'conn-a' ? 'disconnected' : 'connected' })) as any })
     })
-    const select = screen.getByRole('combobox', { name: '资源池筛选' }) as HTMLSelectElement
-    expect(select.value).toBe('all')
-    expect(screen.getByRole('button', { name: 'App VM' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'B VM' })).toBeInTheDocument()
-    fireEvent.change(select, { target: { value: 'conn-b' } })
-    await screen.findByRole('button', { name: 'B VM' })
+    expect(screen.getByRole('button', { name: 'Create new virtual machine' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Import virtual machine' })).toBeDisabled()
+    expect(screen.queryByRole('button', { name: 'B VM' })).not.toBeInTheDocument()
   })
 })

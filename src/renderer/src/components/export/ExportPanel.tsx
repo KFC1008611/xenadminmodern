@@ -10,7 +10,7 @@ import { feedback } from '../../store/feedback.store'
 import { readOperationResult } from '../../../../shared/read-operation-result'
 import { useConnectionManagerStore } from '../../store/connectionManager.store'
 
-export function ExportPanel() {
+export function ExportPanel({ observe = true }: { observe?: boolean } = {}) {
   const {
     tasks,
     clearCompleted,
@@ -39,6 +39,7 @@ export function ExportPanel() {
 
   // Poll for progress updates on active tasks
   useEffect(() => {
+    if (!observe) return
     if (trackedCount === 0) return
     let disposed = false
     let timer: ReturnType<typeof setTimeout> | undefined
@@ -118,7 +119,7 @@ export function ExportPanel() {
 
     void pollProgress()
     return () => { disposed = true; if (timer) clearTimeout(timer) }
-  }, [trackedCount, updateTask, connections])
+  }, [trackedCount, updateTask, connections, observe])
 
   if (!tasks.length) return null
   return <section aria-label="导出任务" className="space-y-2">

@@ -1,5 +1,5 @@
 import { TaskRecords } from '../feedback/TaskRecords'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Upload } from 'lucide-react'
 import { useImportWizardStore } from '../../store/importWizard.store'
@@ -11,17 +11,12 @@ import { ImportOperationProgress } from './ImportOperationProgress'
 const terminal = (status: string) => ['completed', 'failed', 'cancelled'].includes(status)
 
 /** Keeps accepted imports observable across dialogs, routes and new drafts. */
-export function ImportTransferPanel() {
+export function ImportTransferPanel({ observe = true }: { observe?: boolean } = {}) {
   const store = useImportWizardStore()
-  const cancelling = useRef(new Set<string>())
-  const [pendingCancels, setPendingCancels] = useState<string[]>([])
+  const pendingCancels = store.pendingCancels
   const cancel = async (connectionId: string, operationId: string) => {
-    if (cancelling.current.has(operationId)) return
-    cancelling.current.add(operationId)
-    setPendingCancels([...cancelling.current])
-    try { await window.xapi.vm.cancelImport(connectionId, operationId) }
+    try { await store.cancel(connectionId, operationId) }
     catch (error: any) { feedback.error(error.message) }
-    finally { cancelling.current.delete(operationId); setPendingCancels([...cancelling.current]) }
   }
   const connections = useConnectionManagerStore((s) => s.connections)
   const history = useRef(store.history)
@@ -29,6 +24,7 @@ export function ImportTransferPanel() {
   const navigate = useNavigate()
   const active = store.history.filter((item) => !item.recordMissing && !terminal(item.operation.status)).length
   useEffect(() => {
+    if (!observe) return
     if (!active) return
     let disposed = false
     let timer: ReturnType<typeof setTimeout> | undefined
@@ -53,7 +49,7 @@ export function ImportTransferPanel() {
     }
     void poll()
     return () => { disposed = true; if (timer) clearTimeout(timer) }
-  }, [active, connections, store.dialogOpen])
+  }, [active, connections, store.dialogOpen, observe])
 
   if (!store.history.length) return null
   return <section aria-label="导入任务" className="space-y-2">

@@ -16,7 +16,6 @@ import { AlertHistoryList } from '../components/alerts/AlertHistoryList'
 import { NotificationConfigPanel } from '../components/alerts/NotificationConfigPanel'
 import { RefreshCw, BellOff, Bell, Settings, History, Mail } from 'lucide-react'
 import { cn } from '../lib/utils'
-import { feedback } from '../store/feedback.store'
 
 const PAGE_SIZE = 50
 
@@ -25,15 +24,9 @@ export default function AlertsPage() {
   const loading = useAlertStore((s) => s.loading)
   const alertError = useAlertStore((s) => s.error)
   const refreshAlerts = useAlertStore((s) => s.refreshAlerts)
-  const startPolling = useAlertStore((s) => s.startPolling)
-  const stopPolling = useAlertStore((s) => s.stopPolling)
   const dismissAlert = useAlertStore((s) => s.dismissAlert)
   const filters = useAlertStore((s) => s.filters)
   const setFilters = useAlertStore((s) => s.setFilters)
-  const startAlertListener = useAlertStore((s) => s.startAlertListener)
-  const stopAlertListener = useAlertStore((s) => s.stopAlertListener)
-
-  // feedback used directly
   const [searchParams, setSearchParams] = useSearchParams()
   const requestedTab = searchParams.get('tab') || 'alerts'
   const activeTab = ['alerts', 'rules', 'history', 'notify'].includes(requestedTab) ? requestedTab : 'alerts'
@@ -49,33 +42,6 @@ export default function AlertsPage() {
   useEffect(() => {
     setPage(1)
   }, [filters])
-
-  // Start/stop XAPI alert polling on mount/unmount
-  useEffect(() => {
-    startPolling()
-    return () => stopPolling()
-  }, [])
-
-  // v7: Start alert triggered listener for toast notifications
-  useEffect(() => {
-    startAlertListener()
-    return () => stopAlertListener()
-  }, [])
-
-  // v7: Toast notification for triggered alerts
-  useEffect(() => {
-    const unsubscribe = window.xapi.onAlertTriggered((record) => {
-      if (record.status === 'resolved') {
-        feedback.success(`告警恢复：${record.ruleName} · ${record.entityName}`)
-        return
-      }
-      const severityLabel = record.severity === 'error' ? '严重' : '警告'
-      feedback.error(
-        `[${severityLabel}] ${record.ruleName}: ${record.entityName} - ${record.metricType} 超过阈值`,
-      )
-    })
-    return () => unsubscribe()
-  }, [])
 
   // Apply client-side filters
   const filteredAlerts = useMemo(() => {

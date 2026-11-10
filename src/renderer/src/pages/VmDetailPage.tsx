@@ -5,7 +5,7 @@
  * v9: Added Storage tab and Advanced Settings tab.
  */
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
+import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom'
 import * as Tabs from '@radix-ui/react-tabs'
 import {
   ArrowLeft,
@@ -115,6 +115,7 @@ function VmDetailView() {
   const { ref: encodedRef, connectionId: pathConnectionId } = useParams<{ ref: string; connectionId: string }>()
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
+  const location = useLocation()
   // feedback used directly
 
   const { networks: allNetworks, hosts: allHosts, domainStates, refreshNetworks, refreshVms } = useMultiDataStore()
@@ -164,7 +165,11 @@ function VmDetailView() {
     !pathConnectionId && !searchConnectionId && connectedConnections.length > 1
       ? '旧链接缺少资源池连接，请从左侧资源池或 VM 列表重新进入'
       : ''
-  const backPath = connectionId ? `/pool/${encodeURIComponent(connectionId)}/vms` : '/vms'
+  const listPath = location.state?.vmListPath
+  const hostList = typeof listPath === 'string' && listPath.startsWith(`/pool/${encodeURIComponent(connectionId)}/hosts/`)
+    && /^\/pool\/[^/]+\/hosts\/[^/?]+\?/.test(listPath) && new URLSearchParams(listPath.split('?')[1]).get('tab') === 'vms'
+  const backPath = typeof listPath === 'string' && (/^\/(?:pool\/[^/]+\/)?vms(?:\?|$)/.test(listPath) || hostList)
+    ? listPath : connectionId ? `/pool/${encodeURIComponent(connectionId)}/vms` : '/vms'
   const connection = connectionId ? connections.find((c) => c.id === connectionId) : null
   const vmsReadAt = domainStates[connectionId]?.vms?.lastSuccessAt
   const deviceRefreshKey = `${detailRefreshKey}:${vmsReadAt ?? ''}`

@@ -67,6 +67,7 @@ interface CreateVmWizardProps {
   onCreated: (vmRef: string) => void
   connectionId: string
   initialTemplate?: VmRecord | null
+  initialHostRef?: string
 }
 
 function templateDefaults(previous: WizardState, template: VmRecord): WizardState {
@@ -98,7 +99,7 @@ function uniqueName(base: string, names: Set<string>): string {
   return `${base} (${suffix})`
 }
 
-export function CreateVmWizard({ open, onClose, onCreated, connectionId, initialTemplate = null }: CreateVmWizardProps) {
+export function CreateVmWizard({ open, onClose, onCreated, connectionId, initialTemplate = null, initialHostRef = '' }: CreateVmWizardProps) {
   const [currentStepId, setCurrentStepId] = useState<VmWizardStepId>('template')
   const [state, setState] = useState<WizardState>(INITIAL_STATE)
   const [resources, setResources] = useState(EMPTY_RESOURCES)
@@ -134,9 +135,9 @@ export function CreateVmWizard({ open, onClose, onCreated, connectionId, initial
     setFurthestStep(initialTemplate ? 1 : 0)
     setTemplateNetworkRead(null)
     setTemplatePolicies({})
-    setState(initialTemplate ? templateDefaults(INITIAL_STATE, initialTemplate) : { ...INITIAL_STATE })
+    setState({ ...(initialTemplate ? templateDefaults(INITIAL_STATE, initialTemplate) : INITIAL_STATE), targetHostRef: initialHostRef })
     setCurrentStepId(initialTemplate ? 'name' : 'template')
-  }, [open, initialTemplate, connectionId])
+  }, [open, initialTemplate, connectionId, initialHostRef])
 
   useEffect(() => {
     if (!open || !connectionId) return
@@ -220,7 +221,7 @@ export function CreateVmWizard({ open, onClose, onCreated, connectionId, initial
     setTemplateNetworkReload((value) => value + 1)
     setState((previous) => {
       const next = templateDefaults(previous, template)
-      return { ...next, vifs: defaultVifs(template, resources.networks), vmName: previous.nameEdited ? previous.vmName : uniqueName(template.name_label, existingNames) }
+      return { ...next, targetHostRef: initialHostRef, vifs: defaultVifs(template, resources.networks), vmName: previous.nameEdited ? previous.vmName : uniqueName(template.name_label, existingNames) }
     })
   }
 

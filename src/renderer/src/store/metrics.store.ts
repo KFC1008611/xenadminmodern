@@ -1,16 +1,10 @@
 /**
  * Metrics store — manages host metrics collection and history
- * v6: Manages CPU/memory metrics collection for Dashboard charts
+ * Manages connection-scoped host metrics collection and history
  * v7: Extended with persistent history queries, stats, time range support
  */
 import { create } from 'zustand'
 import type { MetricDataPoint, MetricStats, MetricType } from '../types/xapi'
-
-export interface HostMetricsData {
-  hostRef: string
-  hostName: string
-  dataPoints: MetricDataPoint[]
-}
 
 export interface MetricsState {
   // Real-time snapshots are isolated by connection and host reference.
@@ -35,9 +29,6 @@ export interface MetricsState {
     maxDataPoints: number
   }
 
-  // UI state
-  expandedView: boolean
-  selectedHostRef: string | null
   collectionIntervalIds: Map<string, number>
 
   // v6 Actions (preserved)
@@ -45,8 +36,6 @@ export interface MetricsState {
   stopCollection: (connectionId?: string) => void
   refreshHistory: (connectionId: string) => Promise<void>
   updateConfig: (config: Partial<MetricsState['config']>) => void
-  setExpandedView: (expanded: boolean) => void
-  selectHost: (hostRef: string | null) => void
 
   // v7 Actions
   setTimeRange: (range: '1h' | '24h' | '7d') => void
@@ -117,8 +106,6 @@ export const useMetricsStore = create<MetricsState>((set, get) => ({
   history: new Map(),
   collecting: false,
   config: { ...DEFAULT_CONFIG },
-  expandedView: false,
-  selectedHostRef: null,
   collectionIntervalIds: new Map(),
 
   // v7 state
@@ -276,10 +263,6 @@ export const useMetricsStore = create<MetricsState>((set, get) => ({
       config: { ...state.config, ...config },
     }))
   },
-
-  setExpandedView: (expanded: boolean) => set({ expandedView: expanded }),
-
-  selectHost: (hostRef: string | null) => set({ selectedHostRef: hostRef }),
 
   // --- v7 Actions ---
 

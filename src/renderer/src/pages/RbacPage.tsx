@@ -10,7 +10,7 @@ import { EditSubjectRolesDialog } from '../components/rbac/EditSubjectRolesDialo
 import { useConnectionManagerStore } from '../store/connectionManager.store'
 import type { SubjectWithRoles } from '../store/rbac.store'
 
-export default function RbacPage() {
+export default function RbacPage({ connectionId }: { connectionId?: string }) {
   const connections = useConnectionManagerStore((s) => s.connections)
   const activeConnectionId = useConnectionManagerStore((s) => s.activeConnectionId)
   const connectedConnections = useMemo(
@@ -20,6 +20,7 @@ export default function RbacPage() {
   const [selectedConnectionId, setSelectedConnectionId] = useState(activeConnectionId || '')
   const [addDialogOpen, setAddDialogOpen] = useState(false)
   const [editSubject, setEditSubject] = useState<SubjectWithRoles | null>(null)
+  const scopeId = connectionId ?? selectedConnectionId
 
   useEffect(() => {
     const selectedIsConnected = connectedConnections.some(
@@ -35,7 +36,7 @@ export default function RbacPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+      {!connectionId && <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h1 className="text-xl font-semibold text-foreground flex items-center gap-2">
             <Shield className="w-5 h-5 text-accent-foreground" />
@@ -63,16 +64,17 @@ export default function RbacPage() {
             </select>
           </div>
         )}
-      </div>
+      </div>}
 
       <RbacUserManager
-        connectionId={selectedConnectionId}
+        key={scopeId}
+        connectionId={scopeId}
         onAddUser={() => setAddDialogOpen(true)}
         onEditRoles={(subject) => setEditSubject(subject)}
       />
 
       <AddSubjectDialog
-        connectionId={selectedConnectionId}
+        connectionId={scopeId}
         open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
       />
@@ -80,7 +82,7 @@ export default function RbacPage() {
       <EditSubjectRolesDialog
         open={!!editSubject}
         onOpenChange={(open) => { if (!open) setEditSubject(null) }}
-        connectionId={selectedConnectionId}
+        connectionId={scopeId}
         subject={editSubject}
       />
     </div>

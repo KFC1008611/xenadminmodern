@@ -22,7 +22,7 @@ const poolJoinBlocked = getAuditedFeatureBlockReason('pool.join')
 const poolEjectBlocked = getAuditedFeatureBlockReason('pool.eject')
 const poolTransferBlocked = getAuditedFeatureBlockReason('pool.governance')
 
-export default function PoolManagerPage() {
+export default function PoolManagerPage({ connectionId }: { connectionId?: string }) {
   const connections = useConnectionManagerStore((s) => s.connections)
   const { hosts, pools, refreshHosts } = useMultiDataStore()
   const {
@@ -41,9 +41,9 @@ export default function PoolManagerPage() {
   const connectedPools = connections.filter((c) => c.state === 'connected')
 
   const [selectedPoolId, setSelectedPoolId] = useState(activeConnectionId || '')
-  const poolId = connectedPools.find((connection) => connection.id === selectedPoolId)?.id
+  const poolId = connectionId ?? (connectedPools.find((connection) => connection.id === selectedPoolId)?.id
     || connectedPools.find((connection) => connection.id === activeConnectionId)?.id
-    || connectedPools[0]?.id || ''
+    || connectedPools[0]?.id || '')
   useEffect(() => { setSelectedPoolId(poolId) }, [poolId])
   const poolHosts = hosts.filter((h) => h.connectionId === poolId)
   const pool = pools.find((p) => p.connectionId === poolId)
@@ -84,14 +84,14 @@ export default function PoolManagerPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      {!connectionId && <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-semibold text-foreground">资源池管理</h1>
         </div>
-      </div>
+      </div>}
 
       {/* Pool selector */}
-      <div className="flex min-w-0 items-center gap-3">
+      {!connectionId && <div className="flex min-w-0 items-center gap-3">
         <label htmlFor="pool-manager-select" className="shrink-0 text-sm text-muted-foreground">选择资源池：</label>
         <select
           id="pool-manager-select"
@@ -105,7 +105,7 @@ export default function PoolManagerPage() {
             </option>
           ))}
         </select>
-      </div>
+      </div>}
 
       {/* Pool info and actions */}
       {poolId && pool && (
